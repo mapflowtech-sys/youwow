@@ -1,0 +1,106 @@
+import Link from "next/link";
+import { Sparkles, Mail, Send } from "lucide-react";
+
+const serviceLinks = [
+  { href: "/tarot", label: "Гадание Таро" },
+  { href: "/santa", label: "Видео от Деда Мороза" },
+  { href: "/song", label: "Персональная песня" },
+];
+
+const legalLinks = [
+  { href: "/legal/privacy", label: "Политика конфиденциальности" },
+  { href: "/legal/terms", label: "Договор оферты" },
+  { href: "/legal/support", label: "Поддержка" },
+];
+
+export function Footer() {
+  return (
+    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300">
+      <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Column 1 - Services */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Наши сервисы</h3>
+            <ul className="space-y-2">
+              {serviceLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 2 - Legal */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Документы</h3>
+            <ul className="space-y-2">
+              {legalLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3 - Contacts */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">Контакты</h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="mailto:support@youwow.ru"
+                  className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                >
+                  <Mail className="h-4 w-4" />
+                  support@youwow.ru
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://t.me/youwow_support"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                >
+                  <Send className="h-4 w-4" />
+                  Telegram
+                </a>
+                <p className="text-slate-500 text-sm mt-1">
+                  Круглосуточная поддержка 24/7
+                </p>
+              </li>
+              <li className="pt-2">
+                <p className="text-slate-500 text-sm">
+                  Принимаем: Мир, СБП, Visa/MC
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom */}
+        <div className="mt-12 pt-8 border-t border-slate-800">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <Link href="/" className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="font-display font-bold text-white">YouWow</span>
+            </Link>
+            <p className="text-slate-500 text-sm text-center">
+              © 2025 YouWow. Создано специально для вас
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

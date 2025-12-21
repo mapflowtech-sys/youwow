@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Header } from "@/components/shared/header";
+import { Footer } from "@/components/shared/footer";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,9 +20,9 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "YouWow — AI-подарки с WOW-эффектом",
+  title: "YouWow | Индивидуальные подарки с WOW-эффектом",
   description:
-    "Персонализированные цифровые подарки на базе ИИ: гадание Таро, видео от Деда Мороза, персональные песни. Готово за 60 секунд!",
+    "Персональные видео от Деда Мороза, гадание Таро, песни созданные для Вас. Готовность за несколько минут. От 290₽",
   keywords: [
     "AI подарки",
     "персональные подарки",
@@ -28,6 +30,20 @@ export const metadata: Metadata = {
     "видео от деда мороза",
     "персональная песня",
   ],
+  openGraph: {
+    title: "YouWow | Индивидуальные подарки с WOW-эффектом",
+    description:
+      "Персональные видео от Деда Мороза, гадание Таро, песни созданные для Вас. Готовность за несколько минут. От 290₽",
+    type: "website",
+    locale: "ru_RU",
+    siteName: "YouWow",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "YouWow | Индивидуальные подарки с WOW-эффектом",
+    description:
+      "Персональные видео от Деда Мороза, гадание Таро, песни созданные для Вас. От 290₽",
+  },
 };
 
 export default function RootLayout({
@@ -41,10 +57,12 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
-          {children}
+          <Header />
+          <main className="min-h-screen">{children}</main>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
