@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 
 const inter = Inter({
@@ -63,6 +64,7 @@ export default function RootLayout({
           <Header />
           <main className="min-h-screen">{children}</main>
           <Footer />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
