@@ -15,8 +15,57 @@ export default function Home() {
     }
   };
 
+  // JSON-LD для SEO
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'YouWow',
+    description: 'Персональные подарки: видео-поздравления и индивидуальные песни',
+    url: 'https://youwow.ru',
+  };
+
+  const servicesJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: [
+      {
+        '@type': 'Product',
+        position: 1,
+        name: 'Видео от Деда Мороза',
+        description: 'Персональное видео-поздравление от Деда Мороза с именем получателя',
+        offers: {
+          '@type': 'Offer',
+          price: '390',
+          priceCurrency: 'RUB',
+          availability: 'https://schema.org/PreOrder'
+        }
+      },
+      {
+        '@type': 'Product',
+        position: 2,
+        name: 'Персональная песня',
+        description: 'Уникальная песня с именем и историей получателя',
+        offers: {
+          '@type': 'Offer',
+          price: '490',
+          priceCurrency: 'RUB',
+          availability: 'https://schema.org/InStock'
+        }
+      }
+    ]
+  };
+
   return (
-    <main>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesJsonLd) }}
+      />
+      <main>
       {/* HERO SECTION */}
       <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
         <motion.div
@@ -57,64 +106,35 @@ export default function Home() {
       <section id="services" className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-20">
         <h2 className="text-4xl font-bold text-center mb-12">Что создадим сегодня?</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* КАРТОЧКА 1 — Гадание Таро */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {/* КАРТОЧКА 1 — Видео от Деда Мороза */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/tarot" className="h-full group">
-              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
-                <CardHeader>
-                  <Badge className="w-fit mb-3 bg-accent-pink/10 text-accent-pink border-accent-pink/20 hover:shadow-lg hover:shadow-accent-pink/20 transition-all">
-                    🔥 Viral
-                  </Badge>
-                  <CardTitle className="text-2xl">Гадание Таро 2026</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-muted-foreground">
-                    Узнай свою судьбу. Создадим уникальную карту Таро с твоим лицом и предсказанием
-                  </p>
-                </CardContent>
-                <CardContent className="pt-0">
-                  <p className="text-3xl font-bold font-space text-primary">
-                    290 ₽
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full bg-primary">
-                    Узнать будущее →
-                  </Button>
-                </CardFooter>
-              </Card>
-            </Link>
-          </motion.div>
-
-          {/* КАРТОЧКА 2 — Видео от Деда Мороза */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-          >
             <Link href="/santa" className="h-full group">
               <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
-                  <Badge className="w-fit mb-3 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:shadow-lg hover:shadow-green-500/20 transition-all">
-                    🎄 Хит сезона
-                  </Badge>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
+                      🎄 Хит сезона
+                    </Badge>
+                    <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20">
+                      🚧 Скоро запуск
+                    </Badge>
+                  </div>
                   <CardTitle className="text-2xl">Видео от Деда Мороза</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <p className="text-muted-foreground">
-                    Дед Мороз лично поздравит ребёнка или взрослого.
+                    Дед Мороз лично поздравит ребёнка или взрослого. Сервис запустится совсем скоро. Пока доступно оформление предзаказа.
                   </p>
                 </CardContent>
                 <CardContent className="pt-0">
                   <p className="text-3xl font-bold font-space text-primary">
-                    от 690 ₽
+                    от 390 ₽
                   </p>
                 </CardContent>
                 <CardFooter>
@@ -126,19 +146,24 @@ export default function Home() {
             </Link>
           </motion.div>
 
-          {/* КАРТОЧКА 3 — Персональная песня */}
+          {/* КАРТОЧКА 2 — Персональная песня */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             whileHover={{ scale: 1.05 }}
           >
             <Link href="/song" className="h-full group">
               <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
-                  <Badge className="w-fit mb-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:shadow-lg hover:shadow-purple-500/20 transition-all">
-                    🎵 Новинка
-                  </Badge>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
+                      ✅ Доступно
+                    </Badge>
+                    <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20">
+                      🎵 Новинка
+                    </Badge>
+                  </div>
                   <CardTitle className="text-2xl">Твой персональный хит</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
@@ -270,5 +295,6 @@ export default function Home() {
         </div>
       </section>
     </main>
+    </>
   );
 }
