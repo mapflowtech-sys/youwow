@@ -1,16 +1,22 @@
 import Link from "next/link";
 import { Sparkles, Mail, Send } from "lucide-react";
 
-const serviceLinks = [
+type FooterLink = {
+  href: string;
+  label: string;
+  external?: boolean;
+};
+
+const serviceLinks: FooterLink[] = [
   { href: "/tarot", label: "Гадание Таро" },
   { href: "/santa", label: "Видео от Деда Мороза" },
   { href: "/song", label: "Персональная песня" },
 ];
 
-const legalLinks = [
+const legalLinks: FooterLink[] = [
   { href: "/legal/privacy", label: "Политика конфиденциальности" },
-  { href: "/legal/terms", label: "Договор оферты" },
-  { href: "/legal/support", label: "Поддержка" },
+  { href: "/legal/offer", label: "Договор оферты" },
+  { href: "mailto:support@youwow.ru", label: "Поддержка", external: true },
 ];
 
 export function Footer() {
@@ -41,12 +47,21 @@ export function Footer() {
             <ul className="space-y-2">
               {legalLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a
+                      href={link.href}
+                      className="text-slate-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={link.href}
+                      className="text-slate-400 hover:text-white transition-colors"
+                    >
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
