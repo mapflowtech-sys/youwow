@@ -18,14 +18,23 @@ export default function Home() {
   return (
     <main>
       {/* HERO SECTION */}
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
+        {/* Floating particles background */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-primary/5 animate-float" style={{ animationDelay: '0s' }}></div>
+          <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-accent-pink/5 animate-float" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute bottom-40 left-1/4 w-24 h-24 rounded-full bg-accent-gold/5 animate-float" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute top-1/3 right-1/3 w-16 h-16 rounded-full bg-primary/5 animate-float" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute bottom-20 right-10 w-28 h-28 rounded-full bg-accent-pink/5 animate-float" style={{ animationDelay: '3s' }}></div>
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl"
+          className="text-center max-w-4xl relative z-10"
         >
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer">
             Подари эмоции, которые невозможно забыть
           </h1>
 
@@ -33,14 +42,21 @@ export default function Home() {
             Персональные видео, песни и предсказания на 2026, созданные специально для вас за 1 минуту
           </p>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-8"
+          >
             <Button
               onClick={scrollToServices}
               size="lg"
-              className="mt-8 bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all"
+              className="relative overflow-hidden bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all backdrop-blur-sm"
             >
-              Выбрать чудо
-              <ChevronRight className="ml-2 w-5 h-5" />
+              <span className="relative z-10 flex items-center">
+                Выбрать чудо
+                <ChevronRight className="ml-2 w-5 h-5" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             </Button>
           </motion.div>
         </motion.div>
@@ -58,10 +74,11 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.1 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/tarot" className="h-full">
-              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col">
+            <Link href="/tarot" className="h-full group">
+              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
+                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
                 <CardHeader>
-                  <Badge className="w-fit mb-3 bg-accent-pink/10 text-accent-pink border-accent-pink/20">
+                  <Badge className="w-fit mb-3 bg-accent-pink/10 text-accent-pink border-accent-pink/20 hover:shadow-lg hover:shadow-accent-pink/20 transition-all">
                     🔥 Viral
                   </Badge>
                   <CardTitle className="text-2xl">Гадание Таро 2026</CardTitle>
@@ -92,10 +109,11 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/santa" className="h-full">
-              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col">
+            <Link href="/santa" className="h-full group">
+              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
+                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
                 <CardHeader>
-                  <Badge className="w-fit mb-3 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
+                  <Badge className="w-fit mb-3 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:shadow-lg hover:shadow-green-500/20 transition-all">
                     🎄 Хит сезона
                   </Badge>
                   <CardTitle className="text-2xl">Видео от Деда Мороза</CardTitle>
@@ -126,10 +144,11 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.3 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/song" className="h-full">
-              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col">
+            <Link href="/song" className="h-full group">
+              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
+                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
                 <CardHeader>
-                  <Badge className="w-fit mb-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20">
+                  <Badge className="w-fit mb-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:shadow-lg hover:shadow-purple-500/20 transition-all">
                     🎵 Новинка
                   </Badge>
                   <CardTitle className="text-2xl">Твой персональный хит</CardTitle>
