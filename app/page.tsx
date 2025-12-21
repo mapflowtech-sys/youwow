@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { User, CreditCard, Sparkles, ChevronRight, ArrowRight } from "lucide-react";
+import { User, CreditCard, Sparkles, ChevronDown, MoveRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -18,21 +18,12 @@ export default function Home() {
   return (
     <main>
       {/* HERO SECTION */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
-        {/* Floating particles background */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-primary/5 animate-float" style={{ animationDelay: '0s' }}></div>
-          <div className="absolute top-40 right-20 w-32 h-32 rounded-full bg-accent-pink/5 animate-float" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute bottom-40 left-1/4 w-24 h-24 rounded-full bg-accent-gold/5 animate-float" style={{ animationDelay: '4s' }}></div>
-          <div className="absolute top-1/3 right-1/3 w-16 h-16 rounded-full bg-primary/5 animate-float" style={{ animationDelay: '1s' }}></div>
-          <div className="absolute bottom-20 right-10 w-28 h-28 rounded-full bg-accent-pink/5 animate-float" style={{ animationDelay: '3s' }}></div>
-        </div>
-
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-4xl relative z-10"
+          className="text-center max-w-4xl"
         >
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer">
             Подари эмоции, которые невозможно забыть
@@ -54,7 +45,7 @@ export default function Home() {
             >
               <span className="relative z-10 flex items-center">
                 Выбрать чудо
-                <ChevronRight className="ml-2 w-5 h-5" />
+                <ChevronDown className="ml-2 w-5 h-5" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
             </Button>
@@ -75,8 +66,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
           >
             <Link href="/tarot" className="h-full group">
-              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
-                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
                   <Badge className="w-fit mb-3 bg-accent-pink/10 text-accent-pink border-accent-pink/20 hover:shadow-lg hover:shadow-accent-pink/20 transition-all">
                     🔥 Viral
@@ -110,8 +100,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
           >
             <Link href="/santa" className="h-full group">
-              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
-                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
                   <Badge className="w-fit mb-3 bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 hover:shadow-lg hover:shadow-green-500/20 transition-all">
                     🎄 Хит сезона
@@ -145,8 +134,7 @@ export default function Home() {
             whileHover={{ scale: 1.05 }}
           >
             <Link href="/song" className="h-full group">
-              <Card className="h-full cursor-pointer border-2 hover:border-transparent transition-all hover:shadow-xl flex flex-col relative overflow-hidden backdrop-blur-sm bg-card/80">
-                <div className="absolute inset-0 gradient-border opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10"></div>
+              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
                   <Badge className="w-fit mb-3 bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 hover:shadow-lg hover:shadow-purple-500/20 transition-all">
                     🎵 Новинка
@@ -202,18 +190,22 @@ export default function Home() {
                 </p>
               </motion.div>
 
-              {/* Стрелка 1 */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.6, repeat: Infinity, repeatType: "reverse", repeatDelay: 1 }}
-                className="hidden md:flex absolute left-[30%] top-12 transform -translate-x-1/2 items-center justify-center"
-              >
-                <div className="flex items-center gap-1">
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-primary to-accent-pink"></div>
-                  <ArrowRight className="w-6 h-6 text-accent-pink" />
+              {/* Линия 1 */}
+              <div className="hidden md:flex absolute left-[30%] top-12 transform -translate-x-1/2 items-center justify-center">
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="w-2 h-2 rounded-full bg-primary"
+                  ></motion.div>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-primary to-accent-pink"></div>
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
+                    className="w-2 h-2 rounded-full bg-accent-pink"
+                  ></motion.div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Шаг 2 */}
               <motion.div
@@ -236,18 +228,22 @@ export default function Home() {
                 </p>
               </motion.div>
 
-              {/* Стрелка 2 */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.8, repeat: Infinity, repeatType: "reverse", repeatDelay: 1 }}
-                className="hidden md:flex absolute left-[63.5%] top-12 transform -translate-x-1/2 items-center justify-center"
-              >
-                <div className="flex items-center gap-1">
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-accent-pink to-accent-gold"></div>
-                  <ArrowRight className="w-6 h-6 text-accent-gold" />
+              {/* Линия 2 */}
+              <div className="hidden md:flex absolute left-[63.5%] top-12 transform -translate-x-1/2 items-center justify-center">
+                <div className="flex items-center gap-2">
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                    className="w-2 h-2 rounded-full bg-accent-pink"
+                  ></motion.div>
+                  <div className="w-8 h-0.5 bg-gradient-to-r from-accent-pink to-accent-gold"></div>
+                  <motion.div
+                    animate={{ scale: [1, 1.2, 1] }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 0.8 }}
+                    className="w-2 h-2 rounded-full bg-accent-gold"
+                  ></motion.div>
                 </div>
-              </motion.div>
+              </div>
 
               {/* Шаг 3 */}
               <motion.div
