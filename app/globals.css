@@ -2,26 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    /* YouWow Light Theme - Violet + Gold */
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 210 40% 98%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    /* Primary: Violet (#8b5cf6) */
+    --primary: 258 90% 66%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 258 90% 73%;
+    --primary-dark: 258 90% 55%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
+    /* Accent Gold: Amber (#f59e0b) */
+    --accent-gold: 38 92% 50%;
+    /* Accent Pink: (#ec4899) */
+    --accent-pink: 330 81% 60%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 258 90% 66%;
+
+    --chart-1: 258 90% 66%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 330 81% 60%;
+    --chart-4: 173 58% 39%;
+    --chart-5: 197 37% 24%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* YouWow Dark Theme */
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 217 33% 17%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    /* Primary: Violet-400 для тёмного фона */
+    --primary: 258 90% 73%;
+    --primary-foreground: 222 47% 11%;
+    --primary-light: 258 89% 82%;
+    --primary-dark: 258 90% 66%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+    --accent-gold: 38 92% 50%;
+    --accent-pink: 330 81% 60%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 26%;
+    --input: 217 33% 26%;
+    --ring: 258 90% 73%;
+
+    --chart-1: 258 90% 73%;
+    --chart-2: 38 92% 50%;
+    --chart-3: 330 81% 60%;
+    --chart-4: 160 60% 45%;
+    --chart-5: 30 80% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
   }
 }
