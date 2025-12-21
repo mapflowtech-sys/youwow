@@ -29,7 +29,8 @@ export default function OrderStatusDisplay({ order }: { order: Order }) {
       icon: Clock,
       iconColor: 'text-yellow-500',
       title: '⏳ Ожидаем оплату',
-      description: 'Заказ создан, но ещё не оплачен'
+      description: 'Заказ создан, но ещё не оплачен',
+      spin: false
     },
     paid: {
       icon: Loader2,
@@ -49,13 +50,15 @@ export default function OrderStatusDisplay({ order }: { order: Order }) {
       icon: CheckCircle2,
       iconColor: 'text-green-500',
       title: '🎉 Готово!',
-      description: 'Ваш подарок успешно создан'
+      description: 'Ваш подарок успешно создан',
+      spin: false
     },
     failed: {
       icon: XCircle,
       iconColor: 'text-red-500',
       title: '❌ Что-то пошло не так',
-      description: 'Произошла ошибка при создании'
+      description: 'Произошла ошибка при создании',
+      spin: false
     }
   }
 
@@ -131,6 +134,7 @@ export default function OrderStatusDisplay({ order }: { order: Order }) {
             {/* Превью результата (если картинка) */}
             {order.service_type === 'tarot' && (
               <div className="flex justify-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={order.result_url}
                   alt="Карта Таро"

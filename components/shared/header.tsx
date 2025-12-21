@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/sheet";
 
 const navLinks = [
-  { href: "/tarot", label: "Таро" },
   { href: "/santa", label: "Дед Мороз" },
   { href: "/song", label: "Песня" },
 ];

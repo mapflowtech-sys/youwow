@@ -8,7 +8,6 @@ type FooterLink = {
 };
 
 const serviceLinks: FooterLink[] = [
-  { href: "/tarot", label: "Гадание Таро" },
   { href: "/santa", label: "Видео от Деда Мороза" },
   { href: "/song", label: "Персональная песня" },
 ];
@@ -106,10 +105,17 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-slate-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
-              <span className="font-display font-bold text-white">YouWow</span>
-            </Link>
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <Link href="/" className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <span className="font-display font-bold text-white">YouWow</span>
+              </Link>
+              <div className="text-slate-500 text-xs">
+                <p>ИП Иванов Иван Иванович</p>
+                <p>ИНН: 123456789012</p>
+                <p>ОГРНИП: 123456789012345</p>
+              </div>
+            </div>
             <p className="text-slate-500 text-sm text-center">
               © 2025 YouWow. Создано специально для вас
             </p>

@@ -12,7 +12,7 @@ export default async function OrderPage({
 
   try {
     order = await getOrderById(params.id)
-  } catch (error) {
+  } catch {
     notFound()
   }
 

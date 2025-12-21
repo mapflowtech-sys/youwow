@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -41,9 +41,7 @@ const tarotFormSchema = z.object({
 
   birthDate: z.string().min(1, "Укажите дату рождения"),
 
-  topic: z.enum(["love", "money", "career", "surprise"], {
-    required_error: "Выберите тему гадания",
-  }),
+  topic: z.enum(["love", "money", "career", "surprise"]),
 
   photo: z
     .instanceof(FileList)
@@ -119,7 +117,7 @@ export default function TarotPage() {
         title: "Форма заполнена! ✨",
         description: "Скоро здесь будет генерация и оплата",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Ошибка",
         description: "Что-то пошло не так. Попробуйте позже",
@@ -425,7 +423,7 @@ export default function TarotPage() {
                   <FormField
                     control={form.control}
                     name="photo"
-                    render={({ field: { onChange, value, ...field } }) => (
+                    render={({ field: { onChange, ...field } }) => (
                       <FormItem>
                         <FormLabel>Твоё фото (анфас)</FormLabel>
                         <FormControl>
@@ -471,7 +469,7 @@ export default function TarotPage() {
                   <FormField
                     control={form.control}
                     name="palmPhoto"
-                    render={({ field: { onChange, value, ...field } }) => (
+                    render={({ field: { onChange, ...field } }) => (
                       <FormItem>
                         <FormLabel>
                           Фото ладони (опционально) 🖐

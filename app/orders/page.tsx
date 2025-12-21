@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 
 export default function OrdersPage() {
   const [email, setEmail] = useState('')
-  const router = useRouter()
 
   // TODO: В будущем здесь будет поиск всех заказов по email
   // Пока просим ввести ID заказа
