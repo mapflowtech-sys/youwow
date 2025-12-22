@@ -51,21 +51,39 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 const songFormSchema = z.object({
   aboutPerson: z
     .string()
-    .min(5, "Расскажите о человеке (минимум 5 символов)"),
+    .min(10, "Расскажите о человеке подробнее (минимум 10 символов)")
+    .max(500, "Слишком длинное описание (максимум 500 символов)"),
 
-  facts: z.string().min(10, "Добавьте факты для песни (минимум 10 символов)"),
+  facts: z
+    .string()
+    .min(20, "Опишите тему песни подробнее (минимум 20 символов)")
+    .max(800, "Слишком длинное описание (максимум 800 символов)"),
 
-  genre: z.enum(["pop", "rock", "rap", "chanson"]),
+  mustInclude: z
+    .string()
+    .max(200, "Слишком много обязательных фраз (максимум 200 символов)")
+    .optional(),
 
-  textStyle: z.enum(["humor", "lyric", "roast", "motivation"]),
+  occasion: z.string().min(1, "Выберите повод для песни"),
+
+  customOccasion: z.string().optional(),
+
+  textStyle: z.string().min(1, "Выберите стиль песни"),
+
+  customStyle: z.string().optional(),
+
+  genre: z.string().min(1, "Выберите жанр музыки"),
 
   voice: z.enum(["male", "female"]),
 
-  email: z.string().email("Введите корректный email"),
+  email: z
+    .string()
+    .email("Введите корректный email адрес")
+    .min(5, "Email слишком короткий"),
 
-  agreedToPolicy: z
-    .boolean()
-    .refine((val) => val === true, "Необходимо согласие"),
+  agreedToPolicy: z.boolean().refine((val) => val === true, {
+    message: "Необходимо согласие с условиями",
+  }),
 });
 
 type SongFormData = z.infer<typeof songFormSchema>;
@@ -78,10 +96,19 @@ export default function SongPage() {
     defaultValues: {
       aboutPerson: "",
       facts: "",
+      mustInclude: "",
+      occasion: "",
+      customOccasion: "",
+      textStyle: "",
+      customStyle: "",
+      genre: "",
       email: "",
       agreedToPolicy: false,
     },
   });
+
+  const watchTextStyle = form.watch("textStyle");
+  const watchOccasion = form.watch("occasion");
 
   const onSubmit = async (data: SongFormData) => {
     console.log("Song form data:", data);
@@ -414,32 +441,84 @@ export default function SongPage() {
                   )}
                 />
 
+                {/* Обязательные слова/фразы */}
                 <FormField
                   control={form.control}
-                  name="genre"
+                  name="mustInclude"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Жанр музыки *</FormLabel>
+                      <FormLabel>
+                        Слова или фразы, которые обязательно должны быть в песне
+                        (необязательно)
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={2}
+                          placeholder="Например: 'лучший друг', 'помнишь как мы...'"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription className="text-xs">
+                        Необязательное поле — оставьте пустым если нет пожеланий
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Повод для песни */}
+                <FormField
+                  control={form.control}
+                  name="occasion"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Повод для песни *</FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Выберите жанр..." />
+                            <SelectValue placeholder="Выберите повод..." />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="pop">🎤 Новогодний поп</SelectItem>
-                          <SelectItem value="rock">🎸 Рок</SelectItem>
-                          <SelectItem value="rap">🎧 Рэп</SelectItem>
-                          <SelectItem value="chanson">🎻 Шансон</SelectItem>
+                          <SelectItem value="birthday">День рождения</SelectItem>
+                          <SelectItem value="new-year">Новый год</SelectItem>
+                          <SelectItem value="march-8">8 марта</SelectItem>
+                          <SelectItem value="feb-23">23 февраля</SelectItem>
+                          <SelectItem value="anniversary">Годовщина</SelectItem>
+                          <SelectItem value="wedding">Свадьба</SelectItem>
+                          <SelectItem value="none">
+                            Просто так / без повода
+                          </SelectItem>
+                          <SelectItem value="custom">Свой вариант</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Свой вариант повода */}
+                {watchOccasion === "custom" && (
+                  <FormField
+                    control={form.control}
+                    name="customOccasion"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Укажите свой повод</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Например: Выпускной, юбилей компании"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <FormField
                   control={form.control}
@@ -451,7 +530,7 @@ export default function SongPage() {
                         <RadioGroup
                           onValueChange={field.onChange}
                           defaultValue={field.value}
-                          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                         >
                           <FormItem>
                             <FormControl>
@@ -463,14 +542,14 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="humor"
-                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
                                     <span className="text-2xl">😄</span>
-                                    <span className="font-semibold">Юмор</span>
+                                    <span className="font-semibold">Весёлая</span>
                                   </div>
                                   <span className="text-sm text-slate-500">
-                                    Весёлая песня с шутками
+                                    Юмор и шутки
                                   </span>
                                 </FormLabel>
                               </div>
@@ -486,16 +565,16 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="lyric"
-                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
                                     <span className="text-2xl">❤️</span>
                                     <span className="font-semibold">
-                                      Лирика
+                                      Душевная
                                     </span>
                                   </div>
                                   <span className="text-sm text-slate-500">
-                                    Тёплые слова и эмоции
+                                    Тёплые эмоции
                                   </span>
                                 </FormLabel>
                               </div>
@@ -511,7 +590,7 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="roast"
-                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
                                     <span className="text-2xl">🔥</span>
@@ -530,22 +609,122 @@ export default function SongPage() {
                             <FormControl>
                               <div>
                                 <RadioGroupItem
-                                  value="motivation"
-                                  id="motivation"
+                                  value="romantic"
+                                  id="romantic"
                                   className="peer sr-only"
                                 />
                                 <FormLabel
-                                  htmlFor="motivation"
-                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                  htmlFor="romantic"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-2xl">💕</span>
+                                    <span className="font-semibold">
+                                      Романтичная
+                                    </span>
+                                  </div>
+                                  <span className="text-sm text-slate-500">
+                                    Про любовь
+                                  </span>
+                                </FormLabel>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                          <FormItem>
+                            <FormControl>
+                              <div>
+                                <RadioGroupItem
+                                  value="bold"
+                                  id="bold"
+                                  className="peer sr-only"
+                                />
+                                <FormLabel
+                                  htmlFor="bold"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-2xl">⚡</span>
+                                    <span className="font-semibold">
+                                      Энергичная
+                                    </span>
+                                  </div>
+                                  <span className="text-sm text-slate-500">
+                                    Дерзкая и мощная
+                                  </span>
+                                </FormLabel>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                          <FormItem>
+                            <FormControl>
+                              <div>
+                                <RadioGroupItem
+                                  value="motivating"
+                                  id="motivating"
+                                  className="peer sr-only"
+                                />
+                                <FormLabel
+                                  htmlFor="motivating"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
                                     <span className="text-2xl">💪</span>
                                     <span className="font-semibold">
-                                      Мотивация
+                                      Мотивирующая
                                     </span>
                                   </div>
                                   <span className="text-sm text-slate-500">
-                                    Вдохновляющий текст
+                                    Вдохновляющая
+                                  </span>
+                                </FormLabel>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                          <FormItem>
+                            <FormControl>
+                              <div>
+                                <RadioGroupItem
+                                  value="nostalgic"
+                                  id="nostalgic"
+                                  className="peer sr-only"
+                                />
+                                <FormLabel
+                                  htmlFor="nostalgic"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-2xl">🌅</span>
+                                    <span className="font-semibold">
+                                      Ностальгическая
+                                    </span>
+                                  </div>
+                                  <span className="text-sm text-slate-500">
+                                    О прошлом
+                                  </span>
+                                </FormLabel>
+                              </div>
+                            </FormControl>
+                          </FormItem>
+                          <FormItem>
+                            <FormControl>
+                              <div>
+                                <RadioGroupItem
+                                  value="custom"
+                                  id="custom"
+                                  className="peer sr-only"
+                                />
+                                <FormLabel
+                                  htmlFor="custom"
+                                  className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                                >
+                                  <div className="flex items-center gap-2 mb-2">
+                                    <span className="text-2xl">✨</span>
+                                    <span className="font-semibold">
+                                      Свой вариант
+                                    </span>
+                                  </div>
+                                  <span className="text-sm text-slate-500">
+                                    Укажите свой стиль
                                   </span>
                                 </FormLabel>
                               </div>
@@ -553,6 +732,65 @@ export default function SongPage() {
                           </FormItem>
                         </RadioGroup>
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Свой вариант стиля */}
+                {watchTextStyle === "custom" && (
+                  <FormField
+                    control={form.control}
+                    name="customStyle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Укажите свой стиль песни</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Например: Эпическая и героическая, Задумчивая и философская"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription className="text-xs">
+                          Опишите желаемый стиль текста песни
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
+
+                {/* Жанр музыки */}
+                <FormField
+                  control={form.control}
+                  name="genre"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Жанр музыки *</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Выберите жанр..." />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="new-year-pop">
+                            🎄 Новогодний поп
+                          </SelectItem>
+                          <SelectItem value="pop">🎵 Классический поп</SelectItem>
+                          <SelectItem value="rock">🎸 Рок</SelectItem>
+                          <SelectItem value="rap">🎤 Рэп / Хип-хоп</SelectItem>
+                          <SelectItem value="chanson">💝 Шансон</SelectItem>
+                          <SelectItem value="jazz">🎹 Джаз</SelectItem>
+                          <SelectItem value="edm">⚡ Электро / EDM</SelectItem>
+                          <SelectItem value="blues">🎺 Блюз</SelectItem>
+                          <SelectItem value="country">🤠 Кантри</SelectItem>
+                          <SelectItem value="acoustic">🎻 Акустика</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -580,7 +818,7 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="male"
-                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
+                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
                                 >
                                   🎤 Мужской
                                 </FormLabel>
@@ -597,7 +835,7 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="female"
-                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 bg-white p-4 hover:bg-slate-50 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
+                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
                                 >
                                   🎤 Женский
                                 </FormLabel>
@@ -644,17 +882,21 @@ export default function SongPage() {
                         <FormLabel>
                           Я согласен с{" "}
                           <a
-                            href="/legal/offer"
+                            href="/legal/privacy"
                             className="text-primary underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            договором оферты
+                            Политикой конфиденциальности
                           </a>{" "}
                           и{" "}
                           <a
-                            href="/legal/privacy"
+                            href="/legal/offer"
                             className="text-primary underline"
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
-                            политикой конфиденциальности
+                            Договором оферты
                           </a>
                         </FormLabel>
                         <FormMessage />
@@ -668,11 +910,127 @@ export default function SongPage() {
                   size="lg"
                   className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                 >
-                  Записать хит за 490₽
+                  Попробовать бесплатно
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </form>
             </Form>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Guarantee Section */}
+      <section className="py-16 bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
+        <div className="mx-auto max-w-4xl px-4 md:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            {/* Header */}
+            <div className="text-center mb-12">
+              <div className="inline-flex items-center gap-2 text-primary mb-4">
+                <Shield className="h-5 w-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">
+                  Гарантия качества
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                Мы создаём не просто песню
+              </h2>
+              <p className="text-xl text-slate-600 dark:text-slate-300">
+                Мы создаём эмоцию, которую невозможно забыть
+              </p>
+            </div>
+
+            {/* Benefits List */}
+            <div className="space-y-4 mb-12">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-lg mb-1">
+                    Уникальный текст
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Учитывается каждая деталь о человеке — имена, характер,
+                    истории. Каждое слово индивидуально.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-lg mb-1">
+                    Профессиональная музыка
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Качество студийной записи. Музыка и вокал — как у настоящих
+                    артистов.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 mt-1">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-semibold text-lg mb-1">
+                    Оригинальный подарок
+                  </h4>
+                  <p className="text-slate-600 dark:text-slate-400">
+                    Такого точно ни у кого нет. Запоминающийся сюрприз, который
+                    удивит по-настоящему.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Guarantee Box */}
+            <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
+              <h3 className="text-2xl font-bold mb-4">
+                Не понравилось? Переделаем бесплатно или вернём деньги
+              </h3>
+              <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
+                Мы верим в качество наших песен. Если результат вас не устроит —
+                мы бесплатно переделаем песню один раз с учётом ваших пожеланий.
+                А если и это не поможет — вернём деньги. Без вопросов и
+                объяснений.
+              </p>
+              <div className="flex items-center gap-3">
+                <span className="text-slate-600 dark:text-slate-400">
+                  Поддержка 24/7:
+                </span>
+                <a
+                  href="https://t.me/youwow_support"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-primary font-semibold hover:opacity-80 transition-opacity"
+                >
+                  <svg
+                    className="h-5 w-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18.717-.962 4.042-1.362 5.362-.168.558-.5.744-.818.762-.696.033-1.224-.46-1.898-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.782-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.248-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.491-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.14.121.099.155.232.171.326.016.062.036.203.02.313z" />
+                  </svg>
+                  @youwow_support
+                </a>
+              </div>
+            </div>
+
+            {/* Final CTA */}
+            <div className="text-center mt-8">
+              <p className="text-lg font-medium text-slate-700 dark:text-slate-300">
+                Каждая песня — это подарок, который запомнят навсегда ✨
+              </p>
+            </div>
           </motion.div>
         </div>
       </section>
