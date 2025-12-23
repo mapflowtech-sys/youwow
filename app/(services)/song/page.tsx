@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useState } from "react";
 import {
   Star,
   Clock,
@@ -22,7 +23,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -47,6 +47,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import GenerationFlow from "./components/GenerationFlow";
+import { SongFormData as APISongFormData } from "@/lib/genapi/text-generation";
 
 const songFormSchema = z.object({
   aboutPerson: z
@@ -89,7 +91,8 @@ const songFormSchema = z.object({
 type SongFormData = z.infer<typeof songFormSchema>;
 
 export default function SongPage() {
-  const { toast } = useToast();
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [apiFormData, setApiFormData] = useState<APISongFormData | null>(null);
 
   const form = useForm<SongFormData>({
     resolver: zodResolver(songFormSchema),
@@ -102,6 +105,7 @@ export default function SongPage() {
       textStyle: "",
       customStyle: "",
       genre: "",
+      voice: "female",
       email: "",
       agreedToPolicy: false,
     },
@@ -113,10 +117,28 @@ export default function SongPage() {
   const onSubmit = async (data: SongFormData) => {
     console.log("Song form data:", data);
 
-    toast({
-      title: "Заказ принят!",
-      description: "Мы создадим песню и отправим на указанный email",
-    });
+    // Преобразуем данные формы в формат API
+    const apiData: APISongFormData = {
+      voice: data.voice,
+      aboutWho: data.aboutPerson,
+      aboutWhat: data.facts,
+      genre: data.genre,
+      style: data.textStyle,
+      customStyle: data.customStyle,
+      occasion: data.occasion,
+      customOccasion: data.customOccasion,
+      mustInclude: data.mustInclude,
+      email: data.email,
+    };
+
+    setApiFormData(apiData);
+    setIsFormSubmitted(true);
+  };
+
+  const handleReset = () => {
+    setIsFormSubmitted(false);
+    setApiFormData(null);
+    form.reset();
   };
 
   return (
@@ -905,16 +927,27 @@ export default function SongPage() {
                   )}
                 />
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                >
-                  Попробовать бесплатно
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
+                {!isFormSubmitted ? (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                  >
+                    Попробовать бесплатно
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                ) : null}
               </form>
             </Form>
+
+            {/* Generation Flow */}
+            {isFormSubmitted && apiFormData && (
+              <GenerationFlow
+                formData={apiFormData}
+                onSubmit={() => {}}
+                onReset={handleReset}
+              />
+            )}
           </motion.div>
         </div>
       </section>
