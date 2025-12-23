@@ -96,6 +96,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     if (typeof sunoResult === 'object' && sunoResult !== null) {
       audioUrl = (sunoResult.audio_url as string) ||
                  (sunoResult.video_url as string) ||
+                 (sunoResult.raw_output as string) || // GenAPI возвращает в raw_output
                  null;
 
       // Если пришёл массив результатов (Suno генерирует 2 варианта)
@@ -104,6 +105,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
         if (typeof firstResult === 'object' && firstResult !== null) {
           audioUrl = (firstResult.audio_url as string) ||
                      (firstResult.video_url as string) ||
+                     (firstResult.raw_output as string) ||
                      null;
         }
       }
