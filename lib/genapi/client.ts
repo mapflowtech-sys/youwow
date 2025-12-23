@@ -25,7 +25,7 @@ export interface GenerationResponse {
   status: GenerationStatus;
   output?: string | string[];
   response_type?: string;
-  input?: any;
+  input?: unknown;
 }
 
 // Проверка статуса задачи
@@ -33,8 +33,13 @@ export async function checkRequestStatus(requestId: number): Promise<GenerationR
   try {
     const response = await genapi.get(`/request/get/${requestId}`);
     return response.data;
-  } catch (error: any) {
-    console.error('GenAPI status check error:', error.response?.data || error.message);
+  } catch (error) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { data?: unknown }; message?: string };
+      console.error('GenAPI status check error:', axiosError.response?.data || axiosError.message);
+    } else {
+      console.error('GenAPI status check error:', error);
+    }
     throw new Error('Ошибка проверки статуса задачи');
   }
 }

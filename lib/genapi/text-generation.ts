@@ -16,7 +16,6 @@ export interface SongFormData {
 
 function createSongPrompt(formData: SongFormData): string {
   const genre = formData.genre;
-  const style = formData.customStyle || formData.style;
   const occasion = formData.customOccasion || formData.occasion;
 
   return `Ты — профессиональный автор песен. Напиши текст песни на русском языке для нейросети Suno AI.
@@ -177,8 +176,13 @@ async function generateWithChatGPT(prompt: string): Promise<number> {
     });
 
     return response.data.request_id;
-  } catch (error: any) {
-    console.error('ChatGPT error:', error.response?.data || error.message);
+  } catch (error) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { data?: unknown }; message?: string };
+      console.error('ChatGPT error:', axiosError.response?.data || axiosError.message);
+    } else {
+      console.error('ChatGPT error:', error);
+    }
     throw new Error('Ошибка генерации текста');
   }
 }

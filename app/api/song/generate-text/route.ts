@@ -36,10 +36,11 @@ export async function POST(request: NextRequest) {
       model: process.env.AI_MODEL || 'chatgpt'
     });
 
-  } catch (error: any) {
+  } catch (error) {
     console.error('API error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Ошибка генерации';
     return NextResponse.json(
-      { error: error.message || 'Ошибка генерации' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
