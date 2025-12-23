@@ -231,13 +231,26 @@ export async function generateSongText(formData: SongFormData): Promise<string> 
     return result;
   }
 
-  // Если результат - объект с полем content (новый формат ChatGPT)
-  if (result && typeof result === 'object' && 'content' in result) {
-    const content = (result as { content: unknown }).content;
-    if (typeof content === 'string') {
-      return content;
+  // Новый формат ChatGPT - объект с message.content
+  if (result && typeof result === 'object') {
+    // Формат: { index: 0, message: { role: 'assistant', content: '...' }, ... }
+    if ('message' in result) {
+      const message = (result as { message?: { content?: unknown } }).message;
+      if (message && typeof message.content === 'string') {
+        return message.content;
+      }
+    }
+
+    // Альтернативный формат с content напрямую
+    if ('content' in result) {
+      const content = (result as { content: unknown }).content;
+      if (typeof content === 'string') {
+        return content;
+      }
     }
   }
 
+  // Для отладки выведем что получили
+  console.error('Unexpected result format from AI:', JSON.stringify(result, null, 2));
   throw new Error('Неожиданный формат ответа от AI модели');
 }
