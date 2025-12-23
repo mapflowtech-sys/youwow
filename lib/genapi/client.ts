@@ -23,9 +23,13 @@ export type GenerationStatus = 'starting' | 'processing' | 'success' | 'error';
 export interface GenerationResponse {
   request_id: number;
   status: GenerationStatus;
-  output?: string | string[];
+  output?: string | string[] | unknown;
+  result?: unknown; // Suno возвращает result вместо output
   response_type?: string;
   input?: unknown;
+  progress?: number;
+  cost?: number;
+  runtime?: number;
 }
 
 // Проверка статуса задачи
@@ -44,31 +48,37 @@ export async function checkRequestStatus(requestId: number): Promise<GenerationR
   }
 }
 
-// Polling с таймаутом
+// Polling с таймаутом - возвращает любой тип данных
 export async function pollRequestStatus(
   requestId: number,
   maxAttempts: number = 30,
   intervalMs: number = 3000
-): Promise<string> {
+): Promise<unknown> {
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     const status = await checkRequestStatus(requestId);
 
     if (status.status === 'success') {
-      if (typeof status.output === 'string') {
-        return status.output;
-      } else if (Array.isArray(status.output) && status.output.length > 0) {
-        return status.output[0];
+      // Возвращаем result если есть (для Suno), иначе output (для ChatGPT)
+      const data = status.result || status.output;
+
+      if (typeof data === 'string') {
+        return data;
+      } else if (Array.isArray(data) && data.length > 0) {
+        return data[0];
+      } else if (data !== undefined) {
+        return data;
       } else {
         throw new Error('Неожиданный формат ответа от GenAPI');
       }
     }
 
     if (status.status === 'error') {
-      throw new Error('Ошибка генерации текста');
+      throw new Error('Ошибка генерации');
     }
 
     await new Promise(resolve => setTimeout(resolve, intervalMs));
   }
 
-  throw new Error('Превышено время ожидания генерации (90 сек)');
+  const timeoutSec = (maxAttempts * intervalMs) / 1000;
+  throw new Error(`Превышено время ожидания генерации (${timeoutSec} сек)`);
 }

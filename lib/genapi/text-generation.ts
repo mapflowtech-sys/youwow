@@ -224,6 +224,20 @@ export async function generateSongText(formData: SongFormData): Promise<string> 
       throw new Error(`Неизвестная модель: ${modelConfig.networkId}`);
   }
 
-  const songText = await pollRequestStatus(requestId, 30, 3000);
-  return songText;
+  const result = await pollRequestStatus(requestId, 30, 3000);
+
+  // Для ChatGPT результат возвращается как строка
+  if (typeof result === 'string') {
+    return result;
+  }
+
+  // Если результат - объект с полем content (новый формат ChatGPT)
+  if (result && typeof result === 'object' && 'content' in result) {
+    const content = (result as { content: unknown }).content;
+    if (typeof content === 'string') {
+      return content;
+    }
+  }
+
+  throw new Error('Неожиданный формат ответа от AI модели');
 }
