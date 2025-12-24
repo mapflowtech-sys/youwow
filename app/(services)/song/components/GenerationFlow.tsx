@@ -1,6 +1,6 @@
 'use client';
 
-import { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Music, CheckCircle, XCircle, X, Download, Mail } from 'lucide-react';
 import { SongFormData } from '@/lib/genapi/text-generation';
@@ -149,8 +149,17 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
       }
 
       try {
-        const response = await fetch(`/api/song/status?orderId=${orderId}`);
+        const response = await fetch(`/api/song/status?orderId=${orderId}&t=${Date.now()}`, {
+          method: 'GET',
+          headers: {
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+          },
+          cache: 'no-store',
+        });
         const data = await response.json();
+
+        console.log(`[Polling #${attempt}]`, 'Status:', data.order?.status, 'Step:', data.order?.resultMetadata?.step);
 
         if (!data.success) {
           throw new Error(data.error || 'Ошибка получения статуса');
@@ -162,16 +171,24 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
         if (order.status === 'processing') {
           const metadata = order.resultMetadata;
 
-          if (metadata?.step === 'text_generated') {
+          if (metadata?.step === 'text_generated' && state.step === 'generating-text') {
             // Текст готов, переходим к музыке
+            console.log('[State Change] Переход к генерации музыки');
             dispatch({ type: 'TEXT_COMPLETED', songText: metadata.songText });
-          } else {
-            // Ещё генерируем текст
-            const progress = Math.min(90, attempt * 3);
+          } else if (state.step === 'generating-text') {
+            // Генерируем текст - показываем плавный прогресс
+            // 2 минуты генерации = 24 попытки по 5 сек
+            // Делаем прогресс до 95%, чтобы оставить место на финал
+            const progress = Math.min(95, Math.floor((attempt / 24) * 100));
             dispatch({ type: 'UPDATE_TEXT_PROGRESS', progress });
+          } else if (state.step === 'generating-music') {
+            // Генерируем музыку - показываем плавный прогресс
+            const progress = Math.min(95, Math.floor((attempt / 60) * 100));
+            dispatch({ type: 'UPDATE_MUSIC_PROGRESS', progress });
           }
         } else if (order.status === 'completed') {
           // Всё готово!
+          console.log('[SUCCESS]', 'Audio URL:', order.resultUrl);
           clearInterval(pollingIntervalRef.current!);
           localStorage.removeItem('currentOrder');
 
@@ -194,19 +211,7 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
     }, 5000); // Каждые 5 секунд
   };
 
-  // Fake прогресс для музыки
-  useEffect(() => {
-    if (state.step === 'generating-music') {
-      const interval = setInterval(() => {
-        dispatch({
-          type: 'UPDATE_MUSIC_PROGRESS',
-          progress: Math.min(95, state.progress + 2)
-        });
-      }, 3000); // Каждые 3 секунды +2%
-
-      return () => clearInterval(interval);
-    }
-  }, [state]);
+  // Удалили fake прогресс для музыки - теперь прогресс управляется через polling
 
   // Рендер в зависимости от состояния
   if (state.step === 'idle') {
@@ -234,11 +239,8 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
 
       {/* Generation Screens */}
       <AnimatePresence mode="wait">
-        {state.step === 'generating-text' && (
-          <GeneratingTextScreen progress={state.progress} />
-        )}
-        {state.step === 'generating-music' && (
-          <GeneratingMusicScreen progress={state.progress} />
+        {(state.step === 'generating-text' || state.step === 'generating-music') && (
+          <UnifiedGenerationScreen />
         )}
         {state.step === 'success' && (
           <SuccessScreen
@@ -337,143 +339,196 @@ function PaymentModal({ onConfirm, onClose }: { onConfirm: () => void; onClose: 
   );
 }
 
-// Generating Text Screen
-function GeneratingTextScreen({ progress }: { progress: number }) {
+// Unified Generation Screen (combines text and music generation)
+function UnifiedGenerationScreen() {
+  const [phase, setPhase] = React.useState<'text' | 'music'>('text');
+
+  // Auto-switch from text to music phase after 20 seconds
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setPhase('music');
+    }, 20000); // 20 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const isTextPhase = phase === 'text';
+
   return (
     <motion.div
-      key="generating-text"
+      key="generating"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800"
     >
-      <div className="text-center max-w-md w-full">
-        {/* Animated Icon */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            rotate: [0, 5, -5, 0]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-          className="mx-auto w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-8 shadow-lg"
-        >
-          <Sparkles className="text-white" size={48} />
-        </motion.div>
-
-        {/* Title */}
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Пишем текст вашей песни...
-        </h2>
-
-        {/* Subtitle */}
-        <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8">
-          Создаём уникальные слова специально для вас
-        </p>
-
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.5 }}
-            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"
-          />
-        </div>
-
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {progress}%
-        </p>
-      </div>
-    </motion.div>
-  );
-}
-
-// Generating Music Screen
-function GeneratingMusicScreen({ progress }: { progress: number }) {
-  const getStatusText = () => {
-    if (progress < 20) return 'Анализируем текст песни';
-    if (progress < 50) return 'Создаём мелодию';
-    if (progress < 80) return 'Записываем вокал';
-    return 'Финальная обработка';
-  };
-
-  return (
-    <motion.div
-      key="generating-music"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800"
-    >
-      <div className="text-center max-w-md w-full">
-        {/* Animated Music Icon with Equalizer Effect */}
-        <motion.div
-          className="mx-auto w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mb-8 shadow-lg relative overflow-hidden"
-        >
-          <Music className="text-white relative z-10" size={48} />
-
-          {/* Equalizer bars */}
-          <div className="absolute inset-0 flex items-center justify-center gap-1">
-            {[...Array(5)].map((_, i) => (
+      <div className="text-center max-w-2xl w-full px-4">
+        {/* Animated Icon Container */}
+        <div className="relative mb-12 h-32 flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            {isTextPhase ? (
               <motion.div
-                key={i}
-                animate={{
-                  scaleY: [0.3, 1, 0.3],
-                }}
-                transition={{
-                  duration: 0.8,
-                  repeat: Infinity,
-                  delay: i * 0.1,
-                  ease: "easeInOut"
-                }}
-                className="w-1 bg-white/30 rounded-full"
-                style={{ height: '50%' }}
-              />
-            ))}
-          </div>
-        </motion.div>
+                key="text-icon"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5 }}
+                className="relative"
+              >
+                {/* Main Icon */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.1, 1],
+                    rotate: [0, 5, -5, 0]
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="w-28 h-28 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-2xl relative z-10"
+                >
+                  <Sparkles className="text-white" size={56} />
+                </motion.div>
 
-        {/* Title */}
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-          Создаём музыку...
-        </h2>
+                {/* Floating particles around the icon */}
+                <div className="absolute inset-0">
+                  {[...Array(8)].map((_, i) => {
+                    const angle = (i * 45 * Math.PI) / 180;
+                    const radius = 65;
+                    const startX = Math.cos(angle) * radius;
+                    const startY = Math.sin(angle) * radius;
 
-        {/* Dynamic Status Text */}
-        <motion.p
-          key={getStatusText()}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-8"
-        >
-          {getStatusText()}
-        </motion.p>
+                    return (
+                      <motion.div
+                        key={i}
+                        animate={{
+                          y: [0, -15, 0],
+                          opacity: [0.4, 1, 0.4],
+                          scale: [0.6, 1.2, 0.6]
+                        }}
+                        transition={{
+                          duration: 2 + i * 0.15,
+                          repeat: Infinity,
+                          delay: i * 0.12,
+                          ease: "easeInOut"
+                        }}
+                        className="absolute w-3 h-3 bg-purple-400 rounded-full shadow-lg"
+                        style={{
+                          left: `calc(50% + ${startX}px)`,
+                          top: `calc(50% + ${startY}px)`,
+                          transform: 'translate(-50%, -50%)'
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="music-icon"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5 }}
+                className="relative"
+              >
+                {/* Main Music Icon */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.05, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                  className="w-28 h-28 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-2xl relative"
+                >
+                  <Music className="text-white relative z-20" size={56} />
 
-        {/* Progress Bar */}
-        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4 overflow-hidden">
+                  {/* Equalizer bars */}
+                  <div className="absolute inset-0 flex items-center justify-center gap-0.5 z-10">
+                    {[...Array(7)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        animate={{
+                          scaleY: [0.3, 1, 0.3],
+                        }}
+                        transition={{
+                          duration: 0.5 + i * 0.08,
+                          repeat: Infinity,
+                          delay: i * 0.06,
+                          ease: "easeInOut"
+                        }}
+                        className="w-1.5 bg-white/30 rounded-full"
+                        style={{ height: '50%' }}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+
+                {/* Sound waves expanding outward */}
+                <div className="absolute inset-0">
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      animate={{
+                        scale: [1, 2.2],
+                        opacity: [0.5, 0]
+                      }}
+                      transition={{
+                        duration: 2.5,
+                        repeat: Infinity,
+                        delay: i * 0.8,
+                        ease: "easeOut"
+                      }}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-28 h-28 border-3 border-blue-400 dark:border-blue-500 rounded-full"
+                      style={{ borderWidth: '3px' }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Title and Subtitle with smooth transitions */}
+        <AnimatePresence mode="wait">
           <motion.div
-            animate={{ width: `${progress}%` }}
+            key={phase}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-          />
-        </div>
+          >
+            <h2 className="text-3xl md:text-5xl font-bold mb-6 text-gray-900 dark:text-white">
+              {isTextPhase ? 'Создаём текст вашей песни' : 'Создаём ваш неповторимый трек'}
+            </h2>
 
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-          {progress}%
-        </p>
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-12 leading-relaxed">
+              {isTextPhase
+                ? 'Подбираем идеальные слова и рифмы специально для вас'
+                : 'Собираем мелодию, аранжировку и вокал в единую композицию'
+              }
+            </p>
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Info Text */}
-        <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur rounded-xl p-6 text-sm md:text-base text-gray-700 dark:text-gray-300">
-          <p className="mb-3">
-            По готовности вы сможете скачать результат прямо здесь, и мы продублируем его на ваш email.
+        {/* Static Info Box - remains unchanged during phase transition */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-6 md:p-8 border border-purple-200 dark:border-purple-800 shadow-xl"
+        >
+          <p className="text-base md:text-lg text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+            Обычно на создание полноценной песни уходит <span className="font-semibold text-purple-600 dark:text-purple-400">от 2 до 5 минут</span>
           </p>
-          <p className="text-gray-600 dark:text-gray-400">
-            Обычно создание занимает 5-7 минут. Не закрывайте эту страницу, чтобы получить песню сразу после завершения.
+          <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 leading-relaxed">
+            Вы можете заниматься своими делами. По завершению работы песня будет доступна для скачивания прямо здесь, а также мы отправим её на указанную вами почту
           </p>
-        </div>
+        </motion.div>
       </div>
     </motion.div>
   );
@@ -490,11 +545,33 @@ function SuccessScreen({
   email: string;
   onNewSong: () => void;
 }) {
-  const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = audioUrl;
-    link.download = `my-song-${Date.now()}.mp3`;
-    link.click();
+  const handleDownload = async () => {
+    try {
+      // Fetch the file as blob to force download without redirect
+      const response = await fetch(audioUrl);
+      const blob = await response.blob();
+
+      // Create object URL from blob
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      // Create temporary link and trigger download
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `my-song-${Date.now()}.mp3`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Download error:', error);
+      // Fallback to direct link if fetch fails
+      const link = document.createElement('a');
+      link.href = audioUrl;
+      link.download = `my-song-${Date.now()}.mp3`;
+      link.click();
+    }
   };
 
   return (

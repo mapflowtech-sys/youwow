@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getOrderById } from '@/lib/db-helpers';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request: NextRequest) {
   try {
@@ -24,7 +25,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({
+    console.log(`[Status API] Возвращаем статус для ${orderId}:`, order.status, 'resultUrl:', order.result_url);
+
+    const response = NextResponse.json({
       success: true,
       order: {
         id: order.id,
@@ -37,6 +40,13 @@ export async function GET(request: NextRequest) {
         errorMessage: order.error_message,
       },
     });
+
+    // Добавляем заголовки для предотвращения кэширования
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
 
   } catch (error) {
     console.error('Status API error:', error);

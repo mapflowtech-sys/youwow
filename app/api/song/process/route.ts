@@ -116,6 +116,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     }
 
     // Обновляем заказ со статусом "completed"
+    console.log(`[${orderId}] Обновляем статус на completed с audioUrl:`, audioUrl);
     await updateOrderStatus(orderId, 'completed', {
       result_url: audioUrl,
       result_metadata: {
@@ -125,7 +126,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
       },
     });
 
-    console.log(`[${orderId}] Генерация завершена успешно`);
+    console.log(`[${orderId}] ✅ Генерация завершена успешно! URL сохранён:`, audioUrl);
 
     // TODO: Отправить email с результатом через Resend
 
