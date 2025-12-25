@@ -266,6 +266,18 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
 
 // Payment Modal Component
 function PaymentModal({ onConfirm, onClose }: { onConfirm: () => void; onClose: () => void }) {
+  const [accessCode, setAccessCode] = React.useState('');
+  const [codeError, setCodeError] = React.useState(false);
+
+  const handleConfirm = () => {
+    if (accessCode === '1234') {
+      onConfirm();
+    } else {
+      setCodeError(true);
+      setTimeout(() => setCodeError(false), 2000);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -322,10 +334,40 @@ function PaymentModal({ onConfirm, onClose }: { onConfirm: () => void; onClose: 
             </div>
           </div>
 
+          {/* Access Code Input */}
+          <div className="mb-6">
+            <label htmlFor="access-code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Введите код доступа
+            </label>
+            <input
+              id="access-code"
+              type="text"
+              value={accessCode}
+              onChange={(e) => setAccessCode(e.target.value)}
+              placeholder="Код доступа"
+              className={`w-full px-4 py-3 border-2 rounded-xl text-center text-lg font-semibold tracking-widest transition-all ${
+                codeError
+                  ? 'border-red-500 bg-red-50 dark:bg-red-900/20 shake'
+                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-purple-500 dark:focus:border-purple-400'
+              } focus:outline-none focus:ring-2 focus:ring-purple-500/20`}
+              maxLength={4}
+            />
+            {codeError && (
+              <motion.p
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-red-500 text-sm mt-2"
+              >
+                Неверный код доступа
+              </motion.p>
+            )}
+          </div>
+
           {/* Confirm Button */}
           <button
-            onClick={onConfirm}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+            onClick={handleConfirm}
+            disabled={!accessCode}
+            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Создать песню бесплатно
           </button>
