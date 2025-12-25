@@ -13,6 +13,20 @@ RUN npm install
 # Копируем остальные файлы проекта
 COPY . .
 
+# Объявляем ARG для переменных окружения, необходимых на этапе сборки
+ARG NEXT_PUBLIC_SUPABASE_URL
+ARG NEXT_PUBLIC_SUPABASE_ANON_KEY
+ARG OPENAI_API_KEY
+ARG SUNO_COOKIE
+ARG CHATGPT_API_KEY
+
+# Устанавливаем переменные окружения для сборки
+ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
+ENV OPENAI_API_KEY=$OPENAI_API_KEY
+ENV SUNO_COOKIE=$SUNO_COOKIE
+ENV CHATGPT_API_KEY=$CHATGPT_API_KEY
+
 # Собираем Next.js приложение
 RUN npm run build
 
