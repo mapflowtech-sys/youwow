@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateSongText, type SongFormData } from '@/lib/genapi/text-generation';
 import { generateSunoMusic } from '@/lib/genapi/suno-generation';
 import { getOrderById, updateOrderStatus } from '@/lib/db-helpers';
+import { sendSongReadyEmail } from '@/lib/email';
 
 export const maxDuration = 300; // 5 минут для полной генерации
 
@@ -128,7 +129,23 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
 
     console.log(`[${orderId}] ✅ Генерация завершена успешно! URL сохранён:`, audioUrl);
 
-    // TODO: Отправить email с результатом через Resend
+    // Отправляем email с готовой песней
+    if (order.customer_email) {
+      console.log(`[${orderId}] Отправка email на ${order.customer_email}...`);
+      const emailResult = await sendSongReadyEmail({
+        to: order.customer_email,
+        orderId: orderId,
+        audioUrl: audioUrl,
+      });
+
+      if (emailResult.success) {
+        console.log(`[${orderId}] ✅ Email успешно отправлен!`);
+      } else {
+        console.error(`[${orderId}] ❌ Ошибка отправки email:`, emailResult.error);
+      }
+    } else {
+      console.warn(`[${orderId}] Email не указан, пропускаем отправку`);
+    }
 
   } catch (error) {
     console.error(`[${orderId}] Ошибка генерации:`, error);
