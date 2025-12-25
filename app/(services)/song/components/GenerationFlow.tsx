@@ -62,7 +62,7 @@ interface GenerationFlowProps {
 }
 
 export default function GenerationFlow({ formData, onReset }: GenerationFlowProps) {
-  const [state, dispatch] = useReducer(flowReducer, { step: 'idle' });
+  const [state, dispatch] = useReducer(flowReducer, { step: 'payment-modal' });
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const currentOrderIdRef = useRef<string | null>(null);
 
@@ -232,7 +232,10 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
         {state.step === 'payment-modal' && (
           <PaymentModal
             onConfirm={handlePayment}
-            onClose={() => dispatch({ type: 'CLOSE_PAYMENT' })}
+            onClose={() => {
+              dispatch({ type: 'CLOSE_PAYMENT' });
+              onReset();
+            }}
           />
         )}
       </AnimatePresence>

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Star,
   Clock,
@@ -17,6 +17,8 @@ import {
   ArrowRight,
   Headphones,
   Mic,
+  Play,
+  Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,9 +92,187 @@ const songFormSchema = z.object({
 
 type SongFormData = z.infer<typeof songFormSchema>;
 
+// Audio Player Component
+function AudioPlayerCard({
+  title,
+  genre,
+  audioSrc,
+  index
+}: {
+  title: string;
+  genre: string;
+  audioSrc: string;
+  index: number;
+}) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateProgress = () => {
+      if (audio.duration) {
+        setProgress((audio.currentTime / audio.duration) * 100);
+      }
+    };
+
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setProgress(0);
+    };
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('timeupdate', updateProgress);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, []);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+    >
+      <Card className="group hover:shadow-xl transition-all">
+        <CardContent className="pt-6">
+          <div
+            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-slate-700 dark:to-slate-600 aspect-square flex items-center justify-center mb-4 cursor-pointer"
+            onClick={togglePlay}
+          >
+            {/* Анимированный фон при проигрывании */}
+            {isPlaying && (
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-pink-400/30"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  opacity: [0.5, 0.8, 0.5],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            )}
+
+            {/* Кнопка Play/Pause */}
+            <motion.button
+              className="relative z-10 w-20 h-20 rounded-full bg-white/90 dark:bg-slate-800/90 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isPlaying ? (
+                <Pause className="h-10 w-10 text-purple-600" />
+              ) : (
+                <Play className="h-10 w-10 text-purple-600 ml-1" />
+              )}
+            </motion.button>
+
+            {/* Прогресс-бар */}
+            {isPlaying && (
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/30">
+                <motion.div
+                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                  style={{ width: `${progress}%` }}
+                  initial={{ width: 0 }}
+                />
+              </div>
+            )}
+
+            {/* Визуализация звуковых волн */}
+            {isPlaying && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="w-1 bg-white rounded-full"
+                    animate={{
+                      height: [8, 20, 8],
+                    }}
+                    transition={{
+                      duration: 0.6,
+                      repeat: Infinity,
+                      delay: i * 0.1,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          <h4 className="font-semibold mb-1">{title}</h4>
+          <p className="text-sm text-slate-500">{genre}</p>
+
+          <audio ref={audioRef} src={audioSrc} preload="metadata" />
+        </CardContent>
+      </Card>
+    </motion.div>
+  );
+}
+
+// Examples Grid Component
+function ExamplesGrid() {
+  const examples = [
+    {
+      title: "Поп про друга",
+      genre: "Новогодний поп",
+      audioSrc: "/examples/pop-friend.mp3"
+    },
+    {
+      title: "Рок для брата",
+      genre: "Рок",
+      audioSrc: "/examples/rock-brother.mp3"
+    },
+    {
+      title: "Рэп коллеге",
+      genre: "Рэп",
+      audioSrc: "/examples/rap-colleague.mp3"
+    },
+    {
+      title: "Шансон маме",
+      genre: "Шансон",
+      audioSrc: "/examples/chanson-mom.mp3"
+    },
+  ];
+
+  return (
+    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {examples.map((example, index) => (
+        <AudioPlayerCard
+          key={index}
+          title={example.title}
+          genre={example.genre}
+          audioSrc={example.audioSrc}
+          index={index}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function SongPage() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [apiFormData, setApiFormData] = useState<APISongFormData | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<SongFormData>({
     resolver: zodResolver(songFormSchema),
@@ -133,6 +313,10 @@ export default function SongPage() {
 
     setApiFormData(apiData);
     setIsFormSubmitted(true);
+  };
+
+  const handleSubmitClick = () => {
+    form.handleSubmit(onSubmit)();
   };
 
   const handleReset = () => {
@@ -298,63 +482,7 @@ export default function SongPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { title: "Поп про друга", genre: "Новогодний поп" },
-              { title: "Рок для брата", genre: "Рок" },
-              { title: "Рэп коллеге", genre: "Рэп" },
-              { title: "Шансон маме", genre: "Шансон" },
-            ].map((example, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-              >
-                <Card className="group cursor-pointer hover:shadow-xl transition-shadow">
-                  <CardContent className="pt-6">
-                    <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-slate-700 dark:to-slate-600 aspect-square flex items-center justify-center mb-4">
-                      <Music className="h-16 w-16 text-purple-600 group-hover:scale-110 transition-transform" />
-                    </div>
-                    <h4 className="font-semibold mb-1">{example.title}</h4>
-                    <p className="text-sm text-slate-500">{example.genre}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Audio Example */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-2xl mx-auto mt-12"
-          >
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-800 dark:to-slate-700">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Headphones className="h-6 w-6 text-primary" />
-                  Послушай, как это звучит
-                </CardTitle>
-                <CardDescription>
-                  Пример песни в стиле &quot;Новогодний поп&quot;
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="bg-white dark:bg-slate-900 rounded-lg p-4 text-center">
-                  <p className="text-slate-500 text-sm">
-                    Пример скоро будет добавлен
-                  </p>
-                  {/* <audio controls className="w-full">
-                    <source src="/examples/song-example.mp3" type="audio/mpeg" />
-                    Ваш браузер не поддерживает аудио элемент.
-                  </audio> */}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <ExamplesGrid />
         </div>
       </section>
 
@@ -419,7 +547,13 @@ export default function SongPage() {
             </div>
 
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                className="space-y-6"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                }}
+              >
                 <FormField
                   control={form.control}
                   name="aboutPerson"
@@ -932,7 +1066,8 @@ export default function SongPage() {
                     type="button"
                     size="lg"
                     className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    onClick={form.handleSubmit(onSubmit)}
+                    onClick={handleSubmitClick}
+                    disabled={isSubmitting}
                   >
                     Попробовать бесплатно
                     <ArrowRight className="ml-2 h-5 w-5" />
