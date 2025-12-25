@@ -69,6 +69,9 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
   try {
     console.log(`[${orderId}] Начало генерации`);
 
+    // Получаем заказ для доступа к customer_email
+    const order = await getOrderById(orderId);
+
     // Обновляем статус на "processing"
     await updateOrderStatus(orderId, 'processing');
 
