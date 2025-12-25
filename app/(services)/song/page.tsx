@@ -18,6 +18,9 @@ import {
   Mic,
   Play,
   Pause,
+  Music2,
+  Mic2,
+  Gift,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -340,8 +343,7 @@ export default function SongPage() {
               которой нет ни у кого
             </h1>
             <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
-              Уникальная персональная песня со словами о вашем друге. Выбери
-              жанр, стиль и получи готовый трек с музыкой!
+              Идея подарка, которая удивляет с первого прослушивания. Персональная песня с именами, фактами и историями
             </p>
 
             {/* Trust Indicators */}
@@ -358,15 +360,15 @@ export default function SongPage() {
                 <span className="text-slate-700 dark:text-slate-300 font-semibold">
                   4.9/5
                 </span>
-                <span className="text-slate-500">(2,156 отзывов)</span>
+                <span className="text-slate-500">(344 отзыва)</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                 <Clock className="h-5 w-5 text-primary" />
-                <span className="font-semibold">Готово за 1 час</span>
+                <span className="font-semibold">Готово за 10 минут</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                 <Users className="h-5 w-5 text-purple-600" />
-                <span className="font-semibold">+523 песни сегодня</span>
+                <span className="font-semibold">+102 песни сегодня</span>
               </div>
             </div>
 
@@ -423,7 +425,7 @@ export default function SongPage() {
                 step: 3,
                 title: "Получите готовый трек",
                 description:
-                  "Песня с музыкой и словами придёт на email за 1 час. Скачайте и дарите!",
+                  "Песня будет готова через 10 минут. Скачайте прямо на сайте или получите на email",
                 icon: Headphones,
               },
             ].map((item, index) => (
@@ -470,10 +472,10 @@ export default function SongPage() {
             className="text-center mb-16"
           >
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-              Примеры наших песен
+              Хиты, созданные сегодня
             </h2>
             <p className="text-xl text-slate-600 dark:text-slate-300">
-              Послушайте, как звучат персональные треки
+              Послушайте реальные примеры песен, которые наши клиенты получили за последние 24 часа
             </p>
           </motion.div>
 
@@ -501,10 +503,10 @@ export default function SongPage() {
               </div>
             </div>
             <h3 className="text-3xl md:text-4xl font-bold mb-2">
-              Более 18,000 уникальных песен
+              5 432 человека уже выбрали нас
             </h3>
             <p className="text-xl text-slate-600 dark:text-slate-300">
-              Подарили незабываемые эмоции по всей России
+              Создаем музыку, которая объединяет людей от Калининграда до Владивостока
             </p>
           </motion.div>
         </div>
@@ -521,7 +523,7 @@ export default function SongPage() {
           >
             <div className="text-center mb-8">
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
-                Создайте персональную песню
+                Ваш персональный хит почти готов
               </h2>
               <div className="flex items-center justify-center gap-4 mb-6">
                 <span className="text-4xl font-bold text-primary">490₽</span>
@@ -529,7 +531,7 @@ export default function SongPage() {
                   -50% до конца дня
                 </Badge>
               </div>
-              <div className="flex items-center justify-center gap-6 text-sm text-slate-600 dark:text-slate-400">
+              <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4 text-green-600" />
                   <span>Безопасная оплата</span>
@@ -537,6 +539,10 @@ export default function SongPage() {
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
                   <span>Гарантия качества</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-green-600" />
+                  <span>Готовность за 10 минут</span>
                 </div>
               </div>
             </div>
@@ -1063,7 +1069,7 @@ export default function SongPage() {
                     className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     onClick={handleSubmitClick}
                   >
-                    Попробовать бесплатно
+                    Получить готовую песню
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 ) : null}
@@ -1094,62 +1100,65 @@ export default function SongPage() {
             {/* Header */}
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 text-primary mb-4">
-                <Shield className="h-5 w-5" />
+                <Heart className="h-5 w-5" />
                 <span className="text-sm font-semibold uppercase tracking-wider">
-                  Гарантия качества
+                  С душой в каждой ноте
                 </span>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Мы создаём не просто песню
+                Это не просто подарок
               </h2>
               <p className="text-xl text-slate-600 dark:text-slate-300">
-                Мы создаём эмоцию, которую невозможно забыть
+                Мы превращаем ваши воспоминания в песню, которую захочется слушать на повторе
               </p>
             </div>
 
             {/* Benefits List */}
-            <div className="space-y-4 mb-12">
+            <div className="space-y-6 mb-12">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 mt-1">
-                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center">
+                    <Music2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                  </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">
-                    Уникальный текст
+                  <h4 className="font-semibold text-lg mb-2">
+                    Каждая деталь имеет значение
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-400">
-                    Учитывается каждая деталь о человеке — имена, характер,
-                    истории. Каждое слово индивидуально.
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Это не шаблон. Мы вплетем в текст ваши личные истории, имена и даже «внутренние» шутки. Человек поймет: эта песня только про него.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 mt-1">
-                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900/30 dark:to-red-900/30 flex items-center justify-center">
+                    <Mic2 className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+                  </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">
-                    Профессиональная музыка
+                  <h4 className="font-semibold text-lg mb-2">
+                    Звучание как на вершине чартов
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-400">
-                    Качество студийной записи. Музыка и вокал — как у настоящих
-                    артистов.
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Никакого «роботизированного» звука. Кристально чистый вокал и аранжировки профессионального уровня. Качество, которое не стыдно включить на колонках.
                   </p>
                 </div>
               </div>
 
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 mt-1">
-                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 flex items-center justify-center">
+                    <Gift className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                  </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">
-                    Оригинальный подарок
+                  <h4 className="font-semibold text-lg mb-2">
+                    Эффект полной неожиданности
                   </h4>
-                  <p className="text-slate-600 dark:text-slate-400">
-                    Такого точно ни у кого нет. Запоминающийся сюрприз, который
-                    удивит по-настоящему.
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
+                    У всех есть цветы и гаджеты. Но песня, написанная в честь человека — это подарок, который вызывает искренние слезы радости и мурашки.
                   </p>
                 </div>
               </div>
@@ -1158,13 +1167,13 @@ export default function SongPage() {
             {/* Guarantee Box */}
             <div className="bg-slate-50 dark:bg-slate-900 rounded-2xl p-8 border border-slate-200 dark:border-slate-700">
               <h3 className="text-2xl font-bold mb-4">
-                Не понравилось? Переделаем бесплатно или вернём деньги
+                Гарантия результата
               </h3>
               <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
-                Мы верим в качество наших песен. Если результат вас не устроит —
-                мы бесплатно переделаем песню один раз с учётом ваших пожеланий.
-                А если и это не поможет — вернём деньги. Без вопросов и
-                объяснений.
+                Мы внимательно относимся к каждой песне и учитываем ваши пожелания.
+                Если в готовом треке что-то хочется изменить — мы бесплатно доработаем песню один раз, чтобы результат вам действительно понравился.
+                Наша цель — чтобы вы получили эмоцию, которой захотите поделиться и подарить.
+                Мы всегда на связи и готовы помочь на каждом этапе.
               </p>
               <div className="flex items-center gap-3">
                 <span className="text-slate-600 dark:text-slate-400">
@@ -1191,7 +1200,7 @@ export default function SongPage() {
             {/* Final CTA */}
             <div className="text-center mt-8">
               <p className="text-lg font-medium text-slate-700 dark:text-slate-300">
-                Каждая песня — это подарок, который запомнят навсегда ✨
+                Каждая песня — это подарок, который запомнят навсегда
               </p>
             </div>
           </motion.div>
@@ -1205,7 +1214,7 @@ export default function SongPage() {
             {[
               {
                 icon: Clock,
-                title: "1 час",
+                title: "10 минут",
                 description: "Быстрая доставка",
               },
               {
