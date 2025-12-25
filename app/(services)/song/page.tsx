@@ -21,6 +21,11 @@ import {
   Music2,
   Mic2,
   Gift,
+  Smile,
+  Flame,
+  Zap,
+  Target,
+  Mountain,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -537,8 +542,8 @@ export default function SongPage() {
                   <span>Безопасная оплата</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <span>Гарантия качества</span>
+                  <Headphones className="h-4 w-4 text-green-600" />
+                  <span>Студийное звучание</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="h-4 w-4 text-green-600" />
@@ -702,7 +707,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">😄</span>
+                                    <Smile className="h-6 w-6 text-yellow-500" />
                                     <span className="font-semibold">Весёлая</span>
                                   </div>
                                   <span className="text-sm text-slate-500">
@@ -725,7 +730,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">❤️</span>
+                                    <Heart className="h-6 w-6 text-pink-500" />
                                     <span className="font-semibold">
                                       Душевная
                                     </span>
@@ -750,7 +755,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">🔥</span>
+                                    <Flame className="h-6 w-6 text-orange-500" />
                                     <span className="font-semibold">
                                       Прожарка
                                     </span>
@@ -775,7 +780,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">💕</span>
+                                    <Heart className="h-6 w-6 text-red-500 fill-red-500" />
                                     <span className="font-semibold">
                                       Романтичная
                                     </span>
@@ -800,7 +805,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">⚡</span>
+                                    <Zap className="h-6 w-6 text-yellow-500 fill-yellow-500" />
                                     <span className="font-semibold">
                                       Энергичная
                                     </span>
@@ -825,7 +830,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">💪</span>
+                                    <Target className="h-6 w-6 text-blue-500" />
                                     <span className="font-semibold">
                                       Мотивирующая
                                     </span>
@@ -850,7 +855,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">🌅</span>
+                                    <Mountain className="h-6 w-6 text-purple-500" />
                                     <span className="font-semibold">
                                       Ностальгическая
                                     </span>
@@ -875,7 +880,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <span className="text-2xl">✨</span>
+                                    <Sparkles className="h-6 w-6 text-purple-500" />
                                     <span className="font-semibold">
                                       Свой вариант
                                     </span>
@@ -1207,50 +1212,6 @@ export default function SongPage() {
         </div>
       </section>
 
-      {/* Trust Badges */}
-      <section className="py-16 bg-white dark:bg-slate-800">
-        <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Clock,
-                title: "10 минут",
-                description: "Быстрая доставка",
-              },
-              {
-                icon: Shield,
-                title: "Безопасно",
-                description: "Защита платежей",
-              },
-              {
-                icon: CheckCircle2,
-                title: "Качество",
-                description: "Студийный звук",
-              },
-              {
-                icon: Heart,
-                title: "Гарантия",
-                description: "Вернём деньги",
-              },
-            ].map((badge, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="text-center"
-              >
-                <badge.icon className="h-12 w-12 mx-auto mb-3 text-primary" />
-                <h4 className="font-semibold mb-1">{badge.title}</h4>
-                <p className="text-sm text-slate-600 dark:text-slate-400">
-                  {badge.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
