@@ -9,7 +9,6 @@ import {
   Star,
   Clock,
   Shield,
-  CheckCircle2,
   Sparkles,
   Heart,
   Users,
