@@ -11,7 +11,6 @@ import {
   Shield,
   CheckCircle2,
   Sparkles,
-  Music,
   Heart,
   Users,
   ArrowRight,
@@ -28,9 +27,6 @@ import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   Form,
@@ -272,7 +268,6 @@ function ExamplesGrid() {
 export default function SongPage() {
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [apiFormData, setApiFormData] = useState<APISongFormData | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<SongFormData>({
     resolver: zodResolver(songFormSchema),
@@ -1067,7 +1062,6 @@ export default function SongPage() {
                     size="lg"
                     className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     onClick={handleSubmitClick}
-                    disabled={isSubmitting}
                   >
                     Попробовать бесплатно
                     <ArrowRight className="ml-2 h-5 w-5" />
