@@ -44,11 +44,11 @@ export async function POST(request: NextRequest) {
     const intid = formData.get('intid') as string; // ID операции FK
     const merchantOrderId = formData.get('MERCHANT_ORDER_ID') as string;
     const pEmail = formData.get('P_EMAIL') as string;
-    const pPhone = formData.get('P_PHONE') as string;
+    const _pPhone = formData.get('P_PHONE') as string; // Will be used when saving to DB
     const curId = formData.get('CUR_ID') as string;
     const sign = formData.get('SIGN') as string;
-    const payerAccount = formData.get('payer_account') as string;
-    const commission = formData.get('commission') as string;
+    const _payerAccount = formData.get('payer_account') as string; // Will be used when saving to DB
+    const _commission = formData.get('commission') as string; // Will be used when saving to DB
 
     console.log('[Webhook] Payment notification:', {
       merchantId,
@@ -152,7 +152,9 @@ export async function POST(request: NextRequest) {
         paidAt: new Date(),
         paymentMethod: `FK CUR_${curId}`,
         paymentEmail: pEmail,
-        paymentPhone: pPhone,
+        paymentPhone: _pPhone,
+        payerAccount: _payerAccount,
+        commission: _commission,
       }
     });
 
