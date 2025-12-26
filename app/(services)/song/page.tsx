@@ -474,7 +474,7 @@ export default function SongPage() {
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                 <Users className="h-5 w-5 text-purple-600" aria-hidden="true" />
-                <span className="font-semibold">43 песни сегодня</span>
+                <span className="font-semibold">+43 песни сегодня</span>
               </div>
             </div>
 
