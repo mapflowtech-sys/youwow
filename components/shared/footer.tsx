@@ -111,9 +111,9 @@ export function Footer() {
                 <span className="font-display font-bold text-white">YouWow</span>
               </Link>
               <div className="text-slate-500 text-xs">
-                <p>ИП Иванов Иван Иванович</p>
-                <p>ИНН: 123456789012</p>
-                <p>ОГРНИП: 123456789012345</p>
+                <p>ИП Савчук Елизавета Александровна</p>
+                <p>ИНН: 780254953303</p>
+                <p>ОГРНИП: 322784700065555</p>
               </div>
             </div>
             <p className="text-slate-500 text-sm text-center">

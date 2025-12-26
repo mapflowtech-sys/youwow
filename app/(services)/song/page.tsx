@@ -530,9 +530,12 @@ export default function SongPage() {
                 Ваш персональный хит почти готов
               </h2>
               <div className="flex items-center justify-center gap-4 mb-6">
-                <span className="text-4xl font-bold text-primary">490₽</span>
-                <Badge variant="destructive" className="text-base">
-                  -50% до конца дня
+                <div className="flex items-baseline gap-3">
+                  <span className="text-4xl font-bold text-primary">590₽</span>
+                  <span className="text-base text-slate-400 line-through">1 190₽</span>
+                </div>
+                <Badge className="text-sm bg-orange-500 hover:bg-orange-600 text-white border-0">
+                  Скидка сегодня
                 </Badge>
               </div>
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600 dark:text-slate-400">
