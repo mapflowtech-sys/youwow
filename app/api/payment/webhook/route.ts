@@ -44,10 +44,13 @@ export async function POST(request: NextRequest) {
     const intid = formData.get('intid') as string; // ID операции FK
     const merchantOrderId = formData.get('MERCHANT_ORDER_ID') as string;
     const pEmail = formData.get('P_EMAIL') as string;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _pPhone = formData.get('P_PHONE') as string; // Will be used when saving to DB
     const curId = formData.get('CUR_ID') as string;
     const sign = formData.get('SIGN') as string;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _payerAccount = formData.get('payer_account') as string; // Will be used when saving to DB
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const _commission = formData.get('commission') as string; // Will be used when saving to DB
 
     console.log('[Webhook] Payment notification:', {
