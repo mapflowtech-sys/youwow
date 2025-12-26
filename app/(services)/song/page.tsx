@@ -100,12 +100,20 @@ function AudioPlayerCard({
   title,
   genre,
   audioSrc,
-  index
+  index,
+  gradientFrom,
+  gradientTo,
+  buttonColor,
+  progressGradient,
 }: {
   title: string;
   genre: string;
   audioSrc: string;
   index: number;
+  gradientFrom: string;
+  gradientTo: string;
+  buttonColor: string;
+  progressGradient: string;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -154,16 +162,16 @@ function AudioPlayerCard({
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
     >
-      <Card className="group hover:shadow-xl transition-all">
+      <Card className="group hover:shadow-xl transition-all border-2 hover:border-primary/30">
         <CardContent className="pt-6">
           <div
-            className="relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-slate-700 dark:to-slate-600 aspect-square flex items-center justify-center mb-4 cursor-pointer"
+            className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradientFrom} ${gradientTo} aspect-square flex items-center justify-center mb-4 cursor-pointer transition-transform group-hover:scale-[1.02]`}
             onClick={togglePlay}
           >
             {/* Анимированный фон при проигрывании */}
             {isPlaying && (
               <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-purple-400/30 to-pink-400/30"
+                className={`absolute inset-0 bg-gradient-to-br ${gradientFrom.replace('/10', '/20')} ${gradientTo.replace('/10', '/20')}`}
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.5, 0.8, 0.5],
@@ -178,22 +186,22 @@ function AudioPlayerCard({
 
             {/* Кнопка Play/Pause */}
             <motion.button
-              className="relative z-10 w-20 h-20 rounded-full bg-white/90 dark:bg-slate-800/90 flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
+              className="relative z-10 w-20 h-20 rounded-full bg-white/95 dark:bg-slate-800/95 flex items-center justify-center shadow-xl backdrop-blur-sm"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
               {isPlaying ? (
-                <Pause className="h-10 w-10 text-purple-600" />
+                <Pause className={`h-10 w-10 ${buttonColor}`} />
               ) : (
-                <Play className="h-10 w-10 text-purple-600 ml-1" />
+                <Play className={`h-10 w-10 ${buttonColor} ml-1`} />
               )}
             </motion.button>
 
             {/* Прогресс-бар */}
             {isPlaying && (
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/30">
+              <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-white/30 backdrop-blur-sm">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                  className={`h-full ${progressGradient}`}
                   style={{ width: `${progress}%` }}
                   initial={{ width: 0 }}
                 />
@@ -202,13 +210,13 @@ function AudioPlayerCard({
 
             {/* Визуализация звуковых волн */}
             {isPlaying && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex items-center gap-1">
+              <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 flex items-center gap-1.5">
                 {[...Array(5)].map((_, i) => (
                   <motion.div
                     key={i}
-                    className="w-1 bg-white rounded-full"
+                    className="w-1.5 bg-white/80 rounded-full shadow-lg"
                     animate={{
-                      height: [8, 20, 8],
+                      height: [10, 24, 10],
                     }}
                     transition={{
                       duration: 0.6,
@@ -222,8 +230,8 @@ function AudioPlayerCard({
             )}
           </div>
 
-          <h4 className="font-semibold mb-1">{title}</h4>
-          <p className="text-sm text-slate-500">{genre}</p>
+          <h4 className="font-semibold mb-1 text-slate-900 dark:text-white">{title}</h4>
+          <p className="text-sm text-slate-500 dark:text-slate-400">{genre}</p>
 
           <audio ref={audioRef} src={audioSrc} preload="metadata" />
         </CardContent>
@@ -238,22 +246,38 @@ function ExamplesGrid() {
     {
       title: "Поп про друга",
       genre: "Новогодний поп",
-      audioSrc: "/examples/pop-friend.mp3"
+      audioSrc: "/examples/pop-friend.mp3",
+      gradientFrom: "from-violet-100/80",
+      gradientTo: "to-purple-100/80",
+      buttonColor: "text-violet-600",
+      progressGradient: "bg-gradient-to-r from-violet-500 to-purple-500"
     },
     {
       title: "Рок для брата",
       genre: "Рок",
-      audioSrc: "/examples/rock-brother.mp3"
+      audioSrc: "/examples/rock-brother.mp3",
+      gradientFrom: "from-purple-100/80",
+      gradientTo: "to-pink-100/80",
+      buttonColor: "text-purple-600",
+      progressGradient: "bg-gradient-to-r from-purple-500 to-pink-500"
     },
     {
       title: "Рэп коллеге",
       genre: "Рэп",
-      audioSrc: "/examples/rap-colleague.mp3"
+      audioSrc: "/examples/rap-colleague.mp3",
+      gradientFrom: "from-pink-100/80",
+      gradientTo: "to-rose-100/80",
+      buttonColor: "text-pink-600",
+      progressGradient: "bg-gradient-to-r from-pink-500 to-rose-500"
     },
     {
       title: "Шансон маме",
       genre: "Шансон",
-      audioSrc: "/examples/chanson-mom.mp3"
+      audioSrc: "/examples/chanson-mom.mp3",
+      gradientFrom: "from-rose-100/80",
+      gradientTo: "to-orange-100/80",
+      buttonColor: "text-rose-600",
+      progressGradient: "bg-gradient-to-r from-rose-500 to-orange-500"
     },
   ];
 
@@ -266,6 +290,10 @@ function ExamplesGrid() {
           genre={example.genre}
           audioSrc={example.audioSrc}
           index={index}
+          gradientFrom={example.gradientFrom}
+          gradientTo={example.gradientTo}
+          buttonColor={example.buttonColor}
+          progressGradient={example.progressGradient}
         />
       ))}
     </div>
@@ -393,7 +421,7 @@ export default function SongPage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-white dark:bg-slate-800">
+      <section className="py-20 bg-white dark:bg-slate-800 overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0 }}
@@ -409,7 +437,7 @@ export default function SongPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
             {[
               {
                 step: 1,
@@ -417,6 +445,10 @@ export default function SongPage() {
                 description:
                   "Укажите имя, увлечения, смешные истории. Чем больше деталей, тем круче песня",
                 icon: Mic,
+                gradientFrom: "from-purple-500",
+                gradientTo: "to-pink-500",
+                bgGradient: "from-purple-500/10 via-pink-500/5 to-transparent",
+                iconColor: "text-purple-600 dark:text-purple-400",
               },
               {
                 step: 2,
@@ -424,6 +456,10 @@ export default function SongPage() {
                 description:
                   "Поп, рок, рэп или шансон? Юмор или лирика? Мужской или женский голос?",
                 icon: Sparkles,
+                gradientFrom: "from-pink-500",
+                gradientTo: "to-orange-500",
+                bgGradient: "from-pink-500/10 via-orange-500/5 to-transparent",
+                iconColor: "text-pink-600 dark:text-pink-400",
               },
               {
                 step: 3,
@@ -431,6 +467,10 @@ export default function SongPage() {
                 description:
                   "Песня будет готова через 10 минут. Скачайте прямо на сайте или получите на email",
                 icon: Headphones,
+                gradientFrom: "from-orange-500",
+                gradientTo: "to-purple-600",
+                bgGradient: "from-orange-500/10 via-purple-500/5 to-transparent",
+                iconColor: "text-orange-600 dark:text-orange-400",
               },
             ].map((item, index) => (
               <motion.div
@@ -438,28 +478,61 @@ export default function SongPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-                className="relative"
+                transition={{ delay: index * 0.15, duration: 0.5 }}
+                className="relative group"
               >
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-700 dark:to-slate-600 rounded-2xl p-8 h-full border-2 border-transparent hover:border-primary transition-all">
-                  <div className="bg-gradient-to-r from-purple-600 to-pink-600 w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">
-                    {item.step}
-                  </div>
-                  <div className="w-full h-32 bg-slate-200 dark:bg-slate-500 rounded-lg mb-6 flex items-center justify-center">
-                    <item.icon className="h-16 w-16 text-slate-400" />
-                  </div>
-                  <h3 className="font-display text-xl font-bold mb-3">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300">
-                    {item.description}
-                  </p>
-                </div>
+                {/* Connecting Line Animation */}
                 {index < 2 && (
-                  <div className="hidden md:flex absolute top-1/2 -right-4 items-center justify-center z-10">
-                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                  <div className="hidden md:block absolute top-20 -right-6 lg:-right-8 w-12 lg:w-16 h-0.5 bg-gradient-to-r from-primary/30 to-transparent z-0">
+                    <motion.div
+                      className="h-full bg-gradient-to-r from-primary to-transparent"
+                      initial={{ width: 0 }}
+                      whileInView={{ width: "100%" }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.15 + 0.5, duration: 0.8 }}
+                    />
                   </div>
                 )}
+
+                {/* Card */}
+                <motion.div
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="relative bg-white dark:bg-slate-700 rounded-3xl p-8 h-full border border-slate-200 dark:border-slate-600 hover:border-primary/50 dark:hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-xl"
+                >
+                  {/* Step Number Badge */}
+                  <div className={`absolute -top-4 -left-4 bg-gradient-to-r ${item.gradientFrom} ${item.gradientTo} w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-xl shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                    {item.step}
+                  </div>
+
+                  {/* Icon Container with Floating Animation */}
+                  <div className="relative mb-8 mt-4">
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.bgGradient} rounded-2xl blur-2xl opacity-60 group-hover:opacity-80 transition-opacity duration-300`}></div>
+                    <motion.div
+                      animate={{
+                        y: [0, -10, 0],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: index * 0.2,
+                      }}
+                      className="relative flex items-center justify-center h-32"
+                    >
+                      <div className={`absolute inset-0 bg-gradient-to-br ${item.gradientFrom} ${item.gradientTo} opacity-10 rounded-2xl`}></div>
+                      <item.icon className={`h-20 w-20 ${item.iconColor} relative z-10 drop-shadow-lg`} />
+                    </motion.div>
+                  </div>
+
+                  {/* Content */}
+                  <h3 className="font-display text-xl font-bold mb-3 text-slate-900 dark:text-white">
+                    {item.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {item.description}
+                  </p>
+                </motion.div>
               </motion.div>
             ))}
           </div>
