@@ -54,6 +54,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import GenerationFlow from "./components/GenerationFlow";
 import { SongFormData as APISongFormData } from "@/lib/genapi/text-generation";
+import { LiveCounter } from "@/components/shared/live-counter";
 
 const songFormSchema = z.object({
   aboutPerson: z
@@ -581,7 +582,7 @@ export default function SongPage() {
               </div>
             </div>
             <h3 className="text-3xl md:text-4xl font-bold mb-2">
-              5 432 человека уже выбрали нас
+              <LiveCounter /> человека уже выбрали нас
             </h3>
             <p className="text-xl text-slate-600 dark:text-slate-300">
               Создаем музыку, которая объединяет людей от Калининграда до Владивостока
