@@ -14,12 +14,12 @@ export async function POST(request: NextRequest) {
       payment_id,
       guid,
       merchant_id,
-      user_id,
+      user_id: _user_id, // eslint-disable-line @typescript-eslint/no-unused-vars
       status,
       amount,
-      amount_to_pay,
+      amount_to_pay: _amount_to_pay, // eslint-disable-line @typescript-eslint/no-unused-vars
       amount_to_shop,
-      expired,
+      expired: _expired, // eslint-disable-line @typescript-eslint/no-unused-vars
     } = body;
 
     console.log('[1plat Webhook] Payment data:', {
