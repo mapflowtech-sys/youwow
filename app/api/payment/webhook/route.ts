@@ -65,11 +65,11 @@ export async function POST(request: NextRequest) {
 
     // Собираем us_ параметры (пользовательские)
     const customParams: Record<string, string> = {};
-    for (const [key, value] of formData.entries()) {
+    formData.forEach((value, key) => {
       if (key.startsWith('us_')) {
         customParams[key] = value as string;
       }
-    }
+    });
 
     // 3. Проверка обязательных параметров
     if (!merchantId || !amount || !merchantOrderId || !sign) {
