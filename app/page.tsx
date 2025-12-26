@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { User, CreditCard, Sparkles, ChevronDown } from "lucide-react";
+import { User, CreditCard, Sparkles, ChevronDown, Snowflake, Music, Construction } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +35,7 @@ export default function Home() {
         description: 'Персональное видео-поздравление от Деда Мороза с именем получателя',
         offers: {
           '@type': 'Offer',
-          price: '390',
+          price: '1390',
           priceCurrency: 'RUB',
           availability: 'https://schema.org/PreOrder'
         }
@@ -47,7 +47,7 @@ export default function Home() {
         description: 'Уникальная песня с именем и историей получателя',
         offers: {
           '@type': 'Offer',
-          price: '490',
+          price: '590',
           priceCurrency: 'RUB',
           availability: 'https://schema.org/InStock'
         }
@@ -75,11 +75,11 @@ export default function Home() {
           className="text-center max-w-4xl"
         >
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer">
-            Подари эмоции, которые невозможно забыть
+            Персональные подарки с эмоцией
           </h1>
 
           <p className="text-lg md:text-xl text-muted-foreground mt-6">
-            Персональные видео, песни и предсказания на 2026, созданные специально для вас за 1 минуту
+            Видео-поздравления и песни, созданные специально для ваших близких
           </p>
 
           <motion.div
@@ -93,7 +93,7 @@ export default function Home() {
               className="relative overflow-hidden bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all backdrop-blur-sm"
             >
               <span className="relative z-10 flex items-center">
-                Выбрать чудо
+                Создать подарок
                 <ChevronDown className="ml-2 w-5 h-5" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
@@ -107,64 +107,30 @@ export default function Home() {
         <h2 className="text-4xl font-bold text-center mb-12">Что создадим сегодня?</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          {/* КАРТОЧКА 1 — Видео от Деда Мороза */}
+          {/* КАРТОЧКА 1 — Персональная песня */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Link href="/santa" className="h-full group">
-              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
-                <CardHeader>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
-                      🎄 Хит сезона
-                    </Badge>
-                    <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20">
-                      🚧 Скоро запуск
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-2xl">Видео от Деда Мороза</CardTitle>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <p className="text-muted-foreground">
-                    Дед Мороз лично поздравит ребёнка или взрослого. Сервис запустится совсем скоро. Пока доступно оформление предзаказа.
-                  </p>
-                </CardContent>
-                <CardContent className="pt-0">
-                  <p className="text-3xl font-bold font-space text-primary">
-                    от 390 ₽
-                  </p>
-                </CardContent>
-                <CardFooter>
-                  <Button className="w-full bg-primary">
-                    Создать поздравление →
-                  </Button>
-                </CardFooter>
-              </Card>
-            </Link>
-          </motion.div>
-
-          {/* КАРТОЧКА 2 — Персональная песня */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            whileHover={{ scale: 1.05 }}
-          >
             <Link href="/song" className="h-full group">
               <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
                 <CardHeader>
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20">
-                      ✅ Доступно
+                    <Badge className="bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20 flex items-center gap-1">
+                      <Sparkles className="w-3 h-3" />
+                      Доступно
                     </Badge>
-                    <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20">
-                      🎵 Новинка
+                    <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 flex items-center gap-1">
+                      <Music className="w-3 h-3" />
+                      Новинка
                     </Badge>
                   </div>
-                  <CardTitle className="text-2xl">Твой персональный хит</CardTitle>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Music className="w-6 h-6 text-purple-600" />
+                    Твой персональный хит
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow">
                   <p className="text-muted-foreground">
@@ -173,12 +139,52 @@ export default function Home() {
                 </CardContent>
                 <CardContent className="pt-0">
                   <p className="text-3xl font-bold font-space text-primary">
-                    490 ₽
+                    590 ₽
                   </p>
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full bg-primary">
                     Записать трек →
+                  </Button>
+                </CardFooter>
+              </Card>
+            </Link>
+          </motion.div>
+
+          {/* КАРТОЧКА 2 — Видео от Деда Мороза */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <Link href="/santa" className="h-full group">
+              <Card className="h-full cursor-pointer border-2 hover:border-primary transition-all hover:shadow-xl flex flex-col relative overflow-hidden bg-card">
+                <CardHeader>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <Badge className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 flex items-center gap-1">
+                      <Construction className="w-3 h-3" />
+                      Скоро запуск
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-2xl flex items-center gap-2">
+                    <Snowflake className="w-6 h-6 text-blue-500" />
+                    Видео от Деда Мороза
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-muted-foreground">
+                    Дед Мороз лично поздравит ребёнка или взрослого. Сервис запустится совсем скоро. Пока доступно оформление предзаказа.
+                  </p>
+                </CardContent>
+                <CardContent className="pt-0">
+                  <p className="text-3xl font-bold font-space text-primary">
+                    от 1 390 ₽
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Button className="w-full bg-primary">
+                    Создать поздравление →
                   </Button>
                 </CardFooter>
               </Card>
@@ -190,7 +196,7 @@ export default function Home() {
       {/* HOW IT WORKS SECTION */}
       <section className="bg-slate-50 dark:bg-slate-900 py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Магия в 3 клика</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Всего 3 шага до готового подарка</h2>
 
           <div className="relative">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
@@ -209,9 +215,9 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Заполни форму</h3>
+                <h3 className="text-xl font-bold mb-2">Заполните детали</h3>
                 <p className="text-muted-foreground">
-                  Расскажи о том, кого поздравляем
+                  Расскажите нам о человеке, а мы превратим это в искусство
                 </p>
               </motion.div>
 
@@ -247,9 +253,9 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Оплати</h3>
+                <h3 className="text-xl font-bold mb-2">Удобная оплата</h3>
                 <p className="text-muted-foreground">
-                  Безопасная оплата российскими картами
+                  Картами любых банков РФ. Мгновенное подтверждение
                 </p>
               </motion.div>
 
@@ -285,9 +291,9 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2">Получи магию</h3>
+                <h3 className="text-xl font-bold mb-2">Момент восторга</h3>
                 <p className="text-muted-foreground">
-                  Результат на почту через несколько минут
+                  Готовая песня или видео на почту за 10 минут
                 </p>
               </motion.div>
             </div>
