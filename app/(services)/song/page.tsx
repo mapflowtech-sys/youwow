@@ -29,7 +29,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
@@ -443,9 +442,6 @@ export default function SongPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <Badge className="mb-6 text-base px-4 py-2">
-              🎵 Вирусный тренд 2025
-            </Badge>
             <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto] pb-2">
               Подари песню,
               <br />
@@ -478,7 +474,7 @@ export default function SongPage() {
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                 <Users className="h-5 w-5 text-purple-600" aria-hidden="true" />
-                <span className="font-semibold">+102 песни сегодня</span>
+                <span className="font-semibold">43 песни сегодня</span>
               </div>
             </div>
 
@@ -660,10 +656,10 @@ export default function SongPage() {
               </div>
             </div>
             <h3 className="text-3xl md:text-4xl font-bold mb-2">
-              5 432 человека уже выбрали нас
+              Более 5 000 песен создано
             </h3>
             <p className="text-xl text-slate-600 dark:text-slate-300">
-              Создаем музыку, которая объединяет людей от Калининграда до Владивостока
+              Каждая стала любимым треком получателя
             </p>
           </motion.div>
         </div>
