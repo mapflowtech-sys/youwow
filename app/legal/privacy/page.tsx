@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/legal/privacy',
+  },
   title: "Политика конфиденциальности | YouWow",
   description: "Политика конфиденциальности YouWow - защита персональных данных",
 };

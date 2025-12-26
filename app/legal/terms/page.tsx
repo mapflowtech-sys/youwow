@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/legal/terms',
+  },
   title: "Пользовательское соглашение | YouWow",
   description: "Пользовательское соглашение YouWow - правила использования сервиса",
 };

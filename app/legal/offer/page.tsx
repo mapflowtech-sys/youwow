@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/legal/offer',
+  },
   title: "Договор оферты | YouWow",
   description: "Публичная оферта на оказание услуг YouWow",
 };

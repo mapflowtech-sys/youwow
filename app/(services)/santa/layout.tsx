@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  alternates: {
+    canonical: '/santa',
+  },
   title: "Персональное видео от Деда Мороза",
   description:
     "Закажите уникальное видео-поздравление от Деда Мороза с персональным обращением! Видео готово за 10 минут. Идеальный подарок на Новый год для детей и взрослых. От 390₽",

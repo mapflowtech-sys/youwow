@@ -22,6 +22,9 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://youwow.ru'),
+  alternates: {
+    canonical: '/',
+  },
   title: {
     default: 'YouWow | Персональные подарки с WOW-эффектом',
     template: '%s | YouWow'
@@ -86,6 +89,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" suppressHydrationWarning>
+      <head>
+        {/* Preconnect to Google Fonts for faster loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
