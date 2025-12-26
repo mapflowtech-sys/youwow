@@ -370,7 +370,7 @@ export default function SongPage() {
             <Badge className="mb-6 text-base px-4 py-2">
               🎵 Вирусный тренд 2025
             </Badge>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto] pb-2">
               Подари песню,
               <br />
               которой нет ни у кого
@@ -1200,15 +1200,34 @@ export default function SongPage() {
                 />
 
                 {!isFormSubmitted ? (
-                  <Button
-                    type="button"
-                    size="lg"
-                    className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                    onClick={handleSubmitClick}
-                  >
-                    Получить готовую песню
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
+                  <>
+                    <Button
+                      type="button"
+                      size="lg"
+                      className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative overflow-hidden group"
+                      onClick={handleSubmitClick}
+                    >
+                      <span className="relative z-10 flex items-center justify-center w-full">
+                        Получить готовую песню
+                        <ArrowRight className="ml-2 h-5 w-5" />
+                      </span>
+                      {/* Shine animation */}
+                      <motion.div
+                        className="absolute inset-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+                        initial={{ x: '-200%' }}
+                        animate={{ x: '400%' }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          repeatDelay: 5,
+                          ease: "easeInOut"
+                        }}
+                      />
+                    </Button>
+                    <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-3">
+                      Песня будет готова через 10 минут. Скачаете на сайте и получите на почту
+                    </p>
+                  </>
                 ) : null}
               </form>
             </Form>
