@@ -190,11 +190,12 @@ function AudioPlayerCard({
               className="relative z-10 w-20 h-20 rounded-full bg-white/95 dark:bg-slate-800/95 flex items-center justify-center shadow-xl backdrop-blur-sm"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              aria-label={isPlaying ? `Остановить ${title}` : `Воспроизвести ${title}`}
             >
               {isPlaying ? (
-                <Pause className={`h-10 w-10 ${buttonColor}`} />
+                <Pause className={`h-10 w-10 ${buttonColor}`} aria-hidden="true" />
               ) : (
-                <Play className={`h-10 w-10 ${buttonColor} ml-1`} />
+                <Play className={`h-10 w-10 ${buttonColor} ml-1`} aria-hidden="true" />
               )}
             </motion.button>
 
@@ -234,7 +235,7 @@ function AudioPlayerCard({
           <h4 className="font-semibold mb-1 text-slate-900 dark:text-white">{title}</h4>
           <p className="text-sm text-slate-500 dark:text-slate-400">{genre}</p>
 
-          <audio ref={audioRef} src={audioSrc} preload="metadata" />
+          <audio ref={audioRef} src={audioSrc} preload="none" aria-label={`Аудио пример: ${title}`} />
         </CardContent>
       </Card>
     </motion.div>
@@ -358,6 +359,81 @@ export default function SongPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 via-white to-pink-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+      {/* Schema.org structured data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Service",
+            "name": "Персональная песня на заказ",
+            "description": "Закажите уникальную персональную песню! Индивидуальная композиция с именем и историей получателя. Готово за 10 минут. Идеальный подарок на день рождения, Новый год или любой праздник.",
+            "provider": {
+              "@type": "Organization",
+              "name": "YouWow",
+              "url": "https://youwow.ru"
+            },
+            "serviceType": "Музыкальный подарок",
+            "areaServed": "RU",
+            "offers": {
+              "@type": "Offer",
+              "price": "590",
+              "priceCurrency": "RUB",
+              "availability": "https://schema.org/InStock",
+              "priceValidUntil": "2025-12-31",
+              "url": "https://youwow.ru/song"
+            },
+            "aggregateRating": {
+              "@type": "AggregateRating",
+              "ratingValue": "4.9",
+              "reviewCount": "344",
+              "bestRating": "5",
+              "worstRating": "1"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Жанры песен",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Новогодний поп"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Классический поп"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Рок"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Рэп / Хип-хоп"
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Шансон"
+                  }
+                }
+              ]
+            }
+          })
+        }}
+      />
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 md:py-32">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
@@ -382,11 +458,12 @@ export default function SongPage() {
             {/* Trust Indicators */}
             <div className="flex flex-wrap items-center justify-center gap-6 mb-12">
               <div className="flex items-center gap-2">
-                <div className="flex">
+                <div className="flex" aria-label="Рейтинг 4.9 из 5 звезд">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className="h-5 w-5 fill-yellow-400 text-yellow-400"
+                      aria-hidden="true"
                     />
                   ))}
                 </div>
@@ -396,11 +473,11 @@ export default function SongPage() {
                 <span className="text-slate-500">(344 отзыва)</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <Clock className="h-5 w-5 text-primary" />
+                <Clock className="h-5 w-5 text-primary" aria-hidden="true" />
                 <span className="font-semibold">Готово за 10 минут</span>
               </div>
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-                <Users className="h-5 w-5 text-purple-600" />
+                <Users className="h-5 w-5 text-purple-600" aria-hidden="true" />
                 <span className="font-semibold">+102 песни сегодня</span>
               </div>
             </div>
@@ -413,9 +490,10 @@ export default function SongPage() {
                   .getElementById("order-form")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
+              aria-label="Создать персональную песню - перейти к форме заказа"
             >
               Создать песню
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
             </Button>
           </motion.div>
         </div>
@@ -522,7 +600,7 @@ export default function SongPage() {
                       className="relative flex items-center justify-center h-32"
                     >
                       <div className={`absolute inset-0 bg-gradient-to-br ${item.gradientFrom} ${item.gradientTo} opacity-10 rounded-2xl`}></div>
-                      <item.icon className={`h-20 w-20 ${item.iconColor} relative z-10 drop-shadow-lg`} />
+                      <item.icon className={`h-20 w-20 ${item.iconColor} relative z-10 drop-shadow-lg`} aria-hidden="true" />
                     </motion.div>
                   </div>
 
@@ -571,11 +649,12 @@ export default function SongPage() {
             className="text-center"
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="flex">
+              <div className="flex" aria-label="Рейтинг 5 из 5 звезд">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className="h-8 w-8 fill-yellow-400 text-yellow-400"
+                    aria-hidden="true"
                   />
                 ))}
               </div>
@@ -670,15 +749,15 @@ export default function SongPage() {
 
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-green-600" />
+                  <Shield className="h-4 w-4 text-green-600" aria-hidden="true" />
                   <span>Безопасная оплата</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Headphones className="h-4 w-4 text-green-600" />
+                  <Headphones className="h-4 w-4 text-green-600" aria-hidden="true" />
                   <span>Студийное звучание</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 text-green-600" />
+                  <Clock className="h-4 w-4 text-green-600" aria-hidden="true" />
                   <span>Готовность за 10 минут</span>
                 </div>
               </div>
@@ -839,7 +918,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Smile className="h-6 w-6 text-yellow-500" />
+                                    <Smile className="h-6 w-6 text-yellow-500" aria-hidden="true" />
                                     <span className="font-semibold">Весёлая</span>
                                   </div>
                                   <span className="text-sm text-slate-500">
@@ -862,7 +941,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Heart className="h-6 w-6 text-pink-500" />
+                                    <Heart className="h-6 w-6 text-pink-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Душевная
                                     </span>
@@ -887,7 +966,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Flame className="h-6 w-6 text-orange-500" />
+                                    <Flame className="h-6 w-6 text-orange-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Прожарка
                                     </span>
@@ -912,7 +991,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Heart className="h-6 w-6 text-red-500 fill-red-500" />
+                                    <Heart className="h-6 w-6 text-red-500 fill-red-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Романтичная
                                     </span>
@@ -937,7 +1016,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Zap className="h-6 w-6 text-yellow-500 fill-yellow-500" />
+                                    <Zap className="h-6 w-6 text-yellow-500 fill-yellow-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Энергичная
                                     </span>
@@ -962,7 +1041,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Target className="h-6 w-6 text-blue-500" />
+                                    <Target className="h-6 w-6 text-blue-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Мотивирующая
                                     </span>
@@ -987,7 +1066,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Mountain className="h-6 w-6 text-purple-500" />
+                                    <Mountain className="h-6 w-6 text-purple-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Ностальгическая
                                     </span>
@@ -1012,7 +1091,7 @@ export default function SongPage() {
                                   className="flex flex-col items-start justify-between rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2 mb-2">
-                                    <Sparkles className="h-6 w-6 text-purple-500" />
+                                    <Sparkles className="h-6 w-6 text-purple-500" aria-hidden="true" />
                                     <span className="font-semibold">
                                       Свой вариант
                                     </span>
@@ -1206,10 +1285,11 @@ export default function SongPage() {
                       size="lg"
                       className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative overflow-hidden group"
                       onClick={handleSubmitClick}
+                      aria-label="Отправить заказ на создание персональной песни"
                     >
                       <span className="relative z-10 flex items-center justify-center w-full">
                         Получить готовую песню
-                        <ArrowRight className="ml-2 h-5 w-5" />
+                        <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
                       </span>
                       {/* Shine animation */}
                       <motion.div
@@ -1256,7 +1336,7 @@ export default function SongPage() {
             {/* Header */}
             <div className="text-center mb-12">
               <div className="inline-flex items-center gap-2 text-primary mb-4">
-                <Heart className="h-5 w-5" />
+                <Heart className="h-5 w-5" aria-hidden="true" />
                 <span className="text-sm font-semibold uppercase tracking-wider">
                   С душой в каждой ноте
                 </span>
@@ -1274,7 +1354,7 @@ export default function SongPage() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center">
-                    <Music2 className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                    <Music2 className="h-6 w-6 text-purple-600 dark:text-purple-400" aria-hidden="true" />
                   </div>
                 </div>
                 <div>
@@ -1290,7 +1370,7 @@ export default function SongPage() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900/30 dark:to-red-900/30 flex items-center justify-center">
-                    <Mic2 className="h-6 w-6 text-pink-600 dark:text-pink-400" />
+                    <Mic2 className="h-6 w-6 text-pink-600 dark:text-pink-400" aria-hidden="true" />
                   </div>
                 </div>
                 <div>
@@ -1306,7 +1386,7 @@ export default function SongPage() {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 flex items-center justify-center">
-                    <Gift className="h-6 w-6 text-amber-600 dark:text-amber-400" />
+                    <Gift className="h-6 w-6 text-amber-600 dark:text-amber-400" aria-hidden="true" />
                   </div>
                 </div>
                 <div>
