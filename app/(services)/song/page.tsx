@@ -95,6 +95,7 @@ const songFormSchema = z.object({
 
 type SongFormData = z.infer<typeof songFormSchema>;
 
+
 // Audio Player Component
 function AudioPlayerCard({
   title,
@@ -602,15 +603,71 @@ export default function SongPage() {
               <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
                 Ваш персональный хит почти готов
               </h2>
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-4xl font-bold text-primary">590₽</span>
-                  <span className="text-base text-slate-400 line-through">1 190₽</span>
+
+              {/* Glassmorphism pricing display */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="mb-6 inline-block"
+              >
+                <div className="relative backdrop-blur-xl bg-white/40 dark:bg-slate-900/40 border border-white/20 dark:border-slate-700/50 rounded-2xl px-6 py-4 shadow-xl">
+                  {/* Discount sticker - rotated -5deg with bounce */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0, rotate: -15 }}
+                    whileInView={{ opacity: 1, scale: 1, rotate: -5 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      delay: 0.5,
+                      type: "spring",
+                      stiffness: 300,
+                      damping: 10,
+                      bounce: 0.6
+                    }}
+                    className="absolute -top-2 -right-2 z-10"
+                  >
+                    <div className="relative">
+                      {/* Glossy sticker effect */}
+                      <div className="bg-gradient-to-br from-red-500 via-red-600 to-pink-600 text-white px-3 py-1.5 rounded-lg shadow-lg transform rotate-[-5deg]">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent rounded-lg"></div>
+                        <span className="relative text-xs font-black tracking-tight">-50%</span>
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Price content */}
+                  <div className="flex flex-col items-center gap-1">
+                    {/* Old price */}
+                    <motion.span
+                      initial={{ opacity: 0 }}
+                      whileInView={{ opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2, duration: 0.4 }}
+                      className="text-base text-muted-foreground line-through decoration-2"
+                    >
+                      1 190₽
+                    </motion.span>
+
+                    {/* New price with smooth reveal */}
+                    <motion.div
+                      initial={{ scale: 0.9, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.1,
+                        ease: [0.16, 1, 0.3, 1]
+                      }}
+                    >
+                      <span className="text-4xl md:text-5xl font-black text-foreground tracking-tight">
+                        590₽
+                      </span>
+                    </motion.div>
+                  </div>
                 </div>
-                <Badge className="text-sm bg-orange-500 hover:bg-orange-600 text-white border-0">
-                  Скидка сегодня
-                </Badge>
-              </div>
+              </motion.div>
+
               <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-600 dark:text-slate-400">
                 <div className="flex items-center gap-2">
                   <Shield className="h-4 w-4 text-green-600" />
