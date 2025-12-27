@@ -1293,7 +1293,7 @@ export default function SongPage() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Договором оферты
+                            Пользовательским соглашением
                           </a>
                         </FormLabel>
                         <FormMessage />

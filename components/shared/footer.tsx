@@ -14,7 +14,7 @@ const serviceLinks: FooterLink[] = [
 
 const legalLinks: FooterLink[] = [
   { href: "/legal/privacy", label: "Политика конфиденциальности" },
-  { href: "/legal/terms", label: "Договор оферты" },
+  { href: "/legal/terms", label: "Пользовательское соглашение" },
   { href: "mailto:support@youwow.ru", label: "Поддержка", external: true },
 ];
 
