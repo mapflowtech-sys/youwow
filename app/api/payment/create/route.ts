@@ -5,7 +5,7 @@ import { createOrder } from '@/lib/db-helpers';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, formData } = body;
+    const { email, formData, bypass } = body;
 
     if (!email || !formData) {
       return NextResponse.json(
@@ -14,17 +14,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Check if this is a bypass request (for testing)
+    const bypassEmail = process.env.TEST_BYPASS_EMAIL;
+    const isBypassRequest = bypass && bypassEmail && email.toLowerCase() === bypassEmail.toLowerCase();
+
     // Create order in database
     const order = await createOrder({
       serviceType: 'song',
       customerEmail: email,
       customerName: formData.aboutWho || 'Клиент',
       inputData: formData,
-      amount: SONG_PRICE,
+      amount: isBypassRequest ? 0 : SONG_PRICE, // Free for bypass
     });
 
-    console.log('[Payment] Order created:', order.id);
+    console.log('[Payment] Order created:', order.id, isBypassRequest ? '(BYPASS MODE)' : '');
 
+    // If bypass mode, skip payment and mark as paid immediately
+    if (isBypassRequest) {
+      const { updateOrderStatus } = await import('@/lib/db-helpers');
+      await updateOrderStatus(order.id, 'paid', {
+        payment_id: 'bypass-' + order.id,
+        payment_provider: 'bypass',
+      });
+
+      console.log('[Bypass] Order marked as paid, ready for generation');
+
+      return NextResponse.json({
+        success: true,
+        orderId: order.id,
+        bypass: true,
+      });
+    }
+
+    // Normal payment flow
     // Create payment with 1plat
     const paymentProvider = getPaymentProvider();
 

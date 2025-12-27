@@ -63,7 +63,57 @@ interface GenerationFlowProps {
 }
 
 export default function GenerationFlow({ formData, onReset }: GenerationFlowProps) {
-  const [state, dispatch] = useReducer(flowReducer, { step: 'payment-modal' });
+  // Check if email matches bypass email for testing
+  const bypassEmail = process.env.NEXT_PUBLIC_TEST_BYPASS_EMAIL || process.env.TEST_BYPASS_EMAIL;
+  const shouldBypassPayment = bypassEmail && formData.email.toLowerCase() === bypassEmail.toLowerCase();
+
+  // If bypass is enabled, start with generating-text instead of payment-modal
+  const initialStep = shouldBypassPayment ? 'generating-text' : 'payment-modal';
+  const [state, dispatch] = useReducer(flowReducer, {
+    step: initialStep as 'payment-modal',
+    ...(shouldBypassPayment && { progress: 0 })
+  });
+
+  // Auto-create order and start generation if bypassing payment
+  React.useEffect(() => {
+    if (shouldBypassPayment && state.step === 'generating-text') {
+      handleBypassPaymentAndStartGeneration();
+    }
+  }, [shouldBypassPayment]);
+
+  const handleBypassPaymentAndStartGeneration = async () => {
+    try {
+      console.log('[Bypass] Creating order without payment for:', formData.email);
+
+      // Create order directly without payment
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          formData: formData,
+          bypass: true, // Flag to indicate this is a test bypass
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create test order');
+      }
+
+      const data = await response.json();
+      console.log('[Bypass] Order created:', data.orderId);
+
+      // TODO: Start generation process here
+      // For now, just log that bypass worked
+
+    } catch (error) {
+      console.error('[Bypass] Error:', error);
+      dispatch({
+        type: 'GENERATION_ERROR',
+        message: 'Ошибка при создании тестового заказа'
+      });
+    }
+  };
 
   // Обработка отправки формы
   const handleFormSubmit = () => {

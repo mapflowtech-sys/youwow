@@ -206,7 +206,7 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
 
         <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-4">
           Нажимая кнопку, вы соглашаетесь с{' '}
-          <a href="/legal/offer" className="text-purple-600 hover:underline" target="_blank">
+          <a href="/legal/terms" className="text-purple-600 hover:underline" target="_blank">
             условиями оферты
           </a>
         </p>

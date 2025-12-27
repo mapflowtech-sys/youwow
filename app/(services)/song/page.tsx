@@ -1288,7 +1288,7 @@ export default function SongPage() {
                           </a>{" "}
                           и{" "}
                           <a
-                            href="/legal/offer"
+                            href="/legal/terms"
                             className="text-primary underline"
                             target="_blank"
                             rel="noopener noreferrer"

@@ -634,7 +634,7 @@ export default function SantaPage() {
 
                     <p className="text-sm text-center text-slate-500">
                       Нажимая кнопку, вы соглашаетесь с{" "}
-                      <a href="/legal/offer" className="underline">
+                      <a href="/legal/terms" className="underline">
                         договором оферты
                       </a>
                     </p>
