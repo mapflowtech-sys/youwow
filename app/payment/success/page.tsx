@@ -13,6 +13,10 @@ function PaymentSuccessContent() {
   const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Clear form draft on successful payment
+    // User shouldn't see old data when creating a new song
+    localStorage.removeItem('song_form_draft');
+
     // Получаем orderId из URL параметров или localStorage
     const orderIdParam = searchParams.get('orderId');
 

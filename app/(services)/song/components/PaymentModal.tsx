@@ -29,6 +29,10 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
     setError(null);
 
     try {
+      // Save form data to localStorage before redirect
+      // This allows user to see their form data when they return from payment
+      localStorage.setItem('song_form_draft', JSON.stringify(formData));
+
       // Create payment
       const response = await fetch('/api/payment/create', {
         method: 'POST',

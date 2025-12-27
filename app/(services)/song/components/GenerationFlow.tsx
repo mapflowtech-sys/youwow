@@ -100,7 +100,8 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
             onPaymentInitiated={handlePaymentInitiated}
             onClose={() => {
               dispatch({ type: 'CLOSE_PAYMENT' });
-              onReset();
+              // Don't reset form when closing payment modal
+              // User should still see their filled form
             }}
           />
         )}

@@ -105,17 +105,10 @@ export function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-slate-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex flex-col items-center md:items-start gap-2">
-              <Link href="/" className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
-                <span className="font-display font-bold text-white">YouWow</span>
-              </Link>
-              <div className="text-slate-500 text-xs">
-                <p>ИП Савчук Елизавета Александровна</p>
-                <p>ИНН: 780254953303</p>
-                <p>ОГРНИП: 322784700065555</p>
-              </div>
-            </div>
+            <Link href="/" className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="font-display font-bold text-white">YouWow</span>
+            </Link>
             <p className="text-slate-500 text-sm text-center">
               © 2025 YouWow. Создано специально для вас
             </p>

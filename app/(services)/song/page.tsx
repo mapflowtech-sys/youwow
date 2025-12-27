@@ -322,6 +322,33 @@ export default function SongPage() {
     },
   });
 
+  // Restore form data from localStorage on component mount
+  useEffect(() => {
+    const savedFormData = localStorage.getItem('song_form_draft');
+    if (savedFormData) {
+      try {
+        const parsedData = JSON.parse(savedFormData) as APISongFormData;
+        // Map API format back to form format
+        form.reset({
+          aboutPerson: parsedData.aboutWho || "",
+          facts: parsedData.aboutWhat || "",
+          mustInclude: parsedData.mustInclude || "",
+          occasion: parsedData.occasion || "",
+          customOccasion: parsedData.customOccasion || "",
+          textStyle: parsedData.style || "",
+          customStyle: parsedData.customStyle || "",
+          genre: parsedData.genre || "",
+          voice: parsedData.voice || "female",
+          email: parsedData.email || "",
+          agreedToPolicy: false, // Don't restore checkbox for privacy
+        });
+        console.log('[Form] Restored draft from localStorage');
+      } catch (error) {
+        console.error('[Form] Failed to restore draft:', error);
+      }
+    }
+  }, [form]);
+
   const watchTextStyle = form.watch("textStyle");
   const watchOccasion = form.watch("occasion");
 
@@ -354,6 +381,8 @@ export default function SongPage() {
     setIsFormSubmitted(false);
     setApiFormData(null);
     form.reset();
+    // Clear saved draft when user explicitly creates a new song
+    localStorage.removeItem('song_form_draft');
   };
 
   return (
