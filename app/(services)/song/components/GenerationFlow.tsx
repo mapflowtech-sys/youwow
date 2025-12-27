@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useReducer, useEffect, useRef } from 'react';
+import React, { useReducer } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Music, CheckCircle, XCircle, X, Download, Mail } from 'lucide-react';
+import { Sparkles, Music, CheckCircle, XCircle, Download, Mail } from 'lucide-react';
 import { SongFormData } from '@/lib/genapi/text-generation';
+import PaymentModal from './PaymentModal';
 
 // Типы состояний
 type FlowState =
@@ -63,155 +64,19 @@ interface GenerationFlowProps {
 
 export default function GenerationFlow({ formData, onReset }: GenerationFlowProps) {
   const [state, dispatch] = useReducer(flowReducer, { step: 'payment-modal' });
-  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const currentOrderIdRef = useRef<string | null>(null);
-
-  // Очистка при размонтировании
-  useEffect(() => {
-    return () => {
-      if (pollingIntervalRef.current) {
-        clearInterval(pollingIntervalRef.current);
-      }
-    };
-  }, []);
 
   // Обработка отправки формы
   const handleFormSubmit = () => {
     dispatch({ type: 'SHOW_PAYMENT' });
   };
 
-  // Обработка "оплаты"
-  const handlePayment = async () => {
-    dispatch({ type: 'CLOSE_PAYMENT' });
-
-    try {
-      // Создаём заказ
-      const createResponse = await fetch('/api/song/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (!createResponse.ok) {
-        throw new Error('Ошибка создания заказа');
-      }
-
-      const { orderId } = await createResponse.json();
-      currentOrderIdRef.current = orderId;
-
-      // Сохраняем в localStorage
-      localStorage.setItem('currentOrder', JSON.stringify({
-        orderId,
-        formData,
-        timestamp: Date.now(),
-      }));
-
-      dispatch({ type: 'START_GENERATION', orderId });
-
-      // Запускаем "оплату" и обработку
-      const processResponse = await fetch('/api/song/process', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId }),
-      });
-
-      if (!processResponse.ok) {
-        throw new Error('Ошибка запуска генерации');
-      }
-
-      // Начинаем polling статуса
-      startPolling(orderId);
-
-    } catch (error) {
-      console.error('Payment error:', error);
-      dispatch({
-        type: 'GENERATION_ERROR',
-        message: error instanceof Error ? error.message : 'Неизвестная ошибка'
-      });
-    }
+  // Обработка инициации оплаты - пользователь будет перенаправлен на 1plat
+  const handlePaymentInitiated = (paymentGuid: string) => {
+    console.log('[Payment] Initiated, redirecting to 1plat:', paymentGuid);
+    // User will be redirected to 1plat payment page
+    // After successful payment, they'll return via /payment/success
+    // Webhook will trigger generation automatically
   };
-
-  // Polling статуса заказа
-  const startPolling = (orderId: string) => {
-    let attempt = 0;
-    const maxAttempts = 180; // 15 минут (каждые 5 сек)
-
-    pollingIntervalRef.current = setInterval(async () => {
-      attempt++;
-
-      if (attempt > maxAttempts) {
-        clearInterval(pollingIntervalRef.current!);
-        dispatch({
-          type: 'GENERATION_ERROR',
-          message: 'Превышено время ожидания. Мы отправим результат на ваш email.'
-        });
-        return;
-      }
-
-      try {
-        const response = await fetch(`/api/song/status?orderId=${orderId}&t=${Date.now()}`, {
-          method: 'GET',
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-          },
-          cache: 'no-store',
-        });
-        const data = await response.json();
-
-        console.log(`[Polling #${attempt}]`, 'Status:', data.order?.status, 'Step:', data.order?.resultMetadata?.step);
-
-        if (!data.success) {
-          throw new Error(data.error || 'Ошибка получения статуса');
-        }
-
-        const { order } = data;
-
-        // Обновляем прогресс в зависимости от статуса
-        if (order.status === 'processing') {
-          const metadata = order.resultMetadata;
-
-          if (metadata?.step === 'text_generated' && state.step === 'generating-text') {
-            // Текст готов, переходим к музыке
-            console.log('[State Change] Переход к генерации музыки');
-            dispatch({ type: 'TEXT_COMPLETED', songText: metadata.songText });
-          } else if (state.step === 'generating-text') {
-            // Генерируем текст - показываем плавный прогресс
-            // 2 минуты генерации = 24 попытки по 5 сек
-            // Делаем прогресс до 95%, чтобы оставить место на финал
-            const progress = Math.min(95, Math.floor((attempt / 24) * 100));
-            dispatch({ type: 'UPDATE_TEXT_PROGRESS', progress });
-          } else if (state.step === 'generating-music') {
-            // Генерируем музыку - показываем плавный прогресс
-            const progress = Math.min(95, Math.floor((attempt / 60) * 100));
-            dispatch({ type: 'UPDATE_MUSIC_PROGRESS', progress });
-          }
-        } else if (order.status === 'completed') {
-          // Всё готово!
-          console.log('[SUCCESS]', 'Audio URL:', order.resultUrl);
-          clearInterval(pollingIntervalRef.current!);
-          localStorage.removeItem('currentOrder');
-
-          dispatch({
-            type: 'GENERATION_SUCCESS',
-            audioUrl: order.resultUrl,
-            songText: order.resultMetadata?.songText || ''
-          });
-        } else if (order.status === 'failed') {
-          clearInterval(pollingIntervalRef.current!);
-          dispatch({
-            type: 'GENERATION_ERROR',
-            message: order.errorMessage || 'Ошибка генерации'
-          });
-        }
-      } catch (error) {
-        console.error('Polling error:', error);
-        // Не останавливаем polling при единичной ошибке
-      }
-    }, 5000); // Каждые 5 секунд
-  };
-
-  // Удалили fake прогресс для музыки - теперь прогресс управляется через polling
 
   // Рендер в зависимости от состояния
   if (state.step === 'idle') {
@@ -220,7 +85,7 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
         onClick={handleFormSubmit}
         className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
       >
-        Попробовать бесплатно
+        Получить готовую песню
       </button>
     );
   }
@@ -231,7 +96,8 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
       <AnimatePresence>
         {state.step === 'payment-modal' && (
           <PaymentModal
-            onConfirm={handlePayment}
+            formData={formData}
+            onPaymentInitiated={handlePaymentInitiated}
             onClose={() => {
               dispatch({ type: 'CLOSE_PAYMENT' });
               onReset();
@@ -264,123 +130,6 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
         )}
       </AnimatePresence>
     </>
-  );
-}
-
-// Payment Modal Component
-function PaymentModal({ onConfirm, onClose }: { onConfirm: () => void; onClose: () => void }) {
-  const [accessCode, setAccessCode] = React.useState('');
-  const [codeError, setCodeError] = React.useState(false);
-
-  const handleConfirm = () => {
-    if (accessCode === '1234') {
-      onConfirm();
-    } else {
-      setCodeError(true);
-      setTimeout(() => setCodeError(false), 2000);
-    }
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', duration: 0.5 }}
-        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-md w-full p-8"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-        >
-          <X size={24} />
-        </button>
-
-        {/* Content */}
-        <div className="text-center">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring' }}
-            className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-6"
-          >
-            <Music className="text-white" size={32} />
-          </motion.div>
-
-          <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
-            Пробная версия
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Сейчас вы можете создать свою песню совершенно бесплатно!
-            В будущем эта функция станет платной.
-          </p>
-
-          {/* Price Display */}
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 mb-6">
-            <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-              Обычная цена
-            </div>
-            <div className="text-3xl font-bold text-gray-400 dark:text-gray-500 line-through mb-2">
-              1 990 ₽
-            </div>
-            <div className="text-4xl font-bold text-green-600 dark:text-green-400">
-              БЕСПЛАТНО
-            </div>
-          </div>
-
-          {/* Access Code Input */}
-          <div className="mb-6">
-            <label htmlFor="access-code" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Введите код доступа
-            </label>
-            <input
-              id="access-code"
-              type="text"
-              value={accessCode}
-              onChange={(e) => setAccessCode(e.target.value)}
-              placeholder="Код доступа"
-              className={`w-full px-4 py-3 border-2 rounded-xl text-center text-lg font-semibold tracking-widest transition-all ${
-                codeError
-                  ? 'border-red-500 bg-red-50 dark:bg-red-900/20 shake'
-                  : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-purple-500 dark:focus:border-purple-400'
-              } focus:outline-none focus:ring-2 focus:ring-purple-500/20`}
-              maxLength={4}
-            />
-            {codeError && (
-              <motion.p
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-red-500 text-sm mt-2"
-              >
-                Неверный код доступа
-              </motion.p>
-            )}
-          </div>
-
-          {/* Confirm Button */}
-          <button
-            onClick={handleConfirm}
-            disabled={!accessCode}
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Создать песню бесплатно
-          </button>
-
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
-            Нажимая кнопку, вы соглашаетесь с условиями использования
-          </p>
-        </div>
-      </motion.div>
-    </motion.div>
   );
 }
 
@@ -732,7 +481,7 @@ function ErrorScreen({ message, onRetry }: { message: string; onRetry: () => voi
 
         {/* Support Link */}
         <a
-          href="https://t.me/your_support"
+          href="https://t.me/youwow_support"
           target="_blank"
           rel="noopener noreferrer"
           className="text-purple-600 dark:text-purple-400 hover:underline text-sm"

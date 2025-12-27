@@ -90,7 +90,6 @@ export async function POST(request: NextRequest) {
     console.log('[1plat Webhook] Status:', status);
     console.log('[1plat Webhook] Amount to shop:', amount_to_shop);
 
-    // TODO: Обработка платежа в зависимости от статуса
     // Статусы 1plat:
     // -2 - нет подходящих реквизитов
     // -1 - черновик (выбор метода)
@@ -101,45 +100,47 @@ export async function POST(request: NextRequest) {
     if (status === 1 || status === 2) {
       // Платёж успешно оплачен
 
-      // TODO: Когда будет БД:
-      /*
-      const order = await db.order.findUnique({
-        where: { id: user_id } // или по другому полю в зависимости от вашей логики
-      });
+      // Find order by payment_id (guid)
+      const { updateOrderStatus } = await import('@/lib/db-helpers');
+      const { supabaseAdmin } = await import('@/lib/supabase');
+
+      const { data: order } = await supabaseAdmin
+        .from('orders')
+        .select('*')
+        .eq('payment_id', guid)
+        .single();
 
       if (!order) {
-        console.error('[1plat Webhook] Order not found:', user_id);
+        console.error('[1plat Webhook] Order not found for payment:', guid);
         return new NextResponse('Order not found', { status: 404 });
       }
 
-      if (order.status === 'paid' || order.status === 'completed') {
-        console.log('[1plat Webhook] Order already paid, skipping');
+      console.log('[1plat Webhook] Found order:', order.id);
+
+      if (order.status === 'paid' || order.status === 'processing' || order.status === 'completed') {
+        console.log('[1plat Webhook] Order already processed, skipping');
         return new NextResponse('OK', { status: 200 });
       }
 
-      // Обновляем заказ
-      await db.order.update({
-        where: { id: user_id },
-        data: {
-          status: 'paid',
-          paymentId: payment_id,
-          paymentGuid: guid,
-          paidAt: new Date(),
-          paymentMethod: '1plat',
-          amountPaid: amount,
-          amountToShop: amount_to_shop,
-        }
-      });
+      // Update order to paid status
+      await updateOrderStatus(order.id, 'paid');
 
-      // Запускаем генерацию
-      if (status === 2) { // только если полностью подтвержден
-        await fetch(`${process.env.NEXT_PUBLIC_URL}/api/song/process`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderId: user_id })
-        });
-      }
-      */
+      console.log('[1plat Webhook] Order marked as paid:', order.id);
+
+      // Запускаем генерацию песни
+      // Используем абсолютный URL для webhook callback
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+
+      console.log('[1plat Webhook] Triggering song generation for order:', order.id);
+
+      // Запускаем генерацию асинхронно
+      fetch(`${baseUrl}/api/song/process`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId: order.id })
+      }).catch(error => {
+        console.error('[1plat Webhook] Failed to trigger song generation:', error);
+      });
     }
 
     // 6. Возвращаем 200 или 201 - чтобы 1plat знал что всё ок

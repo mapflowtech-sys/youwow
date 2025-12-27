@@ -22,7 +22,12 @@
       "Bash(git push:*)",
       "Bash(del:*)",
       "Bash(npx tsx:*)",
-      "Bash(du:*)"
+      "Bash(du:*)",
+      "Bash(cd:*)",
+      "Bash(ren:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(timeout /t 10 /nobreak)",
+      "Bash(curl:*)"
     ]
   }
 }

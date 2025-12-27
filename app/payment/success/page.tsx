@@ -13,13 +13,33 @@ function PaymentSuccessContent() {
   const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Получаем orderId из URL параметров
+    // Получаем orderId из URL параметров или localStorage
     const orderIdParam = searchParams.get('orderId');
-    setOrderId(orderIdParam);
 
-    // TODO: Здесь можно добавить логику для автоматического начала генерации песни
-    // если orderId есть, можно редиректить на страницу заказа
-  }, [searchParams]);
+    // Try to get from localStorage if not in URL
+    const savedOrder = localStorage.getItem('currentOrder');
+    let foundOrderId = orderIdParam;
+
+    if (!foundOrderId && savedOrder) {
+      try {
+        const { orderId: savedOrderId } = JSON.parse(savedOrder);
+        foundOrderId = savedOrderId;
+      } catch (e) {
+        console.error('Failed to parse saved order:', e);
+      }
+    }
+
+    setOrderId(foundOrderId);
+
+    // Auto-redirect to order page after 5 seconds
+    if (foundOrderId) {
+      const timer = setTimeout(() => {
+        router.push(`/order/${foundOrderId}`);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams, router]);
 
   const handleGoToOrder = () => {
     if (orderId) {
