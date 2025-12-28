@@ -19,4 +19,4 @@ export function getPaymentProvider(): IPaymentProvider {
 }
 
 // Price in rubles
-export const SONG_PRICE = 140; // Test price: 140 rubles (testing 1plat minimum amounts)
+export const SONG_PRICE = 120; // Test price: 120 rubles (testing with commission paid by buyer)
