@@ -5,7 +5,7 @@ import { createOrder } from '@/lib/db-helpers';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, formData, bypass } = body;
+    const { email, formData, bypass, method } = body;
 
     if (!email || !formData) {
       return NextResponse.json(
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
       userId: order.user_id || order.id,
       amount: SONG_PRICE,
       email: email,
-      method: 'card', // Default to card payment
+      method: method || 'card', // Use selected method or default to card
     });
 
     console.log('[Payment] Payment created:', {

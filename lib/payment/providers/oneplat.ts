@@ -22,40 +22,69 @@ export class OnePlatProvider implements IPaymentProvider {
       throw new Error('1plat credentials not configured');
     }
 
-    this.shopId = shopId;
-    this.secret = secret;
+    // Trim whitespace and control characters (like \r\n) from credentials
+    this.shopId = shopId.trim();
+    this.secret = secret.trim();
   }
 
   async createPayment(params: CreatePaymentParams): Promise<PaymentResponse> {
     const { orderId, userId, amount, email, method = 'card' } = params;
 
     try {
+      // Convert userId (UUID string) to a numeric ID for 1plat API
+      // 1plat requires numeric user_id, so we generate a hash from the userId
+      const numericUserId = Math.abs(
+        userId.split('').reduce((acc, char) => {
+          return acc * 31 + char.charCodeAt(0);
+        }, 0)
+      ) % 2147483647; // Keep within 32-bit integer range
+
+      // DEBUG: Log what we're sending
+      console.log('[1plat] Creating payment with:', {
+        shopId: this.shopId,
+        secretLength: this.secret?.length,
+        secretPreview: this.secret ? `${this.secret.slice(0, 5)}...` : 'undefined',
+        orderId,
+        amount,
+        method,
+      });
+
+      const requestBody = {
+        merchant_order_id: orderId,
+        user_id: numericUserId,
+        amount: amount,
+        email: email || `${userId}@temp.com`,
+        method: method as PaymentMethod,
+      };
+
+      console.log('[1plat] Request body:', requestBody);
+
       const response = await fetch(`${BASE_URL}/api/merchant/order/create/by-api`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-shop': this.shopId,
-          'x-secret': this.secret,
+          'x-shop': String(this.shopId),
+          'x-secret': String(this.secret),
         },
-        body: JSON.stringify({
-          merchant_order_id: orderId,
-          user_id: parseInt(userId),
-          amount: amount, // Amount in rubles, 1plat accepts rubles directly
-          email: email || `${userId}@temp.com`,
-          method: method as PaymentMethod,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('[1plat] Payment creation failed:', errorText);
-        throw new Error(`Failed to create payment: ${response.status}`);
+        console.error('[1plat] Payment creation failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: errorText,
+        });
+        throw new Error(`Failed to create payment: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('[1plat] Payment creation response:', data);
 
       if (!data.success) {
-        throw new Error('Payment creation failed: API returned success=false');
+        console.error('[1plat] API returned success=false:', data);
+        throw new Error(`Payment creation failed: ${JSON.stringify(data)}`);
       }
 
       return {

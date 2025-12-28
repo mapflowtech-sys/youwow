@@ -40,6 +40,7 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
         body: JSON.stringify({
           email: formData.email,
           formData: formData,
+          method: selectedMethod, // Pass selected payment method
         }),
       });
 
