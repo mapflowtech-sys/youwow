@@ -19,7 +19,7 @@ const testPayment = async (config) => {
     const requestBody = {
       merchant_order_id: 'test-' + Date.now(),
       user_id: 123456,
-      amount: 1000,
+      amount: 500,
       email: config.email,
       method: 'card'
     };
