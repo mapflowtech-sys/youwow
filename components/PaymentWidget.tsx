@@ -85,9 +85,31 @@ export default function PaymentWidget({
       const widget = new window.YooMoneyCheckoutWidget(config);
 
       // Handle success event
-      widget.on('success', () => {
+      widget.on('success', async () => {
         console.log('[PaymentWidget] Payment successful!');
         setPaymentStatus('success');
+
+        // Trigger song generation immediately (don't wait for webhook in dev mode)
+        try {
+          console.log('[PaymentWidget] Triggering song generation...');
+          const processResponse = await fetch('/api/song/process', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              orderId: orderId,
+            }),
+          });
+
+          if (!processResponse.ok) {
+            console.error('[PaymentWidget] Failed to trigger generation:', await processResponse.text());
+          } else {
+            console.log('[PaymentWidget] Song generation triggered successfully!');
+          }
+        } catch (error) {
+          console.error('[PaymentWidget] Error triggering generation:', error);
+        }
 
         // Wait a bit to show success animation, then redirect
         setTimeout(() => {
