@@ -19,6 +19,7 @@ interface YooKassaPayment {
   confirmation?: {
     type: string;
     confirmation_url?: string;
+    confirmation_token?: string;
   };
   created_at: string;
   description?: string;
@@ -58,21 +59,22 @@ export class YooKassaProvider implements IPaymentProvider {
   }
 
   async createPayment(params: CreatePaymentParams): Promise<PaymentResponse> {
-    const { orderId, userId, amount, email } = params;
+    const { orderId, userId, amount, email, useWidget } = params;
 
     try {
       console.log('[YooKassa] Creating payment with:', {
         shopId: this.shopId,
         orderId,
         amount,
+        useWidget: useWidget ?? false,
       });
 
       const idempotenceKey = this.generateIdempotenceKey();
 
       // Prepare return URL - user will be redirected here after payment
       const returnUrl = process.env.NEXT_PUBLIC_APP_URL
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?orderId=${orderId}`
-        : `http://localhost:3000/payment/success?orderId=${orderId}`;
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/order/${orderId}`
+        : `http://localhost:3000/order/${orderId}`;
 
       const requestBody = {
         amount: {
@@ -80,10 +82,14 @@ export class YooKassaProvider implements IPaymentProvider {
           currency: 'RUB',
         },
         capture: true, // Auto-capture payment (one-stage payment)
-        confirmation: {
-          type: 'redirect',
-          return_url: returnUrl,
-        },
+        confirmation: useWidget
+          ? {
+              type: 'embedded', // Виджет ЮKassa
+            }
+          : {
+              type: 'redirect',
+              return_url: returnUrl,
+            },
         description: `Заказ на генерацию песни №${orderId}`,
         metadata: {
           orderId: orderId,
@@ -117,21 +123,42 @@ export class YooKassaProvider implements IPaymentProvider {
       const data: YooKassaPayment = await response.json();
       console.log('[YooKassa] Payment creation response:', data);
 
-      if (!data.confirmation?.confirmation_url) {
-        throw new Error('No confirmation URL in response');
-      }
+      if (useWidget) {
+        // For widget, return confirmation_token
+        if (!data.confirmation?.confirmation_token) {
+          throw new Error('No confirmation token in response');
+        }
 
-      return {
-        success: true,
-        guid: orderId,
-        paymentId: data.id,
-        paymentUrl: data.confirmation.confirmation_url,
-        paymentData: {
-          method: 'redirect',
-          note: data.metadata || {},
-          status: data.status === 'pending' ? 0 : data.status === 'succeeded' ? 1 : 2,
-        },
-      };
+        return {
+          success: true,
+          guid: orderId,
+          paymentId: data.id,
+          paymentUrl: '', // No URL for widget
+          confirmationToken: data.confirmation.confirmation_token,
+          paymentData: {
+            method: 'widget',
+            note: data.metadata || {},
+            status: data.status === 'pending' ? 0 : data.status === 'succeeded' ? 1 : 2,
+          },
+        };
+      } else {
+        // For redirect, return confirmation_url
+        if (!data.confirmation?.confirmation_url) {
+          throw new Error('No confirmation URL in response');
+        }
+
+        return {
+          success: true,
+          guid: orderId,
+          paymentId: data.id,
+          paymentUrl: data.confirmation.confirmation_url,
+          paymentData: {
+            method: 'redirect',
+            note: data.metadata || {},
+            status: data.status === 'pending' ? 0 : data.status === 'succeeded' ? 1 : 2,
+          },
+        };
+      }
     } catch (error) {
       console.error('[YooKassa] Error creating payment:', error);
       throw error;

@@ -9,6 +9,7 @@ export interface CreatePaymentParams {
   email: string;
   method?: PaymentMethod;
   currency?: string;
+  useWidget?: boolean; // Use ЮKassa widget instead of redirect
 }
 
 export interface PaymentResponse {
@@ -16,6 +17,7 @@ export interface PaymentResponse {
   guid: string;
   paymentId: string | number;
   paymentUrl: string;
+  confirmationToken?: string; // For ЮKassa widget
   paymentData?: {
     method: string;
     note: Record<string, unknown>;

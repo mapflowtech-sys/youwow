@@ -5,7 +5,7 @@ import { createOrder } from '@/lib/db-helpers';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, formData, bypass, method } = body;
+    const { email, formData, bypass, method, useWidget } = body;
 
     if (!email || !formData) {
       return NextResponse.json(
@@ -47,7 +47,6 @@ export async function POST(request: NextRequest) {
     }
 
     // Normal payment flow
-    // Create payment with 1plat
     const paymentProvider = getPaymentProvider();
 
     const payment = await paymentProvider.createPayment({
@@ -56,12 +55,15 @@ export async function POST(request: NextRequest) {
       amount: SONG_PRICE,
       email: email,
       method: method || 'card', // Use selected method or default to card
+      useWidget: useWidget ?? false, // Use widget mode if requested
     });
 
     console.log('[Payment] Payment created:', {
       guid: payment.guid,
       paymentId: payment.paymentId,
       url: payment.paymentUrl,
+      token: payment.confirmationToken ? '***' : undefined,
+      useWidget: useWidget ?? false,
     });
 
     // Update order with payment info
@@ -77,6 +79,7 @@ export async function POST(request: NextRequest) {
       payment: {
         guid: payment.guid,
         url: payment.paymentUrl,
+        confirmationToken: payment.confirmationToken, // For widget
         data: payment.paymentData,
       },
     });

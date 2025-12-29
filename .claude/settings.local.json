@@ -31,7 +31,8 @@
       "Bash(tasklist:*)",
       "Bash(node:*)",
       "Bash(timeout /t 65 /nobreak)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(git checkout:*)"
     ]
   }
 }
