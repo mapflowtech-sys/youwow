@@ -1,14 +1,16 @@
 import type { IPaymentProvider } from './types';
 import { OnePlatProvider } from './providers/oneplat';
+import { YooKassaProvider } from './providers/yookassa';
 
-export type PaymentProviderType = 'oneplat' | 'freekassa';
+export type PaymentProviderType = 'oneplat' | 'yookassa' | 'freekassa';
 
 export function getPaymentProvider(): IPaymentProvider {
-  // For now, use 1plat as default
-  // Later can be switched via env variable: process.env.PAYMENT_PROVIDER
-  const providerType: PaymentProviderType = 'oneplat';
+  // Switch payment provider via env variable
+  const providerType = (process.env.PAYMENT_PROVIDER || 'yookassa') as PaymentProviderType;
 
   switch (providerType) {
+    case 'yookassa':
+      return new YooKassaProvider();
     case 'oneplat':
       return new OnePlatProvider();
     // case 'freekassa':
@@ -19,4 +21,4 @@ export function getPaymentProvider(): IPaymentProvider {
 }
 
 // Price in rubles
-export const SONG_PRICE = 132; // Test price: 132 rubles (testing exact minimum amount from 1plat)
+export const SONG_PRICE = 590; // Production price: 590 rubles
