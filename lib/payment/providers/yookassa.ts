@@ -71,8 +71,8 @@ export class YooKassaProvider implements IPaymentProvider {
 
       // Prepare return URL - user will be redirected here after payment
       const returnUrl = process.env.NEXT_PUBLIC_APP_URL
-        ? `${process.env.NEXT_PUBLIC_APP_URL}/payment/result?orderId=${orderId}`
-        : `http://localhost:3000/payment/result?orderId=${orderId}`;
+        ? `${process.env.NEXT_PUBLIC_APP_URL}/payment/success?orderId=${orderId}`
+        : `http://localhost:3000/payment/success?orderId=${orderId}`;
 
       const requestBody = {
         amount: {
