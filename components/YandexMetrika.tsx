@@ -3,11 +3,18 @@
 import { useEffect } from 'react';
 import Script from 'next/script';
 
+// Extend Window interface for Yandex Metrika
+declare global {
+  interface Window {
+    ym?: (id: number, method: string, params?: Record<string, unknown>) => void;
+  }
+}
+
 export default function YandexMetrika() {
   useEffect(() => {
     // Initialize Yandex Metrika after script loads
-    if (typeof window !== 'undefined' && (window as any).ym) {
-      (window as any).ym(106067742, 'init', {
+    if (typeof window !== 'undefined' && window.ym) {
+      window.ym(106067742, 'init', {
         ssr: true,
         webvisor: true,
         clickmap: true,

@@ -79,7 +79,8 @@ export default function GenerationFlow({ formData, onReset }: GenerationFlowProp
     if (shouldBypassPayment && state.step === 'generating-text') {
       handleBypassPaymentAndStartGeneration();
     }
-  }, [shouldBypassPayment]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldBypassPayment, state.step]);
 
   const handleBypassPaymentAndStartGeneration = async () => {
     try {
