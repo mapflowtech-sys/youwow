@@ -38,19 +38,18 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if already paid
-    if (order.payment_status === 'paid') {
+    if (order.status === 'paid') {
       console.log('[YooKassa Webhook] Order already paid:', webhookData.orderId);
       return NextResponse.json({ received: true });
     }
 
-    // Update order payment status
+    // Update order status to paid
     const { error: updateError } = await supabase
       .from('orders')
       .update({
-        payment_status: 'paid',
+        status: 'paid',
         payment_id: webhookData.paymentId,
         payment_provider: 'yookassa',
-        updated_at: new Date().toISOString(),
       })
       .eq('id', webhookData.orderId);
 
