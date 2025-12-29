@@ -7,7 +7,6 @@ import { Order } from '@/types/database'
 import { Card, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
-  Loader2,
   CheckCircle2,
   XCircle,
   Clock,
