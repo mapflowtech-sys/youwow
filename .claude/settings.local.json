@@ -27,7 +27,11 @@
       "Bash(ren:*)",
       "Bash(timeout /t 3 /nobreak)",
       "Bash(timeout /t 10 /nobreak)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(tasklist:*)",
+      "Bash(node:*)",
+      "Bash(timeout /t 65 /nobreak)",
+      "Bash(ping:*)"
     ]
   }
 }

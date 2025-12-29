@@ -1,9 +1,12 @@
 // Test script to debug 1plat API
 // Test with different formats
+// Testing with non-round amounts as suggested by 1plat support
 const tests = [
-  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', name: 'Test 1: shopId = "1296"' },
-  { shopId: '#1296', secret: 'Kogortalove1!', email: 'test@example.com', name: 'Test 2: shopId = "#1296"' },
-  { shopId: 1296, secret: 'Kogortalove1!', email: 'test@example.com', name: 'Test 3: shopId = 1296 (number)' },
+  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', amount: 137, name: 'Test 1: 137₽' },
+  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', amount: 149, name: 'Test 2: 149₽' },
+  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', amount: 163, name: 'Test 3: 163₽' },
+  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', amount: 591, name: 'Test 4: 591₽' },
+  { shopId: '1296', secret: 'Kogortalove1!', email: 'test@example.com', amount: 597, name: 'Test 5: 597₽' },
 ];
 
 console.log('Testing 1plat API with multiple configurations...\n');
@@ -19,7 +22,7 @@ const testPayment = async (config) => {
     const requestBody = {
       merchant_order_id: 'test-' + Date.now(),
       user_id: 123456,
-      amount: 500,
+      amount: config.amount,
       email: config.email,
       method: 'card'
     };
