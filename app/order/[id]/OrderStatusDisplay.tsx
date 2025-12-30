@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Order } from '@/types/database'
 import { Card, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
@@ -34,7 +33,6 @@ const MUSIC_FACTS = [
 ];
 
 export default function OrderStatusDisplayNew({ order }: { order: Order }) {
-  const router = useRouter()
   const [currentFactIndex, setCurrentFactIndex] = useState(0)
   const [copied, setCopied] = useState(false)
 
@@ -50,15 +48,15 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           if (response.ok) {
             const data = await response.json()
             if (data.success && data.order) {
-              // Обновляем локальное состояние с новыми данными
-              setCurrentOrder({
-                ...currentOrder,
+              // Используем функциональное обновление для избежания зависимости от currentOrder
+              setCurrentOrder(prevOrder => ({
+                ...prevOrder,
                 status: data.order.status,
                 result_url: data.order.resultUrl,
                 result_metadata: data.order.resultMetadata,
                 error_message: data.order.errorMessage,
                 completed_at: data.order.completedAt,
-              })
+              }))
               console.log('[OrderStatus] Обновлён статус:', data.order.status)
             }
           }
