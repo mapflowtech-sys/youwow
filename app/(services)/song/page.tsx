@@ -51,8 +51,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import GenerationFlow from "./components/GenerationFlow";
 import { SongFormData as APISongFormData } from "@/lib/genapi/text-generation";
+import PaymentWidget from "@/components/PaymentWidget";
 
 const songFormSchema = z.object({
   aboutPerson: z
@@ -302,8 +302,10 @@ function ExamplesGrid() {
 }
 
 export default function SongPage() {
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [apiFormData, setApiFormData] = useState<APISongFormData | null>(null);
+  const [step, setStep] = useState<'form' | 'payment' | 'processing'>('form');
+  const [orderId, setOrderId] = useState<string>('');
+  const [confirmationToken, setConfirmationToken] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<SongFormData>({
     resolver: zodResolver(songFormSchema),
@@ -353,36 +355,59 @@ export default function SongPage() {
   const watchOccasion = form.watch("occasion");
 
   const onSubmit = async (data: SongFormData) => {
-    console.log("Song form data:", data);
+    setIsSubmitting(true);
 
-    // Преобразуем данные формы в формат API
-    const apiData: APISongFormData = {
-      voice: data.voice,
-      aboutWho: data.aboutPerson,
-      aboutWhat: data.facts,
-      genre: data.genre,
-      style: data.textStyle,
-      customStyle: data.customStyle,
-      occasion: data.occasion,
-      customOccasion: data.customOccasion,
-      mustInclude: data.mustInclude,
-      email: data.email,
-    };
+    try {
+      console.log('[Song] Submitting form:', data);
 
-    setApiFormData(apiData);
-    setIsFormSubmitted(true);
+      // Call API to create payment with widget mode
+      const response = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          useWidget: true, // ВАЖНО: используем виджет вместо редиректа
+          formData: {
+            voice: data.voice,
+            aboutWho: data.aboutPerson,
+            aboutWhat: data.facts,
+            genre: data.genre,
+            style: data.textStyle,
+            customStyle: data.customStyle,
+            occasion: data.occasion,
+            customOccasion: data.customOccasion,
+            mustInclude: data.mustInclude,
+            email: data.email,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create payment');
+      }
+
+      const result = await response.json();
+      console.log('[Song] Payment created:', result);
+
+      if (result.payment?.confirmationToken) {
+        setOrderId(result.orderId);
+        setConfirmationToken(result.payment.confirmationToken);
+        setStep('payment');
+      } else {
+        throw new Error('No confirmation token received');
+      }
+    } catch (error) {
+      console.error('[Song] Error:', error);
+      alert('Ошибка при создании заказа. Проверьте консоль.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSubmitClick = () => {
     form.handleSubmit(onSubmit)();
-  };
-
-  const handleReset = () => {
-    setIsFormSubmitted(false);
-    setApiFormData(null);
-    form.reset();
-    // Clear saved draft when user explicitly creates a new song
-    localStorage.removeItem('song_form_draft');
   };
 
   return (
@@ -1302,31 +1327,34 @@ export default function SongPage() {
                   )}
                 />
 
-                {!isFormSubmitted ? (
+                {step === 'form' ? (
                   <>
                     <Button
                       type="button"
                       size="lg"
                       className="w-full text-lg bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 relative overflow-hidden group"
                       onClick={handleSubmitClick}
+                      disabled={isSubmitting}
                       aria-label="Отправить заказ на создание персональной песни"
                     >
                       <span className="relative z-10 flex items-center justify-center w-full">
-                        Получить готовую песню
-                        <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
+                        {isSubmitting ? 'Создаём заказ...' : 'Получить готовую песню'}
+                        {!isSubmitting && <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />}
                       </span>
                       {/* Shine animation */}
-                      <motion.div
-                        className="absolute inset-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
-                        initial={{ x: '-200%' }}
-                        animate={{ x: '400%' }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          repeatDelay: 5,
-                          ease: "easeInOut"
-                        }}
-                      />
+                      {!isSubmitting && (
+                        <motion.div
+                          className="absolute inset-0 w-1/4 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+                          initial={{ x: '-200%' }}
+                          animate={{ x: '400%' }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatDelay: 5,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      )}
                     </Button>
                     <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-3">
                       Песня будет готова через 10 минут. Скачаете на сайте и получите на почту
@@ -1336,13 +1364,24 @@ export default function SongPage() {
               </form>
             </Form>
 
-            {/* Generation Flow */}
-            {isFormSubmitted && apiFormData && (
-              <GenerationFlow
-                formData={apiFormData}
-                onSubmit={() => {}}
-                onReset={handleReset}
-              />
+            {/* Payment Widget */}
+            {step === 'payment' && confirmationToken && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <PaymentWidget
+                  confirmationToken={confirmationToken}
+                  orderId={orderId}
+                  onSuccess={() => {
+                    console.log('[Song] Payment success!');
+                  }}
+                  onError={(error) => {
+                    console.error('[Song] Payment error:', error);
+                    alert(`Ошибка оплаты: ${error.message}`);
+                  }}
+                />
+              </motion.div>
             )}
           </motion.div>
         </div>
