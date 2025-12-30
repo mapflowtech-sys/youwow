@@ -67,11 +67,15 @@ export default function PaymentWidget({
       const config: YooKassaWidgetConfig = {
         confirmation_token: confirmationToken,
 
-        // Customization to match our design
+        // Customization to match our design - organic and beautiful colors
         customization: {
           colors: {
-            control_primary: '#8b5cf6', // Purple-600
+            control_primary: '#a855f7', // Purple-500 - более мягкий фиолетовый
+            control_primary_content: '#ffffff', // Белый текст на кнопках
             background: '#ffffff',
+            text: '#1f2937', // Gray-800 - основной текст
+            border: '#e5e7eb', // Gray-200 - мягкие границы
+            control_secondary: '#f3f4f6', // Gray-100 - вторичные элементы
           },
         },
 
@@ -163,6 +167,7 @@ export default function PaymentWidget({
       >
         {/* Progress Steps */}
         <div className="flex items-center justify-center gap-4 mb-6">
+          {/* Шаг 1: Форма - всегда завершён */}
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5" />
@@ -170,22 +175,59 @@ export default function PaymentWidget({
             <span className="text-sm font-medium">Форма</span>
           </div>
 
-          <div className="h-0.5 w-12 bg-primary" />
+          <div className={`h-0.5 w-12 transition-colors duration-500 ${
+            paymentStatus === 'success' ? 'bg-green-500' : 'bg-primary'
+          }`} />
 
+          {/* Шаг 2: Оплата - активен до успешной оплаты */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
-              2
+            <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold transition-all duration-500 ${
+              paymentStatus === 'success'
+                ? 'bg-green-500'
+                : 'bg-primary'
+            }`}>
+              {paymentStatus === 'success' ? (
+                <CheckCircle2 className="w-5 h-5" />
+              ) : (
+                '2'
+              )}
             </div>
-            <span className="text-sm font-medium text-primary">Оплата</span>
+            <span className={`text-sm font-medium transition-colors duration-500 ${
+              paymentStatus === 'success' ? 'text-green-600' : 'text-primary'
+            }`}>
+              Оплата
+            </span>
           </div>
 
-          <div className="h-0.5 w-12 bg-slate-300" />
+          <div className={`h-0.5 w-12 transition-colors duration-500 ${
+            paymentStatus === 'success' ? 'bg-green-500' : 'bg-slate-300'
+          }`} />
 
+          {/* Шаг 3: Генерация - активируется после успешной оплаты */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-slate-300 text-slate-600 flex items-center justify-center">
+            <motion.div
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
+                paymentStatus === 'success'
+                  ? 'bg-purple-500 text-white'
+                  : 'bg-slate-300 text-slate-600'
+              }`}
+              animate={paymentStatus === 'success' ? {
+                scale: [1, 1.15, 1],
+                rotate: [0, 5, -5, 0],
+              } : {}}
+              transition={{
+                duration: 2,
+                repeat: paymentStatus === 'success' ? Infinity : 0,
+                ease: "easeInOut"
+              }}
+            >
               <Music2 className="w-5 h-5" />
-            </div>
-            <span className="text-sm text-slate-500">Генерация</span>
+            </motion.div>
+            <span className={`text-sm font-medium transition-colors duration-500 ${
+              paymentStatus === 'success' ? 'text-purple-600' : 'text-slate-500'
+            }`}>
+              Генерация
+            </span>
           </div>
         </div>
 
@@ -195,38 +237,24 @@ export default function PaymentWidget({
         </h2>
       </motion.div>
 
-      {/* Trust Indicators */}
+      {/* Trust Indicators - Компактный стиль как в модальном окне */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6"
+        className="flex flex-col gap-2 mb-6"
       >
-        <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/10 rounded-xl border border-green-200 dark:border-green-800">
-          <Shield className="w-5 h-5 text-green-600 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-semibold text-green-900 dark:text-green-100">
-              Безопасная оплата через ЮKassa
-            </p>
-          </div>
+        <div className="flex items-center gap-3 text-sm">
+          <Shield className="text-green-500 flex-shrink-0" size={20} />
+          <span className="text-gray-700 dark:text-gray-300">Безопасная оплата</span>
         </div>
-
-        <div className="flex items-center gap-3 p-4 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-200 dark:border-blue-800">
-          <Zap className="w-5 h-5 text-blue-600 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
-              Генерация начнётся сразу после оплаты
-            </p>
-          </div>
+        <div className="flex items-center gap-3 text-sm">
+          <Zap className="text-purple-500 flex-shrink-0" size={20} />
+          <span className="text-gray-700 dark:text-gray-300">Мгновенное начало генерации</span>
         </div>
-
-        <div className="flex items-center gap-3 p-4 bg-purple-50 dark:bg-purple-900/10 rounded-xl border border-purple-200 dark:border-purple-800">
-          <RefreshCw className="w-5 h-5 text-purple-600 flex-shrink-0" />
-          <div>
-            <p className="text-sm font-semibold text-purple-900 dark:text-purple-100">
-              Гарантия возврата в течение 14 дней
-            </p>
-          </div>
+        <div className="flex items-center gap-3 text-sm">
+          <CheckCircle2 className="text-blue-500 flex-shrink-0" size={20} />
+          <span className="text-gray-700 dark:text-gray-300">Гарантия возврата средств</span>
         </div>
       </motion.div>
 
