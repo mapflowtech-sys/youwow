@@ -18,13 +18,24 @@ export async function POST(request: NextRequest) {
     const bypassEmail = process.env.TEST_BYPASS_EMAIL;
     const isBypassRequest = bypass && bypassEmail && email.toLowerCase() === bypassEmail.toLowerCase();
 
+    // Determine price: bypass = 0, test price if set, otherwise regular price
+    const testPrice = process.env.YOOKASSA_MIN_TEST_PRICE
+      ? parseInt(process.env.YOOKASSA_MIN_TEST_PRICE) / 100
+      : null;
+
+    const finalPrice = isBypassRequest ? 0 : (testPrice || SONG_PRICE);
+
+    if (testPrice) {
+      console.log(`[Payment] Using test price: ${testPrice}₽ (from YOOKASSA_MIN_TEST_PRICE=${process.env.YOOKASSA_MIN_TEST_PRICE} копеек)`);
+    }
+
     // Create order in database
     const order = await createOrder({
       serviceType: 'song',
       customerEmail: email,
       customerName: formData.aboutWho || 'Клиент',
       inputData: formData,
-      amount: isBypassRequest ? 0 : SONG_PRICE, // Free for bypass
+      amount: finalPrice,
     });
 
     console.log('[Payment] Order created:', order.id, isBypassRequest ? '(BYPASS MODE)' : '');
@@ -52,7 +63,7 @@ export async function POST(request: NextRequest) {
     const payment = await paymentProvider.createPayment({
       orderId: order.id,
       userId: order.user_id || order.id,
-      amount: SONG_PRICE,
+      amount: finalPrice,
       email: email,
       method: method || 'card', // Use selected method or default to card
       useWidget: useWidget ?? false, // Use widget mode if requested
