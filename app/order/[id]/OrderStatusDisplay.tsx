@@ -38,27 +38,55 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
   const [currentFactIndex, setCurrentFactIndex] = useState(0)
   const [copied, setCopied] = useState(false)
 
+  // Состояние для хранения обновлённых данных заказа
+  const [currentOrder, setCurrentOrder] = useState(order)
+
   // Авто-обновление для статусов в процессе
   useEffect(() => {
-    if (['pending', 'paid', 'processing'].includes(order.status)) {
-      const interval = setInterval(() => {
-        router.refresh()
-      }, 5000)
+    if (['pending', 'paid', 'processing'].includes(currentOrder.status)) {
+      const fetchStatus = async () => {
+        try {
+          const response = await fetch(`/api/song/status?orderId=${currentOrder.id}`)
+          if (response.ok) {
+            const data = await response.json()
+            if (data.success && data.order) {
+              // Обновляем локальное состояние с новыми данными
+              setCurrentOrder({
+                ...currentOrder,
+                status: data.order.status,
+                result_url: data.order.resultUrl,
+                result_metadata: data.order.resultMetadata,
+                error_message: data.order.errorMessage,
+                completed_at: data.order.completedAt,
+              })
+              console.log('[OrderStatus] Обновлён статус:', data.order.status)
+            }
+          }
+        } catch (error) {
+          console.error('[OrderStatus] Ошибка получения статуса:', error)
+        }
+      }
+
+      // Первое обновление сразу
+      fetchStatus()
+
+      // Затем каждые 5 секунд
+      const interval = setInterval(fetchStatus, 5000)
 
       return () => clearInterval(interval)
     }
-  }, [order.status, router])
+  }, [currentOrder.status, currentOrder.id])
 
   // Смена фактов каждые 8 секунд
   useEffect(() => {
-    if (order.status === 'processing') {
+    if (currentOrder.status === 'processing') {
       const interval = setInterval(() => {
         setCurrentFactIndex((prev) => (prev + 1) % MUSIC_FACTS.length)
       }, 8000)
 
       return () => clearInterval(interval)
     }
-  }, [order.status])
+  }, [currentOrder.status])
 
   const getStatusConfig = () => {
     const configs = {
@@ -104,7 +132,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
       }
     }
 
-    return configs[order.status] || configs.pending
+    return configs[currentOrder.status] || configs.pending
   }
 
   const config = getStatusConfig()
@@ -200,28 +228,28 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
             </div>
 
             <div className={`h-0.5 w-12 transition-colors duration-500 ${
-              ['paid', 'processing', 'completed'].includes(order.status) ? 'bg-green-500' : 'bg-primary'
+              ['paid', 'processing', 'completed'].includes(currentOrder.status) ? 'bg-green-500' : 'bg-primary'
             }`} />
 
             {/* Шаг 2: Оплата */}
             <div className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold transition-all duration-500 ${
-                ['processing', 'completed'].includes(order.status)
+                ['processing', 'completed'].includes(currentOrder.status)
                   ? 'bg-green-500'
-                  : ['paid'].includes(order.status)
+                  : ['paid'].includes(currentOrder.status)
                   ? 'bg-primary'
                   : 'bg-slate-300'
               }`}>
-                {['processing', 'completed'].includes(order.status) ? (
+                {['processing', 'completed'].includes(currentOrder.status) ? (
                   <CheckCircle2 className="w-5 h-5" />
                 ) : (
                   '2'
                 )}
               </div>
               <span className={`text-sm font-medium transition-colors duration-500 ${
-                ['processing', 'completed'].includes(order.status)
+                ['processing', 'completed'].includes(currentOrder.status)
                   ? 'text-green-600'
-                  : ['paid'].includes(order.status)
+                  : ['paid'].includes(currentOrder.status)
                   ? 'text-primary'
                   : 'text-slate-500'
               }`}>
@@ -230,39 +258,39 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
             </div>
 
             <div className={`h-0.5 w-12 transition-colors duration-500 ${
-              order.status === 'completed' ? 'bg-green-500' : ['processing'].includes(order.status) ? 'bg-purple-500' : 'bg-slate-300'
+              currentOrder.status === 'completed' ? 'bg-green-500' : ['processing'].includes(currentOrder.status) ? 'bg-purple-500' : 'bg-slate-300'
             }`} />
 
             {/* Шаг 3: Генерация - активный с анимацией */}
             <div className="flex items-center gap-2">
               <motion.div
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
-                  order.status === 'completed'
+                  currentOrder.status === 'completed'
                     ? 'bg-green-500 text-white'
-                    : order.status === 'processing'
+                    : currentOrder.status === 'processing'
                     ? 'bg-purple-500 text-white'
                     : 'bg-slate-300 text-slate-600'
                 }`}
-                animate={order.status === 'processing' ? {
+                animate={currentOrder.status === 'processing' ? {
                   scale: [1, 1.15, 1],
                   rotate: [0, 5, -5, 0],
                 } : {}}
                 transition={{
                   duration: 2,
-                  repeat: order.status === 'processing' ? Infinity : 0,
+                  repeat: currentOrder.status === 'processing' ? Infinity : 0,
                   ease: "easeInOut"
                 }}
               >
-                {order.status === 'completed' ? (
+                {currentOrder.status === 'completed' ? (
                   <CheckCircle2 className="w-5 h-5" />
                 ) : (
                   <Music2 className="w-5 h-5" />
                 )}
               </motion.div>
               <span className={`text-sm font-medium transition-colors duration-500 ${
-                order.status === 'completed'
+                currentOrder.status === 'completed'
                   ? 'text-green-600'
-                  : order.status === 'processing'
+                  : currentOrder.status === 'processing'
                   ? 'text-purple-600 font-bold'
                   : 'text-slate-500'
               }`}>
@@ -275,20 +303,20 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Заказ:</span>
-              <span className="font-mono">#{order.id.slice(0, 8)}</span>
+              <span className="font-mono">#{currentOrder.id.slice(0, 8)}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Email:</span>
-              <span>{order.customer_email}</span>
+              <span>{currentOrder.customer_email}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Сумма:</span>
-              <span className="font-bold">{order.amount} ₽</span>
+              <span className="font-bold">{currentOrder.amount} ₽</span>
             </div>
           </div>
 
           {/* Интересный факт во время обработки */}
-          {order.status === 'processing' && (
+          {currentOrder.status === 'processing' && (
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentFactIndex}
@@ -307,16 +335,16 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           )}
 
           {/* Результат для completed */}
-          {order.status === 'completed' && order.result_url && (
+          {currentOrder.status === 'completed' && currentOrder.result_url && (
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-4"
             >
               {/* Audio Player (if song) */}
-              {order.service_type === 'song' && (
+              {currentOrder.service_type === 'song' && (
                 <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
-                  <audio controls className="w-full" src={order.result_url}>
+                  <audio controls className="w-full" src={currentOrder.result_url}>
                     Ваш браузер не поддерживает аудио.
                   </audio>
                 </div>
@@ -328,7 +356,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                 size="lg"
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
-                <a href={order.result_url} download>
+                <a href={currentOrder.result_url} download>
                   <Download className="mr-2 h-5 w-5" />
                   Скачать песню
                 </a>
@@ -400,16 +428,16 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
               </div>
 
               <p className="text-xs text-center text-muted-foreground">
-                Песня также отправлена на {order.customer_email}
+                Песня также отправлена на {currentOrder.customer_email}
               </p>
             </motion.div>
           )}
 
           {/* Error Message */}
-          {order.status === 'failed' && (
+          {currentOrder.status === 'failed' && (
             <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl p-4">
               <p className="text-red-800 dark:text-red-200 font-semibold mb-2">
-                {order.error_message || 'Произошла неизвестная ошибка'}
+                {currentOrder.error_message || 'Произошла неизвестная ошибка'}
               </p>
               <p className="text-sm text-red-600 dark:text-red-300">
                 Напишите нам в Telegram:{" "}
