@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Shield, Zap, RefreshCw, CheckCircle2, Music2 } from "lucide-react";
+import { Shield, Zap, CheckCircle2, Music2 } from "lucide-react";
 import type { YooKassaWidget, YooKassaWidgetConfig } from "@/types/yookassa-widget";
 
 interface PaymentWidgetProps {
