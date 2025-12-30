@@ -35,9 +35,46 @@ const MUSIC_FACTS = [
 export default function OrderStatusDisplayNew({ order }: { order: Order }) {
   const [currentFactIndex, setCurrentFactIndex] = useState(0)
   const [copied, setCopied] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
 
   // Состояние для хранения обновлённых данных заказа
   const [currentOrder, setCurrentOrder] = useState(order)
+
+  // Функция для принудительного скачивания файла
+  const handleDownload = async () => {
+    if (!currentOrder.result_url) return
+
+    setIsDownloading(true)
+    try {
+      // Создаём прокси через API route для скачивания
+      const response = await fetch(`/api/download?url=${encodeURIComponent(currentOrder.result_url)}`)
+
+      if (!response.ok) {
+        throw new Error('Download failed')
+      }
+
+      // Получаем blob
+      const blob = await response.blob()
+
+      // Создаём временную ссылку для скачивания
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `youwow-song-${currentOrder.id.slice(0, 8)}.mp3`
+      document.body.appendChild(link)
+      link.click()
+
+      // Очистка
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error('Download error:', error)
+      // Fallback: открыть в новой вкладке
+      window.open(currentOrder.result_url, '_blank')
+    } finally {
+      setIsDownloading(false)
+    }
+  }
 
   // Авто-обновление для статусов в процессе
   useEffect(() => {
@@ -350,14 +387,13 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
 
               {/* Download Button */}
               <Button
-                asChild
+                onClick={handleDownload}
+                disabled={isDownloading}
                 size="lg"
                 className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
-                <a href={currentOrder.result_url} download>
-                  <Download className="mr-2 h-5 w-5" />
-                  Скачать песню
-                </a>
+                <Download className="mr-2 h-5 w-5" />
+                {isDownloading ? 'Скачивание...' : 'Скачать песню'}
               </Button>
 
               {/* Share Buttons */}
