@@ -31,15 +31,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // ВАЖНО: Проверяем статус и сразу меняем на processing атомарно!
+    // Это предотвращает дублирование генерации при параллельных вызовах
     if (order.status !== 'pending' && order.status !== 'paid') {
+      console.log(`[${orderId}] Заказ уже в статусе ${order.status}, пропускаем генерацию`);
       return NextResponse.json(
         { error: 'Заказ уже обработан или обрабатывается' },
         { status: 400 }
       );
     }
 
-    // Обновляем статус на "paid" (имитация оплаты)
-    await updateOrderStatus(orderId, 'paid');
+    // Атомарно меняем статус на "processing" чтобы избежать race condition
+    await updateOrderStatus(orderId, 'processing');
+    console.log(`[${orderId}] Статус изменён на processing, запускаем генерацию`);
 
     // Запускаем генерацию в фоне (не блокируя ответ)
     // В production это должно быть в отдельной очереди/worker
@@ -72,8 +76,8 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     // Получаем заказ для доступа к customer_email
     const order = await getOrderById(orderId);
 
-    // Обновляем статус на "processing"
-    await updateOrderStatus(orderId, 'processing');
+    // Статус уже установлен в "processing" в вызывающей функции
+    // (не меняем здесь, чтобы не было race condition)
 
     // Шаг 1: Генерация текста песни через ChatGPT
     console.log(`[${orderId}] Генерация текста...`);

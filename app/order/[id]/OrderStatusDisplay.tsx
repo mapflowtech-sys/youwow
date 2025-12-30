@@ -189,25 +189,86 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
         </div>
 
         <CardContent className="space-y-6 pt-6">
-          {/* Progress Steps */}
-          <div className="flex items-center justify-between">
-            <ProgressStep label="Форма" completed={true} />
-            <div className="flex-1 h-1 bg-slate-200 dark:bg-slate-700 mx-2">
-              <motion.div
-                className="h-full bg-primary"
-                initial={{ width: 0 }}
-                animate={{ width: ['paid', 'processing', 'completed'].includes(order.status) ? '100%' : 0 }}
-              />
+          {/* Progress Steps - Анимированный как в PaymentWidget */}
+          <div className="flex items-center justify-center gap-4">
+            {/* Шаг 1: Форма - всегда завершён */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
+              <span className="text-sm font-medium">Форма</span>
             </div>
-            <ProgressStep label="Оплата" completed={['paid', 'processing', 'completed'].includes(order.status)} />
-            <div className="flex-1 h-1 bg-slate-200 dark:bg-slate-700 mx-2">
-              <motion.div
-                className="h-full bg-primary"
-                initial={{ width: 0 }}
-                animate={{ width: order.status === 'completed' ? '100%' : 0 }}
-              />
+
+            <div className={`h-0.5 w-12 transition-colors duration-500 ${
+              ['paid', 'processing', 'completed'].includes(order.status) ? 'bg-green-500' : 'bg-primary'
+            }`} />
+
+            {/* Шаг 2: Оплата */}
+            <div className="flex items-center gap-2">
+              <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold transition-all duration-500 ${
+                ['processing', 'completed'].includes(order.status)
+                  ? 'bg-green-500'
+                  : ['paid'].includes(order.status)
+                  ? 'bg-primary'
+                  : 'bg-slate-300'
+              }`}>
+                {['processing', 'completed'].includes(order.status) ? (
+                  <CheckCircle2 className="w-5 h-5" />
+                ) : (
+                  '2'
+                )}
+              </div>
+              <span className={`text-sm font-medium transition-colors duration-500 ${
+                ['processing', 'completed'].includes(order.status)
+                  ? 'text-green-600'
+                  : ['paid'].includes(order.status)
+                  ? 'text-primary'
+                  : 'text-slate-500'
+              }`}>
+                Оплата
+              </span>
             </div>
-            <ProgressStep label="Генерация" completed={order.status === 'completed'} />
+
+            <div className={`h-0.5 w-12 transition-colors duration-500 ${
+              order.status === 'completed' ? 'bg-green-500' : ['processing'].includes(order.status) ? 'bg-purple-500' : 'bg-slate-300'
+            }`} />
+
+            {/* Шаг 3: Генерация - активный с анимацией */}
+            <div className="flex items-center gap-2">
+              <motion.div
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
+                  order.status === 'completed'
+                    ? 'bg-green-500 text-white'
+                    : order.status === 'processing'
+                    ? 'bg-purple-500 text-white'
+                    : 'bg-slate-300 text-slate-600'
+                }`}
+                animate={order.status === 'processing' ? {
+                  scale: [1, 1.15, 1],
+                  rotate: [0, 5, -5, 0],
+                } : {}}
+                transition={{
+                  duration: 2,
+                  repeat: order.status === 'processing' ? Infinity : 0,
+                  ease: "easeInOut"
+                }}
+              >
+                {order.status === 'completed' ? (
+                  <CheckCircle2 className="w-5 h-5" />
+                ) : (
+                  <Music2 className="w-5 h-5" />
+                )}
+              </motion.div>
+              <span className={`text-sm font-medium transition-colors duration-500 ${
+                order.status === 'completed'
+                  ? 'text-green-600'
+                  : order.status === 'processing'
+                  ? 'text-purple-600 font-bold'
+                  : 'text-slate-500'
+              }`}>
+                Генерация
+              </span>
+            </div>
           </div>
 
           {/* Order Info */}
@@ -378,25 +439,3 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
   )
 }
 
-// Progress Step Component
-function ProgressStep({ label, completed }: { label: string; completed: boolean }) {
-  return (
-    <div className="flex flex-col items-center">
-      <motion.div
-        className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-          completed
-            ? 'bg-primary border-primary text-white'
-            : 'border-slate-300 dark:border-slate-700 text-slate-400'
-        }`}
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ type: "spring", stiffness: 200, damping: 15 }}
-      >
-        {completed && <CheckCircle2 className="w-5 h-5" />}
-      </motion.div>
-      <p className={`text-xs mt-2 ${completed ? 'font-semibold' : 'text-muted-foreground'}`}>
-        {label}
-      </p>
-    </div>
-  )
-}
