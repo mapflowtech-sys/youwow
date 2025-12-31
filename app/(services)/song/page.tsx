@@ -245,8 +245,8 @@ function AudioPlayerCard({
 function ExamplesGrid() {
   const examples = [
     {
-      title: "Поп про друга",
-      genre: "Новогодний поп",
+      title: "Песня для друга",
+      genre: "Для того, кто всегда рядом",
       audioSrc: "/examples/pop-friend.mp3",
       gradientFrom: "from-violet-100/80",
       gradientTo: "to-purple-100/80",
@@ -254,8 +254,8 @@ function ExamplesGrid() {
       progressGradient: "bg-gradient-to-r from-violet-500 to-purple-500"
     },
     {
-      title: "Рок для брата",
-      genre: "Рок",
+      title: "Песня для брата",
+      genre: "Для самого близкого человека",
       audioSrc: "/examples/rock-brother.mp3",
       gradientFrom: "from-purple-100/80",
       gradientTo: "to-pink-100/80",
@@ -263,8 +263,8 @@ function ExamplesGrid() {
       progressGradient: "bg-gradient-to-r from-purple-500 to-pink-500"
     },
     {
-      title: "Рэп коллеге",
-      genre: "Рэп",
+      title: "Песня для коллеги",
+      genre: "Для человека из твоей команды",
       audioSrc: "/examples/rap-colleague.mp3",
       gradientFrom: "from-pink-100/80",
       gradientTo: "to-rose-100/80",
@@ -272,8 +272,8 @@ function ExamplesGrid() {
       progressGradient: "bg-gradient-to-r from-pink-500 to-rose-500"
     },
     {
-      title: "Шансон маме",
-      genre: "Шансон",
+      title: "Песня для мамы",
+      genre: "Для самого родного человека",
       audioSrc: "/examples/chanson-mom.mp3",
       gradientFrom: "from-rose-100/80",
       gradientTo: "to-orange-100/80",
