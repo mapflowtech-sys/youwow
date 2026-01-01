@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Скачать логотип YouWow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .logo-preview {
+            margin: 30px 0;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .preview-item {
+            text-align: center;
+        }
+        .preview-box {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+        img {
+            display: block;
+            border-radius: 10px;
+        }
+        button {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 50%, #f59e0b 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .size-label {
+            font-size: 14px;
+            color: #888;
+            font-weight: 600;
+        }
+        .instructions {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin-top: 30px;
+            text-align: left;
+            border-radius: 5px;
+        }
+        .instructions h3 {
+            color: #3b82f6;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            color: #555;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Логотип YouWow</h1>
+        <p>Скачай логотип в нужном размере для Telegram и других соцсетей</p>
+
+        <div class="logo-preview">
+            <div class="preview-item">
+                <div class="preview-box">
+                    <img id="preview512" width="200" height="200" alt="Логотип 512x512">
+                </div>
+                <p class="size-label">512×512 px</p>
+                <button onclick="downloadLogo(512)">Скачать 512×512</button>
+            </div>
+
+            <div class="preview-item">
+                <div class="preview-box">
+                    <img id="preview192" width="150" height="150" alt="Логотип 192x192">
+                </div>
+                <p class="size-label">192×192 px</p>
+                <button onclick="downloadLogo(192)">Скачать 192×192</button>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h3>📱 Как использовать:</h3>
+            <ol>
+                <li><strong>Telegram:</strong> Нажми "Скачать 512×512" и установи как аватар в настройках канала/группы</li>
+                <li><strong>WhatsApp Business:</strong> Используй 192×192 или 512×512</li>
+                <li><strong>VK:</strong> Подойдет любой размер (оптимально 512×512)</li>
+                <li><strong>Instagram:</strong> Используй 512×512 (будет обрезан в круг)</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const svgContent = `<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fef3c7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <circle cx="256" cy="256" r="256" fill="url(#bgGradient)"/>
+  <g transform="translate(256, 256)">
+    <path d="M 0,-80 L 8,-8 L 80,0 L 8,8 L 0,80 L -8,8 L -80,0 L -8,-8 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="4"/>
+    <path d="M 60,-100 L 64,-64 L 100,-60 L 64,-56 L 60,-20 L 56,-56 L 20,-60 L 56,-64 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="3"/>
+    <path d="M -60,100 L -56,64 L -20,60 L -56,56 L -60,20 L -64,56 L -100,60 L -64,64 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="3"/>
+    <path d="M -80,-80 L -76,-60 L -60,-56 L -76,-52 L -80,-32 L -84,-52 L -100,-56 L -84,-60 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="2"/>
+    <path d="M 80,80 L 84,60 L 100,56 L 84,52 L 80,32 L 76,52 L 60,56 L 76,60 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="2"/>
+  </g>
+</svg>`;
+
+        function svgToPng(svgString, size, callback) {
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+
+            const img = new Image();
+            const blob = new Blob([svgString], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, size, size);
+                URL.revokeObjectURL(url);
+                callback(canvas.toDataURL('image/png'));
+            };
+
+            img.src = url;
+        }
+
+        // Generate previews
+        svgToPng(svgContent, 512, function(dataUrl) {
+            document.getElementById('preview512').src = dataUrl;
+        });
+
+        svgToPng(svgContent, 192, function(dataUrl) {
+            document.getElementById('preview192').src = dataUrl;
+        });
+
+        function downloadLogo(size) {
+            svgToPng(svgContent, size, function(dataUrl) {
+                const link = document.createElement('a');
+                link.download = `youwow-logo-${size}x${size}.png`;
+                link.href = dataUrl;
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

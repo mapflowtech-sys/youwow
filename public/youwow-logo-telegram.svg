@@ -1,0 +1,50 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background circle -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sparkleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fef3c7;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="url(#bgGradient)"/>
+
+  <!-- Sparkles icon (simplified lucide-react sparkles) -->
+  <g transform="translate(256, 256)">
+    <!-- Center star -->
+    <path d="M 0,-80 L 8,-8 L 80,0 L 8,8 L 0,80 L -8,8 L -80,0 L -8,-8 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="4"/>
+
+    <!-- Top-right small star -->
+    <path d="M 60,-100 L 64,-64 L 100,-60 L 64,-56 L 60,-20 L 56,-56 L 20,-60 L 56,-64 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="3"/>
+
+    <!-- Bottom-left small star -->
+    <path d="M -60,100 L -56,64 L -20,60 L -56,56 L -60,20 L -64,56 L -100,60 L -64,64 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="3"/>
+
+    <!-- Top-left tiny star -->
+    <path d="M -80,-80 L -76,-60 L -60,-56 L -76,-52 L -80,-32 L -84,-52 L -100,-56 L -84,-60 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="2"/>
+
+    <!-- Bottom-right tiny star -->
+    <path d="M 80,80 L 84,60 L 100,56 L 84,52 L 80,32 L 76,52 L 60,56 L 76,60 Z"
+          fill="url(#sparkleGradient)"
+          stroke="white"
+          stroke-width="2"/>
+  </g>
+</svg>
