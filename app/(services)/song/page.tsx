@@ -727,8 +727,14 @@ export default function SongPage() {
             <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
               Хиты, созданные сегодня
             </h2>
-            <p className="text-xl text-slate-600 dark:text-slate-300">
+            <p className="text-xl text-slate-600 dark:text-slate-300 mb-3">
               Послушайте реальные примеры песен, которые наши клиенты получили за последние 24 часа
+            </p>
+            <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center gap-2">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Все треки публикуются только с согласия авторов
             </p>
           </motion.div>
 
@@ -736,17 +742,70 @@ export default function SongPage() {
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="py-16 bg-white dark:bg-slate-800">
+      {/* Reviews Section */}
+      <section className="py-20 bg-white dark:bg-slate-800">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": "Персональная песня на заказ",
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "344"
+              },
+              "review": [
+                {
+                  "@type": "Review",
+                  "author": {
+                    "@type": "Person",
+                    "name": "Мария"
+                  },
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5"
+                  },
+                  "reviewBody": "Заказала песню для мамы на юбилей. Когда она услышала, просто расплакалась от счастья. Там были все наши семейные истории, которые я указала в форме. Спасибо вам огромное за такой подарок!"
+                },
+                {
+                  "@type": "Review",
+                  "author": {
+                    "@type": "Person",
+                    "name": "Алексей"
+                  },
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5"
+                  },
+                  "reviewBody": "Сделал песню-прожарку для друга на день рождения. Вся компания смеялась до слёз! Качество трека как у настоящих исполнителей, даже не верится что это AI. Однозначно буду заказывать ещё!"
+                },
+                {
+                  "@type": "Review",
+                  "author": {
+                    "@type": "Person",
+                    "name": "Екатерина"
+                  },
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": "5"
+                  },
+                  "reviewBody": "Подарила мужу романтичную песню на годовщину. Он был в полном шоке! Говорит, это лучший подарок за всю нашу жизнь. И правда, песня получилась очень трогательная и личная."
+                }
+              ]
+            })
+          }}
+        />
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center"
+            className="text-center mb-12"
           >
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="flex" aria-label="Рейтинг 5 из 5 звезд">
+              <div className="flex" aria-label="Рейтинг 4.9 из 5 звезд">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
@@ -756,13 +815,84 @@ export default function SongPage() {
                 ))}
               </div>
             </div>
-            <h3 className="text-3xl md:text-4xl font-bold mb-2">
-              Более 5 000 песен создано
-            </h3>
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">
+              Что говорят наши клиенты
+            </h2>
             <p className="text-xl text-slate-600 dark:text-slate-300">
-              Каждая стала любимым треком получателя
+              Более 5 000 песен создано - каждая стала любимым треком получателя
             </p>
           </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {[
+              {
+                name: "Мария",
+                rating: 5,
+                text: "Заказала песню для мамы на юбилей. Когда она услышала, просто расплакалась от счастья. Там были все наши семейные истории, которые я указала в форме. Спасибо вам огромное за такой подарок!",
+                gradient: "from-purple-500 to-pink-500"
+              },
+              {
+                name: "Алексей",
+                rating: 5,
+                text: "Сделал песню-прожарку для друга на день рождения. Вся компания смеялась до слёз! Качество трека как у настоящих исполнителей, даже не верится что это AI. Однозначно буду заказывать ещё!",
+                gradient: "from-pink-500 to-orange-500"
+              },
+              {
+                name: "Екатерина",
+                rating: 5,
+                text: "Подарила мужу романтичную песню на годовщину. Он был в полном шоке! Говорит, это лучший подарок за всю нашу жизнь. И правда, песня получилась очень трогательная и личная.",
+                gradient: "from-orange-500 to-red-500"
+              }
+            ].map((review, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="group"
+              >
+                <Card className="h-full border-2 hover:border-primary/50 transition-all hover:shadow-xl">
+                  <CardContent className="p-6 flex flex-col h-full">
+                    {/* Avatar with gradient */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${review.gradient} flex items-center justify-center text-white font-bold text-xl`}>
+                        {review.name[0]}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-slate-900 dark:text-white">
+                          {review.name}
+                        </div>
+                        <div className="flex gap-0.5 mt-1">
+                          {[...Array(review.rating)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className="h-4 w-4 fill-yellow-400 text-yellow-400"
+                              aria-hidden="true"
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Review text */}
+                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-grow">
+                      "{review.text}"
+                    </p>
+
+                    {/* Verified badge */}
+                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+                      <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                        <Shield className="w-4 h-4 text-green-600" aria-hidden="true" />
+                        <span>Подтверждённый заказ</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
         </div>
       </section>
 
