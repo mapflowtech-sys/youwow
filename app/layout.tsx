@@ -102,6 +102,8 @@ export default function RootLayout({
         {/* Preconnect to Google Fonts for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Theme color for browser UI */}
+        <meta name="theme-color" content="#a855f7" />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
         <ThemeProvider
