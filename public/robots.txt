@@ -1,13 +1,13 @@
 # Robots.txt for YouWow.ru
 User-agent: *
 Disallow: /api/
+Disallow: /_next/data/
 Disallow: /payment/
 Disallow: /order/
 Disallow: /orders/
 Disallow: /test/
 Allow: /_next/static/
 Allow: /_next/image/
-Allow: /public/
 
 # Sitemap
 Sitemap: https://youwow.ru/sitemap.xml
