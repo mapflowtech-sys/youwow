@@ -611,7 +611,7 @@ export default function SongPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-12 relative max-w-7xl mx-auto">
             {[
               {
                 step: 1,
@@ -653,11 +653,11 @@ export default function SongPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.15, duration: 0.5 }}
-                className="relative group"
+                className={`relative group ${index === 2 ? 'sm:col-span-2 sm:max-w-md sm:mx-auto lg:col-span-1 lg:max-w-none' : ''}`}
               >
                 {/* Connecting Line Animation */}
                 {index < 2 && (
-                  <div className="hidden md:block absolute top-20 -right-6 lg:-right-8 w-12 lg:w-16 h-0.5 bg-gradient-to-r from-primary/30 to-transparent z-0">
+                  <div className="hidden lg:block absolute top-20 -right-6 lg:-right-8 w-12 lg:w-16 h-0.5 bg-gradient-to-r from-primary/30 to-transparent z-0">
                     <motion.div
                       className="h-full bg-gradient-to-r from-primary to-transparent"
                       initial={{ width: 0 }}
@@ -1513,7 +1513,12 @@ export default function SongPage() {
                       aria-label="Отправить заказ на создание персональной песни"
                     >
                       <span className="relative z-10 flex items-center justify-center w-full">
-                        {isSubmitting ? 'Создаём заказ...' : 'Получить готовую песню'}
+                        {isSubmitting ? 'Создаём заказ...' : (
+                          <>
+                            <span className="hidden sm:inline">Получить готовую песню</span>
+                            <span className="inline sm:hidden">Получить песню</span>
+                          </>
+                        )}
                         {!isSubmitting && <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />}
                       </span>
                       {/* Shine animation */}
