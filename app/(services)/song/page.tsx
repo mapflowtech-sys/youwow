@@ -877,7 +877,7 @@ export default function SongPage() {
 
                     {/* Review text */}
                     <p className="text-slate-600 dark:text-slate-300 leading-relaxed flex-grow">
-                      "{review.text}"
+                      &quot;{review.text}&quot;
                     </p>
 
                     {/* Verified badge */}
