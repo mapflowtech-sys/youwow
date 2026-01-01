@@ -74,7 +74,7 @@ export default function Home() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl"
         >
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer px-2">
             Персональные подарки с эмоцией
           </h1>
 

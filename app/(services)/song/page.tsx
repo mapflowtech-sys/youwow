@@ -543,10 +543,8 @@ export default function SongPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto] pb-2">
-              Персональная песня на заказ —
-              <br />
-              индивидуальный подарок на день рождения
+            <h1 className="font-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto] pb-2 px-2">
+              Персональная песня в подарок на день рождения
             </h1>
             <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto">
               Необычный музыкальный подарок, который удивляет с первого прослушивания. Уникальная песня с именами, фактами и личными историями получателя
@@ -1417,9 +1415,9 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="male"
-                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
+                                  className="flex items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
                                 >
-                                  🎤 Мужской
+                                  Мужской
                                 </FormLabel>
                               </div>
                             </FormControl>
@@ -1434,9 +1432,9 @@ export default function SongPage() {
                                 />
                                 <FormLabel
                                   htmlFor="female"
-                                  className="flex items-center justify-center gap-2 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
+                                  className="flex items-center justify-center rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-4 hover:bg-slate-50 dark:hover:bg-slate-700 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer font-semibold"
                                 >
-                                  🎤 Женский
+                                  Женский
                                 </FormLabel>
                               </div>
                             </FormControl>
@@ -1800,7 +1798,7 @@ export default function SongPage() {
                 Наша цель - чтобы вы получили эмоцию, которой захотите поделиться и подарить.
                 Мы всегда на связи и готовы помочь на каждом этапе.
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
                 <span className="text-slate-600 dark:text-slate-400">
                   Поддержка 24/7:
                 </span>
