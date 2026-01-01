@@ -1,0 +1,26 @@
+# Robots.txt for YouWow.ru
+# Разрешаем индексацию всем поисковым роботам
+
+User-agent: *
+Allow: /
+
+# Особые настройки для Яндекса
+User-agent: Yandex
+Allow: /
+
+# Особые настройки для Google
+User-agent: Googlebot
+Allow: /
+
+# Запрещаем индексацию технических страниц
+Disallow: /api/
+Disallow: /payment/
+Disallow: /order/
+Disallow: /orders/
+Disallow: /test/
+
+# Указываем путь к карте сайта
+Sitemap: https://youwow.ru/sitemap.xml
+
+# Время задержки между запросами (в секундах)
+Crawl-delay: 1
