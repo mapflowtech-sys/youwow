@@ -96,6 +96,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Organization JSON-LD schema for brand identity
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'YouWow',
+    url: 'https://youwow.ru',
+    logo: 'https://youwow.ru/icon-512.png',
+    description: 'Персональные подарки с WOW-эффектом: индивидуальные песни и видео-поздравления',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Service',
+      availableLanguage: ['Russian'],
+      url: 'https://t.me/youwow_support'
+    },
+    sameAs: [
+      'https://t.me/youwow_support'
+    ]
+  };
+
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
@@ -104,6 +123,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#a855f7" />
+        {/* Organization JSON-LD for SEO */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
       </head>
       <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
         <ThemeProvider
