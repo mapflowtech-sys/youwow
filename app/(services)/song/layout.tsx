@@ -31,6 +31,23 @@ export const metadata: Metadata = {
     description:
       "Закажите уникальную персональную песню! Индивидуальный музыкальный подарок. Готово за 10 минут. От 590₽",
     type: "website",
+    url: "https://youwow.ru/song",
+    siteName: "YouWow",
+    images: [
+      {
+        url: "/og-song.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Персональная песня в подарок - YouWow",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Персональная песня на заказ | YouWow",
+    description:
+      "Закажите уникальную персональную песню! Индивидуальный музыкальный подарок. Готово за 10 минут. От 590₽",
+    images: ["/og-song.jpg"],
   },
 };
 
