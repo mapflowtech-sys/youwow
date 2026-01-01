@@ -32,7 +32,8 @@
       "Bash(node:*)",
       "Bash(timeout /t 65 /nobreak)",
       "Bash(ping:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(if exist publicrobots.txt type publicrobots.txt)"
     ]
   }
 }
