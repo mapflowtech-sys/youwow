@@ -107,6 +107,7 @@ function AudioPlayerCard({
   gradientTo,
   buttonColor,
   progressGradient,
+  onPlay,
 }: {
   title: string;
   genre: string;
@@ -116,6 +117,7 @@ function AudioPlayerCard({
   gradientTo: string;
   buttonColor: string;
   progressGradient: string;
+  onPlay: (audio: HTMLAudioElement) => void;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -136,12 +138,18 @@ function AudioPlayerCard({
       setProgress(0);
     };
 
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('pause', handlePause);
 
     return () => {
       audio.removeEventListener('timeupdate', updateProgress);
       audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('pause', handlePause);
     };
   }, []);
 
@@ -152,9 +160,11 @@ function AudioPlayerCard({
     if (isPlaying) {
       audio.pause();
     } else {
+      // Уведомляем родителя о начале воспроизведения
+      onPlay(audio);
       audio.play();
+      setIsPlaying(true);
     }
-    setIsPlaying(!isPlaying);
   };
 
   return (
@@ -245,6 +255,18 @@ function AudioPlayerCard({
 
 // Examples Grid Component
 function ExamplesGrid() {
+  // Ref для хранения текущего активного аудио
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const handlePlay = (audioElement: HTMLAudioElement) => {
+    // Останавливаем предыдущий трек, если он играет
+    if (currentAudioRef.current && currentAudioRef.current !== audioElement) {
+      currentAudioRef.current.pause();
+    }
+    // Сохраняем ссылку на новый активный трек
+    currentAudioRef.current = audioElement;
+  };
+
   const examples = [
     {
       title: "Песня для друга",
@@ -297,6 +319,7 @@ function ExamplesGrid() {
           gradientTo={example.gradientTo}
           buttonColor={example.buttonColor}
           progressGradient={example.progressGradient}
+          onPlay={handlePlay}
         />
       ))}
     </div>
