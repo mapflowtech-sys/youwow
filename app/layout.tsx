@@ -6,6 +6,9 @@ import { Footer } from "@/components/shared/footer";
 import { Toaster } from "@/components/ui/toaster";
 import YandexMetrika from "@/components/YandexMetrika";
 import "./globals.css";
+import "primereact/resources/themes/lara-dark-purple/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
