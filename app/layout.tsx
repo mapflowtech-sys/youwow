@@ -12,6 +12,8 @@ const inter = Inter({
   weight: ["400", "500", "600", "700"],
   variable: "--font-inter",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 const spaceGrotesk = Space_Grotesk({
@@ -19,6 +21,8 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["600", "700"],
   variable: "--font-space-grotesk",
   display: "swap",
+  preload: true,
+  adjustFontFallback: true,
 });
 
 export const metadata: Metadata = {
@@ -118,9 +122,11 @@ export default function RootLayout({
   return (
     <html lang="ru" suppressHydrationWarning>
       <head>
-        {/* Preconnect to Google Fonts for faster loading */}
+        {/* Preconnect to critical resources for faster loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://mc.yandex.ru" />
+        <link rel="preconnect" href="https://mc.yandex.ru" crossOrigin="anonymous" />
         {/* Theme color for browser UI */}
         <meta name="theme-color" content="#a855f7" />
         {/* Organization JSON-LD for SEO */}
