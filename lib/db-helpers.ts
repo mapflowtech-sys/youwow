@@ -30,6 +30,8 @@ export async function createOrder(data: {
   customerName?: string;
   inputData: Record<string, unknown>;
   amount: number;
+  partnerId?: string;
+  partnerSessionId?: string;
 }) {
   // Получаем или создаём пользователя
   const user = await getOrCreateUser(data.customerEmail);
@@ -44,6 +46,8 @@ export async function createOrder(data: {
       input_data: data.inputData,
       amount: data.amount,
       status: "pending",
+      partner_id: data.partnerId || null,
+      partner_session_id: data.partnerSessionId || null,
     })
     .select()
     .single();

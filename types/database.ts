@@ -32,6 +32,8 @@ export interface Order {
   error_message: string | null;
   processing_started_at: string | null;
   completed_at: string | null;
+  partner_id: string | null; // ID партнёра из таблицы partners
+  partner_session_id: string | null; // Session ID из партнёрского cookie
 }
 
 export interface ServiceOption {

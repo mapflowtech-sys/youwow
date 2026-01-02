@@ -86,6 +86,7 @@ export async function hasActivePartner(): Promise<boolean> {
 
 /**
  * Записать конверсию (покупку) для партнёра
+ * Читает данные из заказа (не из cookie, т.к. вызывается из серверного контекста)
  */
 export async function trackConversion(
   orderId: string,
@@ -93,14 +94,17 @@ export async function trackConversion(
   amount: number
 ): Promise<void> {
   try {
-    const partnerData = await getPartnerCookie();
+    // Импортируем здесь, чтобы избежать циклических зависимостей
+    const { getOrderById } = await import('@/lib/db-helpers');
+    const order = await getOrderById(orderId);
 
-    if (!partnerData) {
-      console.log('[Affiliate] No partner cookie found, skipping conversion tracking');
+    // Проверяем есть ли партнёрские данные в заказе
+    if (!order.partner_id || !order.partner_session_id) {
+      console.log('[Affiliate] No partner data in order, skipping conversion tracking');
       return;
     }
 
-    console.log('[Affiliate] Tracking conversion for partner:', partnerData.partnerId);
+    console.log('[Affiliate] Tracking conversion for partner:', order.partner_id);
 
     // Вызываем API для записи конверсии
     // Используем абсолютный URL для серверных запросов
@@ -113,8 +117,8 @@ export async function trackConversion(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        partner_id: partnerData.partnerId,
-        session_id: partnerData.sessionId,
+        partner_id: order.partner_id,
+        session_id: order.partner_session_id,
         order_id: orderId,
         service_type: serviceType,
         amount: amount,

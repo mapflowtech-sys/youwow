@@ -6,13 +6,18 @@
 
 1. Откройте ваш проект в **Supabase Dashboard**
 2. Перейдите в **SQL Editor**
-3. Скопируйте содержимое файла `supabase/migrations/001_create_affiliate_tables.sql`
+3. **Миграция 1**: Скопируйте содержимое файла `supabase/migrations/001_create_affiliate_tables.sql`
 4. Выполните SQL-запрос (Execute SQL)
-5. Проверьте что таблицы созданы: **Table Editor** → должны появиться:
+5. **Миграция 2**: Скопируйте содержимое файла `supabase/migrations/002_add_affiliate_to_orders.sql`
+6. Выполните SQL-запрос (Execute SQL)
+7. Проверьте что таблицы созданы: **Table Editor** → должны появиться:
    - `partners`
    - `partner_clicks`
    - `partner_conversions`
    - `partner_payouts`
+8. Проверьте что в таблице `orders` появились поля:
+   - `partner_id`
+   - `partner_session_id`
 
 ### Создание тестовых партнёров (опционально):
 

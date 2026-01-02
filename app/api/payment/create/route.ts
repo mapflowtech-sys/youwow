@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPaymentProvider, SONG_PRICE } from '@/lib/payment/config';
 import { createOrder } from '@/lib/db-helpers';
+import { getPartnerCookie } from '@/lib/affiliate/tracking';
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,6 +30,13 @@ export async function POST(request: NextRequest) {
       console.log(`[Payment] Using test price: ${testPrice}₽ (from YOOKASSA_MIN_TEST_PRICE=${process.env.YOOKASSA_MIN_TEST_PRICE} копеек)`);
     }
 
+    // Получаем партнёрские данные из cookie (если есть)
+    const partnerData = await getPartnerCookie();
+
+    if (partnerData) {
+      console.log('[Payment] Partner cookie found:', partnerData.partnerId);
+    }
+
     // Create order in database
     const order = await createOrder({
       serviceType: 'song',
@@ -36,6 +44,8 @@ export async function POST(request: NextRequest) {
       customerName: formData.aboutWho || 'Клиент',
       inputData: formData,
       amount: finalPrice,
+      partnerId: partnerData?.partnerId,
+      partnerSessionId: partnerData?.sessionId,
     });
 
     console.log('[Payment] Order created:', order.id, isBypassRequest ? '(BYPASS MODE)' : '');
