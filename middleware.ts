@@ -40,10 +40,15 @@ export async function middleware(request: NextRequest) {
       const utmCampaign = searchParams.get('utm_campaign');
 
       // Асинхронно записываем клик в БД (не блокируем redirect)
-      // Используем fetch для вызова API
-      const apiUrl = new URL('/api/affiliate/track-click', request.url);
+      // Используем правильный базовый URL для production/dev
+      const protocol = request.headers.get('x-forwarded-proto') || 'https';
+      const host = request.headers.get('host') || 'localhost:3000';
+      const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
+      const apiUrl = `${baseUrl}/api/affiliate/track-click`;
 
-      fetch(apiUrl.toString(), {
+      console.log('[Affiliate Middleware] Tracking click to:', apiUrl);
+
+      fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +66,7 @@ export async function middleware(request: NextRequest) {
           utm_campaign: utmCampaign,
         }),
       }).catch((error) => {
-        console.error('Error tracking click in middleware:', error);
+        console.error('[Affiliate Middleware] Error tracking click:', error);
       });
 
       return response;

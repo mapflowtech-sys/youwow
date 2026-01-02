@@ -40,9 +40,16 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
-# URL сайта для API запросов
+# URL сайта для API запросов (КРИТИЧЕСКИ ВАЖНО!)
 NEXT_PUBLIC_SITE_URL=https://youwow.ru
 ```
+
+**⚠️ ВАЖНО:** Переменная `NEXT_PUBLIC_SITE_URL` **обязательна** для production! Без неё:
+- Middleware не сможет записывать клики в БД (SSL ошибки)
+- Трекинг конверсий не будет работать
+- Партнёрская система не будет функционировать
+
+На Vercel обязательно установите: `NEXT_PUBLIC_SITE_URL=https://youwow.ru`
 
 ### Переменные уже есть в проекте:
 
