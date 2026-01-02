@@ -3,6 +3,7 @@ import { generateSongText, type SongFormData } from '@/lib/genapi/text-generatio
 import { generateSunoMusic } from '@/lib/genapi/suno-generation';
 import { getOrderById, updateOrderStatus } from '@/lib/db-helpers';
 import { sendSongReadyEmail } from '@/lib/email';
+import { trackConversion } from '@/lib/affiliate/tracking';
 
 export const maxDuration = 300; // 5 минут для полной генерации
 
@@ -135,6 +136,10 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     });
 
     console.log(`[${orderId}] ✅ Генерация завершена успешно! URL сохранён:`, audioUrl);
+
+    // Трекинг партнёрской конверсии (если есть партнёр)
+    await trackConversion(orderId, 'song', order.amount || 590);
+    console.log(`[${orderId}] Партнёрская конверсия обработана`);
 
     // Отправляем email с готовой песней
     if (order.customer_email) {
