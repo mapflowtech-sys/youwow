@@ -77,15 +77,16 @@ export interface PartnerCookieData {
  * Статистика партнёра
  */
 export interface PartnerStats {
-  partner_id: string;
-  partner_name: string;
-  total_clicks: number;
-  total_conversions: number;
-  conversion_rate: number; // В процентах
-  total_earned: number; // Всего заработано
-  total_paid_out: number; // Выплачено
-  pending_payout: number; // К выплате
-  recent_conversions: PartnerConversion[];
+  partnerId: string;
+  partnerName: string;
+  totalClicks: number;
+  totalConversions: number;
+  conversionRate: number; // В процентах
+  totalEarned: number; // Всего заработано
+  totalPaidOut: number; // Выплачено
+  pendingPayout: number; // К выплате
+  commissionRate: number; // Комиссия партнёра
+  isActive: boolean;
 }
 
 /**
