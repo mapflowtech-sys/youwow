@@ -58,13 +58,19 @@ NEXT_PUBLIC_SITE_URL=https://youwow.ru
 Добавьте переменную (только для тестов, не на production!):
 
 ```
-NEXT_PUBLIC_TEST_PRICE=10
+YOOKASSA_MIN_TEST_PRICE=1000
 ```
 
 **Важно:**
+- Указывается в **КОПЕЙКАХ**: `1000` = 10₽, `59000` = 590₽
 - Если переменная **не указана** → цена будет 590₽ (как в продакшене)
-- Если указана `NEXT_PUBLIC_TEST_PRICE=10` → цена будет 10₽
+- Если указана `YOOKASSA_MIN_TEST_PRICE=1000` → цена будет 10₽
 - На production **не ставьте** эту переменную, чтобы цена была реальной!
+
+**Примеры:**
+- 10₽: `YOOKASSA_MIN_TEST_PRICE=1000`
+- 50₽: `YOOKASSA_MIN_TEST_PRICE=5000`
+- 100₽: `YOOKASSA_MIN_TEST_PRICE=10000`
 
 ---
 

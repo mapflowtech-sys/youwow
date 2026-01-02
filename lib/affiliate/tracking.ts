@@ -103,7 +103,11 @@ export async function trackConversion(
     console.log('[Affiliate] Tracking conversion for partner:', partnerData.partnerId);
 
     // Вызываем API для записи конверсии
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/api/affiliate/track-conversion`, {
+    // Используем абсолютный URL для серверных запросов
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
+                    (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+
+    const response = await fetch(`${baseUrl}/api/affiliate/track-conversion`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
