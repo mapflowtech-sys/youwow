@@ -164,7 +164,7 @@ export async function generateSunoMusic(
     } else {
       console.error('Suno generation error:', error);
     }
-    throw new Error('Ошибка генерации музыки в Suno');
+    throw new Error('Ошибка генерации музыки');
   }
 }
 
