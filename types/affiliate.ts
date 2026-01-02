@@ -1,6 +1,11 @@
 // Партнёрская система - TypeScript типы
 
 /**
+ * Статус партнёра
+ */
+export type PartnerStatus = 'active' | 'inactive' | 'archived';
+
+/**
  * Партнёр
  */
 export interface Partner {
@@ -11,7 +16,9 @@ export interface Partner {
   commission_rate: number; // Комиссия в рублях (200.00)
   created_at: string;
   notes?: string;
-  is_active: boolean;
+  is_active: boolean; // Deprecated: используйте status
+  status: PartnerStatus; // Новое поле: active, inactive, archived
+  archived_at?: string; // Дата архивации
 }
 
 /**
@@ -86,7 +93,9 @@ export interface PartnerStats {
   totalPaidOut: number; // Выплачено
   pendingPayout: number; // К выплате
   commissionRate: number; // Комиссия партнёра
-  isActive: boolean;
+  isActive: boolean; // Deprecated: используйте status
+  status: PartnerStatus; // Статус партнёра
+  hasNewActivity?: boolean; // Есть ли новые клики/конверсии (для архивных)
 }
 
 /**
@@ -108,6 +117,7 @@ export interface CreatePartnerRequest {
   payment_info?: string;
   commission_rate?: number;
   notes?: string;
+  status?: PartnerStatus; // Опционально при создании
 }
 
 /**

@@ -1,0 +1,41 @@
+// API: Изменить статус партнёра (для админки)
+
+import { NextRequest, NextResponse } from 'next/server';
+import { updatePartner } from '@/lib/affiliate/supabase-queries';
+import type { PartnerStatus } from '@/types/affiliate';
+
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const partnerId = params.id;
+    const body = await request.json();
+    const { status } = body as { status: PartnerStatus };
+
+    // Валидация статуса
+    const validStatuses: PartnerStatus[] = ['active', 'inactive', 'archived'];
+    if (!status || !validStatuses.includes(status)) {
+      return NextResponse.json(
+        { success: false, error: 'Неверный статус. Допустимые: active, inactive, archived' },
+        { status: 400 }
+      );
+    }
+
+    // Обновляем статус
+    const updatedPartner = await updatePartner(partnerId, { status });
+
+    console.log(`[Admin API] Partner ${partnerId} status changed to ${status}`);
+
+    return NextResponse.json({
+      success: true,
+      partner: updatedPartner,
+    });
+  } catch (error: any) {
+    console.error('[Admin API] Error updating partner status:', error);
+    return NextResponse.json(
+      { success: false, error: error.message || 'Ошибка обновления статуса' },
+      { status: 500 }
+    );
+  }
+}

@@ -1,15 +1,33 @@
 // API: Получить список всех партнёров (для админки)
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllPartners } from '@/lib/affiliate/supabase-queries';
+import { supabaseAdmin } from '@/lib/supabase';
+import type { Partner, PartnerStatus } from '@/types/affiliate';
 
 export async function GET(request: NextRequest) {
   try {
-    const partners = await getAllPartners();
+    const { searchParams } = new URL(request.url);
+    const statusFilter = searchParams.get('status') as PartnerStatus | null;
+
+    let query = supabaseAdmin
+      .from('partners')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    // Фильтр по статусу (если указан)
+    if (statusFilter && ['active', 'inactive', 'archived'].includes(statusFilter)) {
+      query = query.eq('status', statusFilter);
+    }
+
+    const { data, error} = await query;
+
+    if (error) {
+      throw error;
+    }
 
     return NextResponse.json({
       success: true,
-      partners,
+      partners: data as Partner[],
     });
   } catch (error) {
     console.error('[Admin API] Error fetching partners list:', error);
