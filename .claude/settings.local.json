@@ -33,7 +33,15 @@
       "Bash(timeout /t 65 /nobreak)",
       "Bash(ping:*)",
       "Bash(git checkout:*)",
-      "Bash(if exist publicrobots.txt type publicrobots.txt)"
+      "Bash(if exist publicrobots.txt type publicrobots.txt)",
+      "Bash(dir:*)",
+      "Bash(git rm:*)",
+      "Bash(if exist NUL del /f /q NUL)",
+      "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\favicon.ico\" \"C:\\Project\\YouWow\\app\\favicon.ico\" /Y)",
+      "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\apple-icon.png\" \"C:\\Project\\YouWow\\app\\apple-icon.png\" /Y)",
+      "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\icon1.png\" \"C:\\Project\\YouWow\\app\\icon.png\" /Y)",
+      "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\web-app-manifest-192x192.png\" \"C:\\Project\\YouWow\\public\\icon-192.png\" /Y)",
+      "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\web-app-manifest-512x512.png\" \"C:\\Project\\YouWow\\public\\icon-512.png\" /Y)"
     ]
   }
 }
