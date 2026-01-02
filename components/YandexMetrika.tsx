@@ -30,7 +30,7 @@ export default function YandexMetrika() {
       {/* Yandex.Metrika counter */}
       <Script
         id="yandex-metrika"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(m,e,t,r,i,k,a){
