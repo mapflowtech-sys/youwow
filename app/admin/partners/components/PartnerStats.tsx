@@ -5,7 +5,10 @@ import { motion } from 'framer-motion';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import type { PartnerStats as StatsType, PartnerConversion } from '@/types/affiliate';
+import { Button } from 'primereact/button';
+import { confirmDialog } from 'primereact/confirmdialog';
+import { ConfirmDialog } from 'primereact/confirmdialog';
+import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
 
 interface PartnerStatsProps {
   partnerId: string;
@@ -57,6 +60,68 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     }
   };
 
+  // Изменить статус партнёра
+  const changePartnerStatus = async (newStatus: PartnerStatus) => {
+    try {
+      const response = await fetch(`/api/admin/partners/${partnerId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        await loadStats(); // Перезагрузка статистики
+        onPartnerUpdate?.(); // Обновление списка партнёров
+      } else {
+        alert('Ошибка изменения статуса: ' + data.error);
+      }
+    } catch (err) {
+      console.error('Error changing status:', err);
+      alert('Ошибка изменения статуса');
+    }
+  };
+
+  // Архивировать партнёра
+  const handleArchive = () => {
+    confirmDialog({
+      message: `Вы уверены, что хотите архивировать партнёра "${stats?.partnerName}"? Партнёр будет скрыт из основного списка, но продолжит принимать конверсии.`,
+      header: 'Архивация партнёра',
+      icon: 'pi pi-inbox',
+      acceptLabel: 'Архивировать',
+      rejectLabel: 'Отмена',
+      accept: () => changePartnerStatus('archived'),
+    });
+  };
+
+  // Восстановить из архива
+  const handleRestore = () => {
+    confirmDialog({
+      message: `Восстановить партнёра "${stats?.partnerName}" из архива?`,
+      header: 'Восстановление партнёра',
+      icon: 'pi pi-undo',
+      acceptLabel: 'Восстановить',
+      rejectLabel: 'Отмена',
+      accept: () => changePartnerStatus('active'),
+    });
+  };
+
+  // Деактивировать/активировать
+  const handleToggleActive = () => {
+    const newStatus: PartnerStatus = stats?.status === 'active' ? 'inactive' : 'active';
+    const action = newStatus === 'active' ? 'активировать' : 'деактивировать';
+
+    confirmDialog({
+      message: `${action.charAt(0).toUpperCase() + action.slice(1)} партнёра "${stats?.partnerName}"?`,
+      header: `${action.charAt(0).toUpperCase() + action.slice(1)}`,
+      icon: 'pi pi-power-off',
+      acceptLabel: action.charAt(0).toUpperCase() + action.slice(1),
+      rejectLabel: 'Отмена',
+      accept: () => changePartnerStatus(newStatus),
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12 flex items-center justify-center">
@@ -73,37 +138,72 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     );
   }
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
-    >
-      {/* Header */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-white mb-1">
-              {stats.partnerName}
-            </h2>
-            <p className="text-white/60 text-sm">ID: {stats.partnerId}</p>
-          </div>
+  // Получить статус badge
+  const getStatusBadge = () => {
+    switch (stats?.status) {
+      case 'active':
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-green-500/20 text-green-300">Активен</span>;
+      case 'inactive':
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-500/20 text-yellow-300">Неактивен</span>;
+      case 'archived':
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-500/20 text-gray-300">В архиве</span>;
+      default:
+        return null;
+    }
+  };
 
-          <div className="flex items-center gap-2">
-            <span
-              className={`
-                px-3 py-1.5 rounded-full text-sm font-medium
-                ${
-                  stats.isActive
-                    ? 'bg-green-500/20 text-green-300'
-                    : 'bg-red-500/20 text-red-300'
-                }
-              `}
-            >
-              {stats.isActive ? 'Активен' : 'Неактивен'}
-            </span>
+  return (
+    <>
+      <ConfirmDialog />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="space-y-6"
+      >
+        {/* Header */}
+        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+          <div className="flex items-start justify-between flex-wrap gap-4">
+            <div>
+              <h2 className="text-2xl font-bold text-white mb-1">
+                {stats.partnerName}
+              </h2>
+              <p className="text-white/60 text-sm">ID: {stats.partnerId}</p>
+            </div>
+
+            <div className="flex items-center gap-2 flex-wrap">
+              {getStatusBadge()}
+
+              {/* Кнопки управления */}
+              {stats.status === 'archived' ? (
+                <Button
+                  label="Восстановить"
+                  icon="pi pi-undo"
+                  size="small"
+                  outlined
+                  onClick={handleRestore}
+                />
+              ) : (
+                <>
+                  <Button
+                    label={stats.status === 'active' ? 'Деактивировать' : 'Активировать'}
+                    icon="pi pi-power-off"
+                    size="small"
+                    outlined
+                    severity={stats.status === 'active' ? 'warning' : 'success'}
+                    onClick={handleToggleActive}
+                  />
+                  <Button
+                    label="В архив"
+                    icon="pi pi-inbox"
+                    size="small"
+                    outlined
+                    severity="secondary"
+                    onClick={handleArchive}
+                  />
+                </>
+              )}
+            </div>
           </div>
-        </div>
 
         {/* Affiliate Link */}
         <div className="mt-4 p-3 bg-black/20 rounded-lg border border-white/10">
@@ -256,6 +356,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
         )}
       </div>
     </motion.div>
+    </>
   );
 }
 
