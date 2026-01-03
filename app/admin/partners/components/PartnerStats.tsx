@@ -8,6 +8,7 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
+import PayoutModal from './PayoutModal';
 import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
 
 interface PartnerStatsProps {
@@ -20,6 +21,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   const [conversions, setConversions] = useState<PartnerConversion[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
 
   useEffect(() => {
     loadStats();
@@ -58,6 +60,13 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     } catch (err) {
       console.error('Error loading conversions:', err);
     }
+  };
+
+  // Обработчик успешной выплаты
+  const handlePayoutSuccess = () => {
+    setIsPayoutModalOpen(false);
+    loadStats(); // Перезагружаем статистику
+    loadConversions(); // Перезагружаем конверсии
   };
 
   // Изменить статус партнёра
@@ -256,7 +265,18 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
 
       {/* Settings Card */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <h3 className="text-white font-semibold mb-4">Настройки</h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-white font-semibold">Настройки</h3>
+          {stats.pendingPayout > 0 && (
+            <Button
+              label="Отметить выплату"
+              icon="pi pi-money-bill"
+              size="small"
+              severity="success"
+              onClick={() => setIsPayoutModalOpen(true)}
+            />
+          )}
+        </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-white/60 text-sm">Комиссия за продажу</span>
@@ -356,6 +376,16 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
         )}
       </div>
     </motion.div>
+
+    {/* Payout Modal */}
+    <PayoutModal
+      isOpen={isPayoutModalOpen}
+      onClose={() => setIsPayoutModalOpen(false)}
+      partnerId={stats.partnerId}
+      partnerName={stats.partnerName}
+      pendingAmount={stats.pendingPayout}
+      onSuccess={handlePayoutSuccess}
+    />
     </>
   );
 }

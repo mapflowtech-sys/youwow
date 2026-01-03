@@ -188,3 +188,93 @@ export async function getPartnerClicks(
 
   return data;
 }
+
+/**
+ * Создать выплату партнёру
+ */
+export async function createPayout(payoutData: {
+  partnerId: string;
+  periodStart: string;
+  periodEnd: string;
+  paymentMethod?: string;
+  notes?: string;
+}) {
+  const { partnerId, periodStart, periodEnd, paymentMethod, notes } = payoutData;
+
+  // Получаем невыплаченные конверсии за период
+  const { data: conversions, error: conversionsError } = await supabaseAdmin
+    .from('partner_conversions')
+    .select('*')
+    .eq('partner_id', partnerId)
+    .eq('is_paid_out', false)
+    .gte('converted_at', periodStart)
+    .lte('converted_at', periodEnd);
+
+  if (conversionsError) {
+    console.error('[Affiliate] Error fetching conversions for payout:', conversionsError);
+    throw conversionsError;
+  }
+
+  if (!conversions || conversions.length === 0) {
+    throw new Error('Нет невыплаченных конверсий за указанный период');
+  }
+
+  // Рассчитываем сумму выплаты
+  const amount = conversions.reduce((sum, conv) => sum + Number(conv.commission), 0);
+  const conversionIds = conversions.map(c => c.id);
+
+  // Создаём запись о выплате
+  const { data: payout, error: payoutError } = await supabaseAdmin
+    .from('partner_payouts')
+    .insert({
+      partner_id: partnerId,
+      amount,
+      conversions_count: conversions.length,
+      period_start: periodStart,
+      period_end: periodEnd,
+      payment_method: paymentMethod,
+      notes,
+      conversion_ids: conversionIds,
+    })
+    .select()
+    .single();
+
+  if (payoutError) {
+    console.error('[Affiliate] Error creating payout:', payoutError);
+    throw payoutError;
+  }
+
+  // Помечаем конверсии как выплаченные
+  const { error: updateError } = await supabaseAdmin
+    .from('partner_conversions')
+    .update({ is_paid_out: true })
+    .in('id', conversionIds);
+
+  if (updateError) {
+    console.error('[Affiliate] Error marking conversions as paid:', updateError);
+    throw updateError;
+  }
+
+  console.log(`[Affiliate] Payout created for ${partnerId}: ${amount}₽ (${conversions.length} conversions)`);
+
+  return payout;
+}
+
+/**
+ * Получить историю выплат партнёра
+ */
+export async function getPartnerPayouts(partnerId: string, limit: number = 10) {
+  const { data, error } = await supabaseAdmin
+    .from('partner_payouts')
+    .select('*')
+    .eq('partner_id', partnerId)
+    .order('paid_at', { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.error(`[Affiliate] Error fetching payouts for ${partnerId}:`, error);
+    throw error;
+  }
+
+  return data;
+}
