@@ -394,39 +394,3 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     </>
   );
 }
-
-// KPI Card Component
-interface KPICardProps {
-  label: string;
-  value: string | number;
-  subtitle?: string;
-  icon: string;
-  color: 'blue' | 'green' | 'purple' | 'pink';
-}
-
-function KPICard({ label, value, subtitle, icon, color }: KPICardProps) {
-  const colorClasses = {
-    blue: 'from-blue-500/20 to-blue-600/20 border-blue-400/30',
-    green: 'from-green-500/20 to-green-600/20 border-green-400/30',
-    purple: 'from-purple-500/20 to-purple-600/20 border-purple-400/30',
-    pink: 'from-pink-500/20 to-pink-600/20 border-pink-400/30',
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className={`
-        bg-gradient-to-br ${colorClasses[color]}
-        backdrop-blur-md rounded-xl border p-4
-      `}
-    >
-      <div className="flex items-start justify-between mb-2">
-        <span className="text-white/60 text-sm">{label}</span>
-        <i className={`pi ${icon} text-white/40 text-lg`} />
-      </div>
-      <div className="text-2xl font-bold text-white mb-1">{value}</div>
-      {subtitle && <div className="text-xs text-white/50">{subtitle}</div>}
-    </motion.div>
-  );
-}
