@@ -42,7 +42,8 @@
       "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\icon1.png\" \"C:\\Project\\YouWow\\app\\icon.png\" /Y)",
       "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\web-app-manifest-192x192.png\" \"C:\\Project\\YouWow\\public\\icon-192.png\" /Y)",
       "Bash(copy \"C:\\Users\\User\\Downloads\\newfavicon\\web-app-manifest-512x512.png\" \"C:\\Project\\YouWow\\public\\icon-512.png\" /Y)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Bash(if exist nul del /f /q nul)"
     ]
   }
 }

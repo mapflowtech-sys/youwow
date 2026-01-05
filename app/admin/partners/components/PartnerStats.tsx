@@ -9,6 +9,8 @@ import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import PayoutModal from './PayoutModal';
+import AffiliateChart from '@/components/affiliate/AffiliateChart';
+import KPICard from '@/components/affiliate/KPICard';
 import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
 
 interface PartnerStatsProps {
@@ -262,6 +264,9 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
           color="pink"
         />
       </div>
+
+      {/* Chart */}
+      <AffiliateChart partnerId={partnerId} />
 
       {/* Settings Card */}
       <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">

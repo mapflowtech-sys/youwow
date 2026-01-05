@@ -9,6 +9,7 @@ import { Toast } from 'primereact/toast';
 import KPICard from '@/components/affiliate/KPICard';
 import ConversionsTable from '@/components/affiliate/ConversionsTable';
 import FinancialsSummary from '@/components/affiliate/FinancialsSummary';
+import AffiliateChart from '@/components/affiliate/AffiliateChart';
 import type { PartnerStats, PartnerConversion } from '@/types/affiliate';
 
 export default function PartnerDashboardPage() {
@@ -192,6 +193,9 @@ export default function PartnerDashboardPage() {
             delay={0.4}
           />
         </div>
+
+        {/* Chart */}
+        <AffiliateChart partnerId={partnerId} />
 
         {/* Two-column layout for desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
