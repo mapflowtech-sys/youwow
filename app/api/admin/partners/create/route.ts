@@ -6,7 +6,7 @@ import { createPartner } from '@/lib/affiliate/supabase-queries';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, name, website, payment_info, commission_rate, notes, is_active } = body;
+    const { id, name, website, payment_info, commission_rate, notes, is_active, status } = body;
 
     // Валидация
     if (!id || !name) {
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
       commission_rate: commission_rate || 200.00,
       notes: notes || null,
       is_active: is_active !== undefined ? is_active : true,
+      status: status || 'active', // По умолчанию 'active'
     });
 
     console.log('[Admin API] Partner created:', partner.id);

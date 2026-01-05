@@ -17,7 +17,7 @@ export interface Partner {
   created_at: string;
   notes?: string;
   is_active: boolean; // Deprecated: используйте status
-  status: PartnerStatus; // Новое поле: active, inactive, archived
+  status?: PartnerStatus; // Статус партнёра (опционально, по умолчанию 'active')
   archived_at?: string; // Дата архивации
 }
 
@@ -94,7 +94,7 @@ export interface PartnerStats {
   pendingPayout: number; // К выплате
   commissionRate: number; // Комиссия партнёра
   isActive: boolean; // Deprecated: используйте status
-  status: PartnerStatus; // Статус партнёра
+  status?: PartnerStatus; // Статус партнёра (опционально)
   hasNewActivity?: boolean; // Есть ли новые клики/конверсии (для архивных)
 }
 

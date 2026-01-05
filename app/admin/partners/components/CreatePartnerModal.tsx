@@ -25,6 +25,7 @@ export default function CreatePartnerModal({ isOpen, onClose, onSuccess }: Creat
     commission_rate: 200,
     notes: '',
     is_active: true,
+    status: 'active' as const, // По умолчанию активный
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -97,6 +98,7 @@ export default function CreatePartnerModal({ isOpen, onClose, onSuccess }: Creat
       commission_rate: 200,
       notes: '',
       is_active: true,
+      status: 'active' as const,
     });
     setErrors({});
     setApiError(null);

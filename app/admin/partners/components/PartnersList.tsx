@@ -30,11 +30,11 @@ export default function PartnersList({
     if (statusFilter === 'all') {
       return partners;
     }
-    return partners.filter(p => p.status === statusFilter);
+    return partners.filter(p => (p.status || 'active') === statusFilter);
   };
 
   // Партнёры не в архиве
-  const activePartners = getFilteredPartners().filter(p => p.status !== 'archived');
+  const activePartners = getFilteredPartners().filter(p => (p.status || 'active') !== 'archived');
 
   // Архивные партнёры
   const archivedPartners = partners.filter(p => p.status === 'archived');
@@ -90,7 +90,7 @@ export default function PartnersList({
             <h3 className="text-white font-medium text-sm truncate">
               {partner.name}
             </h3>
-            {getStatusBadge(partner.status)}
+            {getStatusBadge(partner.status || 'active')}
           </div>
           <p className="text-white/50 text-xs mt-0.5 truncate">
             {partner.id}
@@ -101,7 +101,7 @@ export default function PartnersList({
         <div
           className={`
             w-2 h-2 rounded-full mt-1.5 flex-shrink-0
-            ${getStatusColor(partner.status)}
+            ${getStatusColor(partner.status || 'active')}
           `}
         />
       </div>
