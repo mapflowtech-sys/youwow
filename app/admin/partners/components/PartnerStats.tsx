@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { DataTable } from 'primereact/datatable';
@@ -23,12 +23,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   const [error, setError] = useState<string | null>(null);
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
 
-  useEffect(() => {
-    loadStats();
-    loadConversions();
-  }, [partnerId]);
-
-  const loadStats = async () => {
+  const loadStats = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -47,9 +42,9 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [partnerId]);
 
-  const loadConversions = async () => {
+  const loadConversions = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/partners/${partnerId}/conversions?limit=20`);
       const data = await response.json();
@@ -60,7 +55,12 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     } catch (err) {
       console.error('Error loading conversions:', err);
     }
-  };
+  }, [partnerId]);
+
+  useEffect(() => {
+    loadStats();
+    loadConversions();
+  }, [partnerId, loadStats, loadConversions]);
 
   // Обработчик успешной выплаты
   const handlePayoutSuccess = () => {

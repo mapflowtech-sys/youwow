@@ -1,12 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useParams } from 'next/navigation';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { Button } from 'primereact/button';
 import { Toast } from 'primereact/toast';
-import { useRef } from 'react';
 import KPICard from '@/components/affiliate/KPICard';
 import ConversionsTable from '@/components/affiliate/ConversionsTable';
 import FinancialsSummary from '@/components/affiliate/FinancialsSummary';
@@ -22,11 +21,7 @@ export default function PartnerDashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadData();
-  }, [partnerId]);
-
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -55,7 +50,11 @@ export default function PartnerDashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [partnerId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const copyAffiliateLink = () => {
     const link = `https://youwow.ru/song?partner=${partnerId}`;

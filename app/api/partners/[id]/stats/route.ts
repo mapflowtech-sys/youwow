@@ -16,11 +16,11 @@ export async function GET(
       success: true,
       stats,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Partner API] Error fetching partner stats:', error);
 
     // Если партнёр не найден
-    if (error.message === 'Partner not found') {
+    if (error instanceof Error && error.message === 'Partner not found') {
       return NextResponse.json(
         { success: false, error: 'Партнёр не найден' },
         { status: 404 }

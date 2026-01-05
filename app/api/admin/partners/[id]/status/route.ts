@@ -31,10 +31,10 @@ export async function PATCH(
       success: true,
       partner: updatedPartner,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Admin API] Error updating partner status:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Ошибка обновления статуса' },
+      { success: false, error: error instanceof Error ? error.message : 'Ошибка обновления статуса' },
       { status: 500 }
     );
   }

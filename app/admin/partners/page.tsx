@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import AuthModal from './components/AuthModal';
 import PartnersList from './components/PartnersList';
 import PartnerStats from './components/PartnerStats';
@@ -15,19 +15,16 @@ export default function AdminPartnersPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Проверяем авторизацию при загрузке
+  // Проверяем авторизацию
   useEffect(() => {
     const authStatus = sessionStorage.getItem('admin_auth');
-    if (authStatus === 'true') {
-      setIsAuthenticated(true);
-      loadPartners();
-    } else {
+    if (authStatus !== 'true') {
       setIsLoading(false);
     }
   }, []);
 
   // Загружаем список партнёров
-  const loadPartners = async () => {
+  const loadPartners = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch('/api/admin/partners/list');
@@ -46,7 +43,7 @@ export default function AdminPartnersPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedPartnerId]);
 
   // Обработчик успешной авторизации
   const handleAuthSuccess = () => {

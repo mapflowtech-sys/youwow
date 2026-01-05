@@ -33,10 +33,10 @@ export async function POST(
       success: true,
       payout,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Admin API] Error creating payout:', error);
     return NextResponse.json(
-      { success: false, error: error.message || 'Ошибка создания выплаты' },
+      { success: false, error: error instanceof Error ? error.message : 'Ошибка создания выплаты' },
       { status: 500 }
     );
   }

@@ -16,10 +16,10 @@ export async function GET(
       success: true,
       stats,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Admin API] Error fetching partner stats:', error);
 
-    if (error.message === 'Partner not found') {
+    if (error instanceof Error && error.message === 'Partner not found') {
       return NextResponse.json(
         { success: false, error: 'Partner not found' },
         { status: 404 }

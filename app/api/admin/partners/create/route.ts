@@ -40,11 +40,11 @@ export async function POST(request: NextRequest) {
       success: true,
       partner,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('[Admin API] Error creating partner:', error);
 
     // Проверяем на дублирование ID
-    if (error?.code === '23505') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
       return NextResponse.json(
         { success: false, error: 'Partner with this ID already exists' },
         { status: 409 }
