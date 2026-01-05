@@ -9,8 +9,10 @@ import { Button } from 'primereact/button';
 import { confirmDialog } from 'primereact/confirmdialog';
 import { ConfirmDialog } from 'primereact/confirmdialog';
 import PayoutModal from './PayoutModal';
+import EditPartnerModal from './EditPartnerModal';
 import AffiliateChart from '@/components/affiliate/AffiliateChart';
 import KPICard from '@/components/affiliate/KPICard';
+import type { Partner } from '@/types/affiliate';
 import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
 
 interface PartnerStatsProps {
@@ -24,6 +26,21 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [partnerData, setPartnerData] = useState<Partner | null>(null);
+
+  const loadPartner = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/admin/partners/list`);
+      const data = await response.json();
+      if (data.success) {
+        const partner = data.partners.find((p: Partner) => p.id === partnerId);
+        if (partner) setPartnerData(partner);
+      }
+    } catch (err) {
+      console.error('Error loading partner:', err);
+    }
+  }, [partnerId]);
 
   const loadStats = useCallback(async () => {
     try {
@@ -60,15 +77,24 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   }, [partnerId]);
 
   useEffect(() => {
+    loadPartner();
     loadStats();
     loadConversions();
-  }, [partnerId, loadStats, loadConversions]);
+  }, [partnerId, loadPartner, loadStats, loadConversions]);
 
   // Обработчик успешной выплаты
   const handlePayoutSuccess = () => {
     setIsPayoutModalOpen(false);
-    loadStats(); // Перезагружаем статистику
-    loadConversions(); // Перезагружаем конверсии
+    loadStats();
+    loadConversions();
+  };
+
+  // Обработчик успешного редактирования
+  const handleEditSuccess = () => {
+    setIsEditModalOpen(false);
+    loadPartner();
+    loadStats();
+    onPartnerUpdate?.();
   };
 
   // Изменить статус партнёра
@@ -272,21 +298,44 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
       <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-white font-semibold">Настройки</h3>
-          {stats.pendingPayout > 0 && (
+          <div className="flex gap-2">
             <Button
-              label="Отметить выплату"
-              icon="pi pi-money-bill"
+              label="Редактировать"
+              icon="pi pi-pencil"
               size="small"
-              severity="success"
-              onClick={() => setIsPayoutModalOpen(true)}
+              outlined
+              onClick={() => setIsEditModalOpen(true)}
             />
-          )}
+            {stats.pendingPayout > 0 && (
+              <Button
+                label="Отметить выплату"
+                icon="pi pi-money-bill"
+                size="small"
+                severity="success"
+                onClick={() => setIsPayoutModalOpen(true)}
+              />
+            )}
+          </div>
         </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-white/60 text-sm">Комиссия за продажу</span>
             <span className="text-white font-medium">{stats.commissionRate}₽</span>
           </div>
+          {partnerData?.website && (
+            <div className="flex items-center justify-between">
+              <span className="text-white/60 text-sm">Сайт</span>
+              <a href={partnerData.website} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 text-sm">
+                {partnerData.website}
+              </a>
+            </div>
+          )}
+          {partnerData?.payment_info && (
+            <div className="flex items-center justify-between">
+              <span className="text-white/60 text-sm">Реквизиты</span>
+              <span className="text-white text-sm">{partnerData.payment_info}</span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -390,6 +439,14 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
       partnerName={stats.partnerName}
       pendingAmount={stats.pendingPayout}
       onSuccess={handlePayoutSuccess}
+    />
+
+    {/* Edit Partner Modal */}
+    <EditPartnerModal
+      isOpen={isEditModalOpen}
+      partner={partnerData}
+      onClose={() => setIsEditModalOpen(false)}
+      onSuccess={handleEditSuccess}
     />
     </>
   );
