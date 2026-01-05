@@ -1,12 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Dialog } from 'primereact/dialog';
 import { Calendar } from 'primereact/calendar';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { motion } from 'framer-motion';
+
+interface ConversionData {
+  converted_at: string;
+  is_paid_out: boolean;
+  commission: number;
+}
 
 interface PayoutModalProps {
   isOpen: boolean;
@@ -33,6 +39,38 @@ export default function PayoutModal({
   const [error, setError] = useState<string | null>(null);
   const [calculatedAmount, setCalculatedAmount] = useState<number | null>(null);
 
+  // Расчёт суммы при изменении периода
+  const calculateAmount = useCallback(async () => {
+    if (!periodStart || !periodEnd) return;
+
+    try {
+      const response = await fetch(
+        `/api/admin/partners/${partnerId}/conversions?limit=1000`
+      );
+      const data = await response.json();
+
+      if (data.success) {
+        const conversionsInPeriod = data.conversions.filter((c: ConversionData) => {
+          const convertedAt = new Date(c.converted_at);
+          return (
+            !c.is_paid_out &&
+            convertedAt >= periodStart &&
+            convertedAt <= periodEnd
+          );
+        });
+
+        const amount = conversionsInPeriod.reduce(
+          (sum: number, c: ConversionData) => sum + Number(c.commission),
+          0
+        );
+
+        setCalculatedAmount(amount);
+      }
+    } catch (err) {
+      console.error('Error calculating amount:', err);
+    }
+  }, [partnerId, periodStart, periodEnd]);
+
   // Сброс формы при открытии
   useEffect(() => {
     if (isOpen) {
@@ -54,38 +92,7 @@ export default function PayoutModal({
     if (periodStart && periodEnd) {
       calculateAmount();
     }
-  }, [periodStart, periodEnd]);
-
-  const calculateAmount = async () => {
-    if (!periodStart || !periodEnd) return;
-
-    try {
-      const response = await fetch(
-        `/api/admin/partners/${partnerId}/conversions?limit=1000`
-      );
-      const data = await response.json();
-
-      if (data.success) {
-        const conversionsInPeriod = data.conversions.filter((c: any) => {
-          const convertedAt = new Date(c.converted_at);
-          return (
-            !c.is_paid_out &&
-            convertedAt >= periodStart &&
-            convertedAt <= periodEnd
-          );
-        });
-
-        const amount = conversionsInPeriod.reduce(
-          (sum: number, c: any) => sum + Number(c.commission),
-          0
-        );
-
-        setCalculatedAmount(amount);
-      }
-    } catch (err) {
-      console.error('Error calculating amount:', err);
-    }
-  };
+  }, [periodStart, periodEnd, calculateAmount]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
