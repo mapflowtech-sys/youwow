@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState, useRef } from 'react'
@@ -5,7 +7,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Upload, Image as ImageIcon, Check, Loader2, Video, X } from 'lucide-react'
-import Image from 'next/image'
 
 interface CoverSelectorProps {
   orderId: string

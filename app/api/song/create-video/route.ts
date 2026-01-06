@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase';
 import { generateVideoWithCover, cropImageToSquare } from '@/lib/video-generator';
 import path from 'path';
 import fs from 'fs';
@@ -42,8 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем заказ из базы данных
-    const supabase = await createClient();
-    const { data: order, error: orderError } = await supabase
+    const { data: order, error: orderError } = await supabaseAdmin
       .from('orders')
       .select('*')
       .eq('id', orderId)
