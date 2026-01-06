@@ -17,6 +17,7 @@ import {
   Check
 } from 'lucide-react'
 import Link from 'next/link'
+import CoverSelector from './components/CoverSelector'
 
 // Интересные факты о музыке для показа во время ожидания
 const MUSIC_FACTS = [
@@ -382,6 +383,13 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                   <audio controls className="w-full" src={currentOrder.result_url}>
                     Ваш браузер не поддерживает аудио.
                   </audio>
+                </div>
+              )}
+
+              {/* Cover Selector for Video Generation */}
+              {currentOrder.service_type === 'song' && (
+                <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6">
+                  <CoverSelector orderId={currentOrder.id} />
                 </div>
               )}
 
