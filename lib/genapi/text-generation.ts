@@ -16,7 +16,20 @@ export interface SongFormData {
 
 function createSongPrompt(formData: SongFormData): string {
   const genre = formData.genre;
-  const occasion = formData.customOccasion || formData.occasion;
+
+  // Маппинг поводов на читаемые названия
+  const occasionMap: Record<string, string> = {
+    'birthday': 'День рождения',
+    'valentine': '14 февраля (День всех влюблённых)',
+    'new-year': 'Новый год',
+    'march-8': '8 марта',
+    'feb-23': '23 февраля',
+    'anniversary': 'Годовщина',
+    'wedding': 'Свадьба',
+    'none': 'Просто так / без повода',
+  };
+
+  const occasion = formData.customOccasion || occasionMap[formData.occasion] || formData.occasion;
 
   return `Ты — профессиональный сонграйтер уровня "Грэмми", пишущий на русском языке. 
 Твоя задача: создать текст, который Suno AI превратит в музыкальный шедевр.

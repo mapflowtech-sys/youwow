@@ -1104,11 +1104,12 @@ export default function SongPage() {
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="birthday">День рождения</SelectItem>
-                          <SelectItem value="new-year">Новый год</SelectItem>
+                          <SelectItem value="valentine">14 февраля (День всех влюблённых)</SelectItem>
                           <SelectItem value="march-8">8 марта</SelectItem>
                           <SelectItem value="feb-23">23 февраля</SelectItem>
                           <SelectItem value="anniversary">Годовщина</SelectItem>
                           <SelectItem value="wedding">Свадьба</SelectItem>
+                          <SelectItem value="new-year">Новый год</SelectItem>
                           <SelectItem value="none">
                             Просто так / без повода
                           </SelectItem>
@@ -1968,7 +1969,7 @@ export default function SongPage() {
                   </li>
                   <li className="text-base md:text-lg leading-relaxed relative">
                     <span className="absolute -left-6 text-primary">•</span>
-                    <strong>Новый год</strong> - новогодняя персональная песня создаёт праздничное настроение и дарит тёплые эмоции
+                    <strong>14 февраля (День всех влюблённых)</strong> - романтичная песня с вашей общей историей растопит сердце второй половинки
                   </li>
                   <li className="text-base md:text-lg leading-relaxed relative">
                     <span className="absolute -left-6 text-primary">•</span>
@@ -1976,11 +1977,15 @@ export default function SongPage() {
                   </li>
                   <li className="text-base md:text-lg leading-relaxed relative">
                     <span className="absolute -left-6 text-primary">•</span>
-                    <strong>Годовщина отношений</strong> - романтичная песня для любимого человека с вашей общей историей
+                    <strong>Годовщина отношений</strong> - особенная песня для любимого человека о вашем совместном пути
                   </li>
                   <li className="text-base md:text-lg leading-relaxed relative">
                     <span className="absolute -left-6 text-primary">•</span>
                     <strong>Свадьба</strong> - оригинальный подарок молодожёнам, который запомнится навсегда
+                  </li>
+                  <li className="text-base md:text-lg leading-relaxed relative">
+                    <span className="absolute -left-6 text-primary">•</span>
+                    <strong>Новый год</strong> - новогодняя персональная песня создаёт праздничное настроение и дарит тёплые эмоции
                   </li>
                   <li className="text-base md:text-lg leading-relaxed relative">
                     <span className="absolute -left-6 text-primary">•</span>
