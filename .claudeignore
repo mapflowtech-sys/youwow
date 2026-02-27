@@ -1,0 +1,31 @@
+# Build artifacts & dependencies
+node_modules/
+.next/
+dist/
+build/
+
+# Lock files (8700+ lines, never useful to read)
+package-lock.json
+yarn.lock
+
+# Archived documentation (read only when specifically needed)
+docs/archive/
+
+# Large reference docs (read on-demand, not auto-indexed)
+docs/yookassa-openapi-specification.yaml
+docs/PROJECT_CONTEXT.md
+
+# Git
+.git/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# IDE
+.vscode/
+.idea/
+
+# Supabase local
+supabase/.temp/
