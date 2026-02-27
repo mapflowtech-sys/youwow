@@ -1,28 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Onest } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/shared/header";
 import { Footer } from "@/components/shared/footer";
 import { Toaster } from "@/components/ui/toaster";
 import YandexMetrika from "@/components/YandexMetrika";
 import "./globals.css";
-import "primereact/resources/themes/lara-dark-purple/theme.css";
+import "primereact/resources/themes/lara-light-pink/theme.css";
 import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
-const inter = Inter({
+const onest = Onest({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-  preload: true,
-  adjustFontFallback: true,
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-space-grotesk",
+  variable: "--font-onest",
   display: "swap",
   preload: true,
   adjustFontFallback: true,
@@ -131,14 +122,14 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://mc.yandex.ru" />
         <link rel="preconnect" href="https://mc.yandex.ru" crossOrigin="anonymous" />
         {/* Theme color for browser UI */}
-        <meta name="theme-color" content="#a855f7" />
+        <meta name="theme-color" content="#E8567F" />
         {/* Organization JSON-LD for SEO */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
         />
       </head>
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans`}>
+      <body className={`${onest.variable} font-sans`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

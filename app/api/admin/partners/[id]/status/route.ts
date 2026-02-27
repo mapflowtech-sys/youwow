@@ -6,10 +6,10 @@ import type { PartnerStatus } from '@/types/affiliate';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const partnerId = params.id;
+    const { id: partnerId } = await params;
     const body = await request.json();
     const { status } = body as { status: PartnerStatus };
 

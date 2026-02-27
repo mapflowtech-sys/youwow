@@ -5,10 +5,10 @@ import { getPartnerStats } from '@/lib/affiliate/supabase-queries';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const partnerId = params.id;
+    const { id: partnerId } = await params;
 
     const stats = await getPartnerStats(partnerId);
 

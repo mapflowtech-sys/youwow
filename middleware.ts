@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
         headers: {
           'Content-Type': 'application/json',
           'x-forwarded-for': request.headers.get('x-forwarded-for') || '',
-          'x-real-ip': request.ip || '',
+          'x-real-ip': request.headers.get('x-real-ip') || '',
           'user-agent': request.headers.get('user-agent') || '',
           'referer': request.headers.get('referer') || '',
         },

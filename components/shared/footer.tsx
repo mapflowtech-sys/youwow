@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, Mail, Send } from "lucide-react";
+import { Mail, Send } from "lucide-react";
 
 type FooterLink = {
   href: string;
@@ -8,8 +8,8 @@ type FooterLink = {
 };
 
 const serviceLinks: FooterLink[] = [
-  { href: "/santa", label: "Видео от Деда Мороза" },
   { href: "/song", label: "Персональная песня" },
+  { href: "/santa", label: "Видео от Деда Мороза" },
 ];
 
 const legalLinks: FooterLink[] = [
@@ -20,7 +20,7 @@ const legalLinks: FooterLink[] = [
 
 export function Footer() {
   return (
-    <footer className="bg-slate-900 dark:bg-slate-950 text-slate-300">
+    <footer className="bg-stone-900 text-stone-300">
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Column 1 - Services */}
@@ -31,7 +31,7 @@ export function Footer() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-slate-400 hover:text-white transition-colors"
+                    className="text-stone-400 hover:text-white transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -49,14 +49,14 @@ export function Footer() {
                   {link.external ? (
                     <a
                       href={link.href}
-                      className="text-slate-400 hover:text-white transition-colors"
+                      className="text-stone-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </a>
                   ) : (
                     <Link
                       href={link.href}
-                      className="text-slate-400 hover:text-white transition-colors"
+                      className="text-stone-400 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -73,7 +73,7 @@ export function Footer() {
               <li>
                 <a
                   href="mailto:support@youwow.ru"
-                  className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-stone-400 hover:text-white transition-colors"
                 >
                   <Mail className="h-4 w-4" />
                   support@youwow.ru
@@ -84,17 +84,17 @@ export function Footer() {
                   href="https://t.me/youwow_support"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-stone-400 hover:text-white transition-colors"
                 >
                   <Send className="h-4 w-4" />
                   Telegram
                 </a>
-                <p className="text-slate-500 text-sm mt-1">
+                <p className="text-stone-500 text-sm mt-1">
                   Круглосуточная поддержка 24/7
                 </p>
               </li>
               <li className="pt-2">
-                <p className="text-slate-500 text-sm">
+                <p className="text-stone-500 text-sm">
                   Принимаем: Мир, СБП, Visa/MC
                 </p>
               </li>
@@ -103,14 +103,13 @@ export function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="mt-12 pt-8 border-t border-slate-800">
+        <div className="mt-12 pt-8 border-t border-stone-800">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <Link href="/" className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-primary" />
+            <Link href="/" className="flex items-center">
               <span className="font-display font-bold text-white">YouWow</span>
             </Link>
-            <p className="text-slate-500 text-sm text-center">
-              © 2025 YouWow. Создано специально для вас
+            <p className="text-stone-500 text-sm text-center">
+              &copy; 2026 YouWow. Создано специально для вас
             </p>
           </div>
         </div>

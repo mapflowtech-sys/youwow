@@ -1,15 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Exclude FFmpeg binaries from server bundle
-      config.externals.push({
-        '@ffmpeg-installer/ffmpeg': 'commonjs @ffmpeg-installer/ffmpeg',
-        'fluent-ffmpeg': 'commonjs fluent-ffmpeg',
-      })
-    }
-    return config
-  },
+  // Exclude FFmpeg binaries from server bundle (works with both Turbopack and Webpack)
+  serverExternalPackages: ['@ffmpeg-installer/ffmpeg', 'fluent-ffmpeg'],
 };
 
 export default nextConfig;

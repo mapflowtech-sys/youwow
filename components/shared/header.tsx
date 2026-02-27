@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
-import { Sparkles, Sun, Moon, Package, Menu } from "lucide-react";
+import { useState } from "react";
+import { Package, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -14,31 +13,20 @@ import {
 } from "@/components/ui/sheet";
 
 const navLinks = [
-  { href: "/santa", label: "Дед Мороз" },
   { href: "/song", label: "Песня" },
+  { href: "/santa", label: "Дед Мороз" },
 ];
 
 export function Header() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            <span className="font-display text-xl font-bold bg-gradient-to-r from-primary to-accent-gold bg-clip-text text-transparent">
+          <Link href="/" className="flex items-center">
+            <span className="font-display text-xl font-bold text-foreground">
               YouWow
             </span>
           </Link>
@@ -58,21 +46,6 @@ export function Header() {
 
           {/* Right side */}
           <div className="flex items-center gap-2">
-            {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="h-9 w-9"
-            >
-              {mounted && theme === "dark" ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-              <span className="sr-only">Переключить тему</span>
-            </Button>
-
             {/* My Orders - Desktop */}
             <Button variant="ghost" size="sm" className="hidden md:flex gap-2" asChild>
               <Link href="/orders">
@@ -91,9 +64,8 @@ export function Header() {
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px]">
                 <SheetHeader>
-                  <SheetTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                    <span className="font-display bg-gradient-to-r from-primary to-accent-gold bg-clip-text text-transparent">
+                  <SheetTitle>
+                    <span className="font-display font-bold text-foreground">
                       YouWow
                     </span>
                   </SheetTitle>

@@ -6,12 +6,13 @@ import OrderStatusDisplay from './OrderStatusDisplay'
 export default async function OrderPage({
   params
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   let order
 
   try {
-    order = await getOrderById(params.id)
+    order = await getOrderById(id)
   } catch {
     notFound()
   }

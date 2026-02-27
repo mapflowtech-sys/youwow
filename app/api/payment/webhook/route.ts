@@ -21,8 +21,8 @@ function getClientIP(request: NextRequest): string {
     return xForwardedFor.split(',')[0].trim();
   }
 
-  // Fallback (хотя в Vercel/Next.js это обычно не используется)
-  return request.ip || 'unknown';
+  // Fallback
+  return 'unknown';
 }
 
 export async function POST(request: NextRequest) {

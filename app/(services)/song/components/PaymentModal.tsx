@@ -7,7 +7,6 @@ import {
   CreditCard,
   Smartphone,
   Shield,
-  Zap,
   CheckCircle,
   Loader2
 } from 'lucide-react';
@@ -29,18 +28,15 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
     setError(null);
 
     try {
-      // Save form data to localStorage before redirect
-      // This allows user to see their form data when they return from payment
       localStorage.setItem('song_form_draft', JSON.stringify(formData));
 
-      // Create payment
       const response = await fetch('/api/payment/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: formData.email,
           formData: formData,
-          method: selectedMethod, // Pass selected payment method
+          method: selectedMethod,
         }),
       });
 
@@ -55,11 +51,7 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
       }
 
       console.log('[Payment] Created:', data);
-
-      // Notify parent and redirect to payment page
       onPaymentInitiated(data.payment.guid);
-
-      // Redirect to 1plat payment page
       window.location.href = data.payment.url;
 
     } catch (err) {
@@ -74,21 +66,21 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.9, opacity: 0 }}
+        initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-        transition={{ type: 'spring', duration: 0.5 }}
-        className="relative bg-white dark:bg-gray-900 rounded-2xl shadow-2xl max-w-lg w-full p-8 max-h-[90vh] overflow-y-auto"
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ type: 'spring', duration: 0.4 }}
+        className="relative bg-white rounded-2xl shadow-xl max-w-lg w-full p-8 max-h-[90vh] overflow-y-auto border border-border/40"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors"
           disabled={isLoading}
         >
           <X size={24} />
@@ -96,94 +88,85 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
 
         {/* Header */}
         <div className="text-center mb-6">
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: 'spring' }}
-            className="mx-auto w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4"
-          >
-            <CreditCard className="text-white" size={32} />
-          </motion.div>
+          <div className="mx-auto w-14 h-14 bg-primary rounded-full flex items-center justify-center mb-4">
+            <CreditCard className="text-white" size={28} />
+          </div>
 
-          <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
+          <h2 className="text-2xl font-bold mb-2 text-foreground">
             Оплата заказа
           </h2>
-          <p className="text-gray-600 dark:text-gray-400">
+          <p className="text-muted-foreground">
             Выберите удобный способ оплаты
           </p>
         </div>
 
         {/* Price Display */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 mb-6 text-center">
-          <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+        <div className="bg-muted rounded-xl p-6 mb-6 text-center">
+          <div className="text-sm text-muted-foreground mb-1">
             Стоимость песни
           </div>
           <div className="flex items-center justify-center gap-3 mb-2">
-            <span className="text-2xl text-gray-400 dark:text-gray-500 line-through">
-              1 190₽
+            <span className="text-xl text-muted-foreground line-through">
+              1 190 &#8381;
             </span>
-            <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
-              -50%
+            <span className="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded-md">
+              &minus;50%
             </span>
           </div>
-          <div className="text-5xl font-bold text-purple-600 dark:text-purple-400">
-            590₽
+          <div className="text-4xl font-bold text-foreground">
+            590 &#8381;
           </div>
         </div>
 
         {/* Payment Method Selection */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+          <label className="block text-sm font-medium text-foreground mb-3">
             Способ оплаты
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
               onClick={() => setSelectedMethod('card')}
               disabled={isLoading}
-              className={`p-4 border-2 rounded-xl transition-all ${
+              className={`p-4 border rounded-xl transition-colors ${
                 selectedMethod === 'card'
-                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-muted-foreground/30'
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              <CreditCard className={`mx-auto mb-2 ${selectedMethod === 'card' ? 'text-purple-600' : 'text-gray-400'}`} size={24} />
+              <CreditCard className={`mx-auto mb-2 ${selectedMethod === 'card' ? 'text-primary' : 'text-muted-foreground'}`} size={24} />
               <div className="text-sm font-medium">Банковская карта</div>
             </button>
             <button
               onClick={() => setSelectedMethod('sbp')}
               disabled={isLoading}
-              className={`p-4 border-2 rounded-xl transition-all ${
+              className={`p-4 border rounded-xl transition-colors ${
                 selectedMethod === 'sbp'
-                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                  : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
+                  ? 'border-primary bg-primary/5'
+                  : 'border-border hover:border-muted-foreground/30'
               } disabled:opacity-50 disabled:cursor-not-allowed`}
             >
-              <Smartphone className={`mx-auto mb-2 ${selectedMethod === 'sbp' ? 'text-purple-600' : 'text-gray-400'}`} size={24} />
+              <Smartphone className={`mx-auto mb-2 ${selectedMethod === 'sbp' ? 'text-primary' : 'text-muted-foreground'}`} size={24} />
               <div className="text-sm font-medium">СБП</div>
             </button>
           </div>
         </div>
 
         {/* Trust Indicators */}
-        <div className="bg-gray-50 dark:bg-gray-800/50 rounded-xl p-4 mb-6 space-y-3">
+        <div className="bg-muted/50 rounded-xl p-4 mb-6 space-y-3">
           <div className="flex items-center gap-3 text-sm">
-            <Shield className="text-green-500 flex-shrink-0" size={20} />
-            <span className="text-gray-700 dark:text-gray-300">Безопасная оплата</span>
+            <Shield className="text-green-600 flex-shrink-0" size={18} />
+            <span className="text-muted-foreground">Безопасная оплата</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <Zap className="text-purple-500 flex-shrink-0" size={20} />
-            <span className="text-gray-700 dark:text-gray-300">Мгновенное начало генерации</span>
-          </div>
-          <div className="flex items-center gap-3 text-sm">
-            <CheckCircle className="text-blue-500 flex-shrink-0" size={20} />
-            <span className="text-gray-700 dark:text-gray-300">Гарантия возврата средств</span>
+            <CheckCircle className="text-green-600 flex-shrink-0" size={18} />
+            <span className="text-muted-foreground">Гарантия возврата средств</span>
           </div>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
-            <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+            <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
 
@@ -191,7 +174,7 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
         <button
           onClick={handlePayment}
           disabled={isLoading}
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          className="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-4 px-8 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -199,15 +182,13 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
               Создаём платёж...
             </>
           ) : (
-            <>
-              Перейти к оплате 590₽
-            </>
+            <>Перейти к оплате 590 &#8381;</>
           )}
         </button>
 
-        <p className="text-xs text-center text-gray-500 dark:text-gray-400 mt-4">
+        <p className="text-xs text-center text-muted-foreground mt-4">
           Нажимая кнопку, вы соглашаетесь с{' '}
-          <a href="/legal/terms" className="text-purple-600 hover:underline" target="_blank">
+          <a href="/legal/terms" className="text-primary hover:underline" target="_blank">
             Пользовательским соглашением
           </a>
         </p>

@@ -5,10 +5,10 @@ import { createPayout, getPartnerPayouts } from '@/lib/affiliate/supabase-querie
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const partnerId = params.id;
+    const { id: partnerId } = await params;
     const body = await request.json();
     const { period_start, period_end, payment_method, notes } = body;
 
@@ -44,10 +44,10 @@ export async function POST(
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const partnerId = params.id;
+    const { id: partnerId } = await params;
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '10');
 

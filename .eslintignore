@@ -1,4 +1,3 @@
-test-genapi.ts
-check-balance.ts
+scripts/
 *.test.ts
 *.spec.ts

@@ -3,11 +3,7 @@
 @tailwind utilities;
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  /* Shimmer effect for hero title */
+  /* Shimmer effect - used on home page */
   @keyframes shimmer {
     0% {
       background-position: -200% center;
@@ -21,151 +17,53 @@
     background-size: 200% auto;
     animation: shimmer 8s linear infinite;
   }
-
-  /* Floating particles */
-  @keyframes float {
-    0%, 100% {
-      transform: translateY(0) rotate(0deg);
-      opacity: 0.1;
-    }
-    50% {
-      transform: translateY(-20px) rotate(180deg);
-      opacity: 0.3;
-    }
-  }
-
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-
-  /* Pulse for badges */
-  @keyframes pulse-glow {
-    0%, 100% {
-      box-shadow: 0 0 0 0 currentColor;
-      opacity: 1;
-    }
-    50% {
-      box-shadow: 0 0 20px 5px currentColor;
-      opacity: 0.8;
-    }
-  }
-
-  .animate-pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
-  }
-
-  /* Gradient border animation */
-  @keyframes gradient-rotate {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
-
-  .gradient-border {
-    background: linear-gradient(90deg,
-      hsl(var(--primary)),
-      hsl(var(--accent-pink)),
-      hsl(var(--accent-gold)),
-      hsl(var(--primary))
-    );
-    background-size: 300% 300%;
-    animation: gradient-rotate 4s ease infinite;
-  }
 }
 
 @layer base {
   :root {
-    /* YouWow Light Theme - Violet + Gold */
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    /* YouWow Coral-Pink Theme */
+    --background: 30 33% 98%;
+    --foreground: 350 10% 15%;
 
-    --card: 210 40% 98%;
-    --card-foreground: 222 47% 11%;
+    --card: 0 0% 100%;
+    --card-foreground: 350 10% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 350 10% 15%;
 
-    /* Primary: Violet (#8b5cf6) */
-    --primary: 258 90% 66%;
+    /* Primary: Coral-Pink */
+    --primary: 348 75% 62%;
     --primary-foreground: 0 0% 100%;
-    --primary-light: 258 90% 73%;
-    --primary-dark: 258 90% 55%;
+    --primary-light: 348 75% 72%;
+    --primary-dark: 348 75% 52%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 47% 11%;
+    /* Secondary: Warm beige */
+    --secondary: 20 30% 96%;
+    --secondary-foreground: 350 10% 15%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 20 18% 93%;
+    --muted-foreground: 350 5% 45%;
 
-    --accent: 210 40% 96%;
-    --accent-foreground: 222 47% 11%;
-    /* Accent Gold: Amber (#f59e0b) */
+    --accent: 20 30% 96%;
+    --accent-foreground: 350 10% 15%;
+    /* Preserved for other pages (home, tarot, 404) */
     --accent-gold: 38 92% 50%;
-    /* Accent Pink: (#ec4899) */
     --accent-pink: 330 81% 60%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 258 90% 66%;
+    --border: 20 15% 90%;
+    --input: 20 15% 90%;
+    --ring: 348 75% 62%;
 
-    --chart-1: 258 90% 66%;
-    --chart-2: 38 92% 50%;
-    --chart-3: 330 81% 60%;
+    --chart-1: 348 75% 62%;
+    --chart-2: 348 60% 50%;
+    --chart-3: 38 90% 55%;
     --chart-4: 173 58% 39%;
     --chart-5: 197 37% 24%;
 
-    --radius: 0.5rem;
-  }
-
-  .dark {
-    /* YouWow Dark Theme */
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-
-    --card: 217 33% 17%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-
-    /* Primary: Violet-400 для тёмного фона */
-    --primary: 258 90% 73%;
-    --primary-foreground: 222 47% 11%;
-    --primary-light: 258 89% 82%;
-    --primary-dark: 258 90% 66%;
-
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --accent-gold: 38 92% 50%;
-    --accent-pink: 330 81% 60%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217 33% 26%;
-    --input: 217 33% 26%;
-    --ring: 258 90% 73%;
-
-    --chart-1: 258 90% 73%;
-    --chart-2: 38 92% 50%;
-    --chart-3: 330 81% 60%;
-    --chart-4: 160 60% 45%;
-    --chart-5: 30 80% 55%;
+    --radius: 0.75rem;
   }
 }
 
@@ -198,7 +96,7 @@
   [role="button"]:focus-visible {
     outline: 3px solid hsl(var(--ring));
     outline-offset: 3px;
-    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.2);
+    box-shadow: 0 0 0 4px hsl(var(--ring) / 0.15);
   }
 
   /* Focus styles for checkbox and radio */
@@ -206,5 +104,39 @@
   input[type="radio"]:focus-visible {
     outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
+  }
+}
+
+/* FAQ smooth open/close animation */
+details .faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s ease;
+}
+details[open] .faq-answer {
+  grid-template-rows: 1fr;
+}
+details .faq-answer > div {
+  overflow: hidden;
+}
+
+/* Audio play button pulse ring when playing */
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.3); }
+  70% { box-shadow: 0 0 0 10px hsl(var(--primary) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0); }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.5s ease-out infinite;
+}
+
+/* Reduced motion: disable all custom animations */
+@media (prefers-reduced-motion: reduce) {
+  .animate-shimmer,
+  .animate-pulse-ring {
+    animation: none;
+  }
+  details .faq-answer {
+    transition: none;
   }
 }
