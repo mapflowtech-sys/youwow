@@ -140,8 +140,8 @@ export async function getPartnerStats(partnerId: string): Promise<PartnerStats> 
     totalPaidOut: Number(totalPaidOut.toFixed(2)),
     pendingPayout: Number(pendingPayout.toFixed(2)),
     commissionRate: Number(partner.commission_rate),
-    isActive: partner.is_active,
-    status: partner.status || 'active', // Новое поле
+    isActive: partner.status === 'active',
+    status: partner.status ?? 'active',
   };
 }
 

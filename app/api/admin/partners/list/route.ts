@@ -2,9 +2,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/admin-auth';
 import type { Partner, PartnerStatus } from '@/types/affiliate';
 
 export async function GET(request: NextRequest) {
+  if (!verifyAdminAuth(request)) {
+    return unauthorizedResponse();
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const statusFilter = searchParams.get('status') as PartnerStatus | null;

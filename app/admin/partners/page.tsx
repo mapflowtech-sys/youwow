@@ -6,6 +6,7 @@ import AuthModal from './components/AuthModal';
 import PartnersList from './components/PartnersList';
 import PartnerStats from './components/PartnerStats';
 import CreatePartnerModal from './components/CreatePartnerModal';
+import { adminFetch } from './lib/admin-fetch';
 import type { Partner } from '@/types/affiliate';
 
 export default function AdminPartnersPage() {
@@ -17,17 +18,21 @@ export default function AdminPartnersPage() {
 
   // Проверяем авторизацию
   useEffect(() => {
-    const authStatus = sessionStorage.getItem('admin_auth');
-    if (authStatus !== 'true') {
+    const authStatus = sessionStorage.getItem('admin_token');
+    if (authStatus) {
+      setIsAuthenticated(true);
+      loadPartners();
+    } else {
       setIsLoading(false);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Загружаем список партнёров
   const loadPartners = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('/api/admin/partners/list');
+      const response = await adminFetch('/api/admin/partners/list');
       const data = await response.json();
 
       if (data.success) {
@@ -83,7 +88,7 @@ export default function AdminPartnersPage() {
 
             <button
               onClick={() => {
-                sessionStorage.removeItem('admin_auth');
+                sessionStorage.removeItem('admin_token');
                 setIsAuthenticated(false);
               }}
               className="px-4 py-2 text-sm text-white/60 hover:text-white transition-colors"

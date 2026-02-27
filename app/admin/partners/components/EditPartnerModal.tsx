@@ -7,6 +7,7 @@ import { InputNumber } from 'primereact/inputnumber';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { motion } from 'framer-motion';
+import { adminFetch } from '../lib/admin-fetch';
 import type { Partner } from '@/types/affiliate';
 
 interface EditPartnerModalProps {
@@ -51,9 +52,8 @@ export default function EditPartnerModal({ isOpen, partner, onClose, onSuccess }
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/admin/partners/${partner.id}`, {
+      const response = await adminFetch(`/api/admin/partners/${partner.id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 

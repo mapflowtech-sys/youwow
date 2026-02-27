@@ -16,8 +16,9 @@ export interface Partner {
   commission_rate: number; // Комиссия в рублях (200.00)
   created_at: string;
   notes?: string;
-  is_active: boolean; // Deprecated: используйте status
-  status?: PartnerStatus; // Статус партнёра (опционально, по умолчанию 'active')
+  /** @deprecated Use status instead */
+  is_active: boolean;
+  status: PartnerStatus;
   archived_at?: string; // Дата архивации
 }
 
@@ -93,8 +94,9 @@ export interface PartnerStats {
   totalPaidOut: number; // Выплачено
   pendingPayout: number; // К выплате
   commissionRate: number; // Комиссия партнёра
-  isActive: boolean; // Deprecated: используйте status
-  status?: PartnerStatus; // Статус партнёра (опционально)
+  /** @deprecated Use status instead */
+  isActive: boolean;
+  status: PartnerStatus;
   hasNewActivity?: boolean; // Есть ли новые клики/конверсии (для архивных)
 }
 

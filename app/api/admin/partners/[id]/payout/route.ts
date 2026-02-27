@@ -2,11 +2,16 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createPayout, getPartnerPayouts } from '@/lib/affiliate/supabase-queries';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/admin-auth';
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!verifyAdminAuth(request)) {
+    return unauthorizedResponse();
+  }
+
   try {
     const { id: partnerId } = await params;
     const body = await request.json();
@@ -46,6 +51,10 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!verifyAdminAuth(request)) {
+    return unauthorizedResponse();
+  }
+
   try {
     const { id: partnerId } = await params;
     const { searchParams } = new URL(request.url);

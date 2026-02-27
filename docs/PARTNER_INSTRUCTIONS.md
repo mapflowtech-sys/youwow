@@ -47,7 +47,7 @@ https://youwow.ru/song?partner=your-partner-id
 
 Ваш личный кабинет доступен по адресу:
 ```
-https://youwow.ru/partners/your-partner-id
+https://youwow.ru/partner/your-partner-id
 ```
 
 В личном кабинете вы увидите:
@@ -174,7 +174,7 @@ https://youwow.ru/song?partner=your-partner-id&utm_source=vk&utm_campaign=new_ye
 
 Если у вас возникли вопросы:
 - Напишите администратору (контакты предоставляются при регистрации)
-- Проверьте статистику в личном кабинете: `https://youwow.ru/partners/your-partner-id`
+- Проверьте статистику в личном кабинете: `https://youwow.ru/partner/your-partner-id`
 
 ---
 

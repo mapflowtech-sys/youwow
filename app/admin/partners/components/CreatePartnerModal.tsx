@@ -8,6 +8,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { Checkbox } from 'primereact/checkbox';
 import { motion } from 'framer-motion';
+import { adminFetch } from '../lib/admin-fetch';
 import type { Partner } from '@/types/affiliate';
 
 interface CreatePartnerModalProps {
@@ -67,9 +68,8 @@ export default function CreatePartnerModal({ isOpen, onClose, onSuccess }: Creat
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/admin/partners/create', {
+      const response = await adminFetch('/api/admin/partners/create', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 

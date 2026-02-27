@@ -2,11 +2,16 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getPartnerStats } from '@/lib/affiliate/supabase-queries';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/admin-auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  if (!verifyAdminAuth(request)) {
+    return unauthorizedResponse();
+  }
+
   try {
     const { id: partnerId } = await params;
 

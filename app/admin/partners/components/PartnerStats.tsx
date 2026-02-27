@@ -12,6 +12,7 @@ import PayoutModal from './PayoutModal';
 import EditPartnerModal from './EditPartnerModal';
 import AffiliateChart from '@/components/affiliate/AffiliateChart';
 import KPICard from '@/components/affiliate/KPICard';
+import { adminFetch } from '../lib/admin-fetch';
 import type { Partner } from '@/types/affiliate';
 import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
 
@@ -31,7 +32,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
 
   const loadPartner = useCallback(async () => {
     try {
-      const response = await fetch(`/api/admin/partners/list`);
+      const response = await adminFetch(`/api/admin/partners/list`);
       const data = await response.json();
       if (data.success) {
         const partner = data.partners.find((p: Partner) => p.id === partnerId);
@@ -47,7 +48,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
       setIsLoading(true);
       setError(null);
 
-      const response = await fetch(`/api/admin/partners/${partnerId}/stats`);
+      const response = await adminFetch(`/api/admin/partners/${partnerId}/stats`);
       const data = await response.json();
 
       if (data.success) {
@@ -65,7 +66,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
 
   const loadConversions = useCallback(async () => {
     try {
-      const response = await fetch(`/api/admin/partners/${partnerId}/conversions?limit=20`);
+      const response = await adminFetch(`/api/admin/partners/${partnerId}/conversions?limit=20`);
       const data = await response.json();
 
       if (data.success) {
@@ -100,9 +101,8 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   // Изменить статус партнёра
   const changePartnerStatus = async (newStatus: PartnerStatus) => {
     try {
-      const response = await fetch(`/api/admin/partners/${partnerId}/status`, {
+      const response = await adminFetch(`/api/admin/partners/${partnerId}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
       });
 

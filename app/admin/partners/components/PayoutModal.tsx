@@ -7,6 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { Button } from 'primereact/button';
 import { motion } from 'framer-motion';
+import { adminFetch } from '../lib/admin-fetch';
 
 interface ConversionData {
   converted_at: string;
@@ -44,7 +45,7 @@ export default function PayoutModal({
     if (!periodStart || !periodEnd) return;
 
     try {
-      const response = await fetch(
+      const response = await adminFetch(
         `/api/admin/partners/${partnerId}/conversions?limit=1000`
       );
       const data = await response.json();
@@ -111,9 +112,8 @@ export default function PayoutModal({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/admin/partners/${partnerId}/payout`, {
+      const response = await adminFetch(`/api/admin/partners/${partnerId}/payout`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           period_start: periodStart.toISOString(),
           period_end: periodEnd.toISOString(),

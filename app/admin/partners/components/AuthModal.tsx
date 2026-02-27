@@ -19,16 +19,24 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
     setError('');
     setIsLoading(true);
 
-    // Имитация задержки для плавности
-    await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
 
-    // Пароль из плана: Kogortalove1!
-    if (password === 'Kogortalove1!') {
-      sessionStorage.setItem('admin_auth', 'true');
-      onSuccess();
-    } else {
-      setError('Неверный пароль');
-      setPassword('');
+      const data = await response.json();
+
+      if (data.success) {
+        sessionStorage.setItem('admin_token', password);
+        onSuccess();
+      } else {
+        setError('Неверный пароль');
+        setPassword('');
+      }
+    } catch {
+      setError('Ошибка соединения с сервером');
     }
 
     setIsLoading(false);

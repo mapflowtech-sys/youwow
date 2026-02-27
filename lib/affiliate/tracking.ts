@@ -94,11 +94,11 @@ export async function trackConversion(
   amount: number
 ): Promise<void> {
   try {
-    // Импортируем здесь, чтобы избежать циклических зависимостей
     const { getOrderById } = await import('@/lib/db-helpers');
+    const { supabaseAdmin } = await import('@/lib/supabase');
+
     const order = await getOrderById(orderId);
 
-    // Проверяем есть ли партнёрские данные в заказе
     if (!order.partner_id || !order.partner_session_id) {
       console.log('[Affiliate] No partner data in order, skipping conversion tracking');
       return;
@@ -106,35 +106,63 @@ export async function trackConversion(
 
     console.log('[Affiliate] Tracking conversion for partner:', order.partner_id);
 
-    // Вызываем API для записи конверсии
-    // Используем абсолютный URL для серверных запросов
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ||
-                    (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
+    // Получаем комиссию партнёра
+    const { data: partner, error: partnerError } = await supabaseAdmin
+      .from('partners')
+      .select('commission_rate, status')
+      .eq('id', order.partner_id)
+      .single();
 
-    const response = await fetch(`${baseUrl}/api/affiliate/track-conversion`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    if (partnerError || !partner) {
+      console.error('[Affiliate] Partner not found:', order.partner_id);
+      return;
+    }
+
+    if (partner.status !== 'active') {
+      console.log('[Affiliate] Partner inactive, skipping conversion');
+      return;
+    }
+
+    // Проверяем дедупликацию
+    const { data: existing } = await supabaseAdmin
+      .from('partner_conversions')
+      .select('id')
+      .eq('order_id', orderId)
+      .single();
+
+    if (existing) {
+      console.log('[Affiliate] Conversion already tracked for order:', orderId);
+      return;
+    }
+
+    // Получаем landing_page из клика
+    const { data: click } = await supabaseAdmin
+      .from('partner_clicks')
+      .select('landing_page')
+      .eq('session_id', order.partner_session_id)
+      .single();
+
+    // Записываем конверсию
+    const { error: insertError } = await supabaseAdmin
+      .from('partner_conversions')
+      .insert({
         partner_id: order.partner_id,
         session_id: order.partner_session_id,
         order_id: orderId,
         service_type: serviceType,
-        amount: amount,
-      }),
-    });
+        amount,
+        commission: partner.commission_rate,
+        landing_page: click?.landing_page || null,
+        is_paid_out: false,
+      });
 
-    if (!response.ok) {
-      const error = await response.json();
-      console.error('[Affiliate] Failed to track conversion:', error);
+    if (insertError) {
+      console.error('[Affiliate] Failed to insert conversion:', insertError);
       return;
     }
 
-    const result = await response.json();
-    console.log('[Affiliate] Conversion tracked successfully:', result);
+    console.log('[Affiliate] Conversion tracked: partner=%s, commission=%s₽', order.partner_id, partner.commission_rate);
   } catch (error) {
     console.error('[Affiliate] Error tracking conversion:', error);
-    // Не бросаем ошибку, чтобы не прервать основной процесс
   }
 }

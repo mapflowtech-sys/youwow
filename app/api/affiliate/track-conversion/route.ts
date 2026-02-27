@@ -1,7 +1,7 @@
 // API: Запись конверсии (покупки) для партнёра
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем комиссию партнёра из БД
-    const { data: partner, error: partnerError } = await supabase
+    const { data: partner, error: partnerError } = await supabaseAdmin
       .from('partners')
-      .select('commission_rate, is_active')
+      .select('commission_rate, status')
       .eq('id', partner_id)
       .single();
 
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!partner.is_active) {
+    if (partner.status !== 'active') {
       return NextResponse.json(
         { error: 'Partner is inactive' },
         { status: 403 }
@@ -44,14 +44,14 @@ export async function POST(request: NextRequest) {
     }
 
     // Получаем информацию о клике (landing_page)
-    const { data: click } = await supabase
+    const { data: click } = await supabaseAdmin
       .from('partner_clicks')
       .select('landing_page')
       .eq('session_id', session_id)
       .single();
 
     // Проверяем что конверсия ещё не записана (по order_id)
-    const { data: existingConversion } = await supabase
+    const { data: existingConversion } = await supabaseAdmin
       .from('partner_conversions')
       .select('id')
       .eq('order_id', order_id)
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Записываем конверсию
-    const { data: conversion, error: conversionError } = await supabase
+    const { data: conversion, error: conversionError } = await supabaseAdmin
       .from('partner_conversions')
       .insert({
         partner_id,

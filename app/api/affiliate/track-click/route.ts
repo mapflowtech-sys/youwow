@@ -1,7 +1,7 @@
 // API: Запись клика по партнёрской ссылке
 
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,9 +24,9 @@ export async function POST(request: NextRequest) {
     }
 
     // Проверяем существование партнёра
-    const { data: partner, error: partnerError } = await supabase
+    const { data: partner, error: partnerError } = await supabaseAdmin
       .from('partners')
-      .select('id, is_active')
+      .select('id, status')
       .eq('id', partner_id)
       .single();
 
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!partner.is_active) {
+    if (partner.status !== 'active') {
       return NextResponse.json(
         { error: 'Partner is inactive' },
         { status: 403 }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     // Проверка дедупликации (один IP не может кликнуть дважды за 1 минуту)
     const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
-    const { data: recentClick } = await supabase
+    const { data: recentClick } = await supabaseAdmin
       .from('partner_clicks')
       .select('id')
       .eq('partner_id', partner_id)
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Записываем клик
-    const { data: click, error: clickError } = await supabase
+    const { data: click, error: clickError } = await supabaseAdmin
       .from('partner_clicks')
       .insert({
         partner_id,

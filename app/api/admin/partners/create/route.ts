@@ -2,8 +2,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createPartner } from '@/lib/affiliate/supabase-queries';
+import { verifyAdminAuth, unauthorizedResponse } from '@/lib/admin-auth';
 
 export async function POST(request: NextRequest) {
+  if (!verifyAdminAuth(request)) {
+    return unauthorizedResponse();
+  }
+
   try {
     const body = await request.json();
     const { id, name, website, payment_info, commission_rate, notes, is_active, status } = body;
