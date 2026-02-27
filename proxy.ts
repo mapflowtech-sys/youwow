@@ -1,9 +1,9 @@
-// Middleware для обработки партнёрских ссылок
+// Proxy для обработки партнёрских ссылок (Next.js 16: middleware → proxy)
 
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { searchParams, pathname } = request.nextUrl;
   const partnerId = searchParams.get('partner');
 
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
       const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || `${protocol}://${host}`;
       const apiUrl = `${baseUrl}/api/affiliate/track-click`;
 
-      console.log('[Affiliate Middleware] Tracking click to:', apiUrl);
+      console.log('[Affiliate Proxy] Tracking click to:', apiUrl);
 
       fetch(apiUrl, {
         method: 'POST',
@@ -66,12 +66,12 @@ export async function middleware(request: NextRequest) {
           utm_campaign: utmCampaign,
         }),
       }).catch((error) => {
-        console.error('[Affiliate Middleware] Error tracking click:', error);
+        console.error('[Affiliate Proxy] Error tracking click:', error);
       });
 
       return response;
     } catch (error) {
-      console.error('Error in partner middleware:', error);
+      console.error('Error in partner proxy:', error);
       // При ошибке просто редиректим без партнёрского трекинга
       return NextResponse.redirect(new URL(pathname, request.url));
     }
@@ -80,7 +80,7 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-// Конфигурация: на каких путях запускать middleware
+// Конфигурация: на каких путях запускать proxy
 export const config = {
   matcher: [
     /*
