@@ -211,7 +211,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
     >
       <Card className="overflow-hidden">
         {/* Gradient Header */}
-        <div className={`bg-gradient-to-br ${config.bgGradient} p-8`}>
+        <div className={`bg-linear-to-br ${config.bgGradient} p-8`}>
           <div className="text-center">
             {/* Animated Icon */}
             <motion.div
@@ -379,7 +379,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
             >
               {/* Audio Player (if song) */}
               {currentOrder.service_type === 'song' && (
-                <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
+                <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
                   <audio controls className="w-full" src={currentOrder.result_url}>
                     Ваш браузер не поддерживает аудио.
                   </audio>
@@ -398,7 +398,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                 onClick={handleDownload}
                 disabled={isDownloading}
                 size="lg"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
               >
                 <Download className="mr-2 h-5 w-5" />
                 {isDownloading ? 'Скачивание...' : 'Скачать песню'}

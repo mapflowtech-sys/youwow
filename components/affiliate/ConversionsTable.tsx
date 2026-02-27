@@ -13,7 +13,7 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-12 text-center"
+        className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 p-12 text-center"
       >
         <i className="pi pi-shopping-cart text-white/20 text-6xl mb-4" />
         <p className="text-white/60 text-lg mb-2">Конверсий пока нет</p>
@@ -25,7 +25,7 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
   }
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 overflow-hidden">
+    <div className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 overflow-hidden">
       {/* Header */}
       <div className="px-6 py-4 border-b border-white/10">
         <h3 className="text-white font-semibold text-lg">

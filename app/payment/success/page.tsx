@@ -58,7 +58,7 @@ function PaymentSuccessContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -95,7 +95,7 @@ function PaymentSuccessContent() {
                 />
 
                 {/* Main icon */}
-                <div className="relative w-24 h-24 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-xl">
+                <div className="relative w-24 h-24 bg-linear-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-xl">
                   <CheckCircle className="w-16 h-16 text-white" />
                 </div>
 
@@ -141,7 +141,7 @@ function PaymentSuccessContent() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-center mb-8"
             >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
                 Оплата прошла успешно!
               </h1>
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300">
@@ -157,10 +157,10 @@ function PaymentSuccessContent() {
               className="space-y-4 mb-8"
             >
               {/* Processing Info */}
-              <div className="bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border border-purple-200 dark:border-purple-800">
+              <div className="bg-linear-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl p-6 border border-purple-200 dark:border-purple-800">
                 <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <div className="shrink-0">
+                    <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                       <Music className="w-6 h-6 text-white" />
                     </div>
                   </div>
@@ -182,7 +182,7 @@ function PaymentSuccessContent() {
                 </h3>
                 <ul className="space-y-3">
                   <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-slate-600 dark:text-slate-400">
@@ -190,7 +190,7 @@ function PaymentSuccessContent() {
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-slate-600 dark:text-slate-400">
@@ -198,7 +198,7 @@ function PaymentSuccessContent() {
                     </span>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
+                    <div className="shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mt-0.5">
                       <CheckCircle className="w-4 h-4 text-white" />
                     </div>
                     <span className="text-slate-600 dark:text-slate-400">
@@ -219,7 +219,7 @@ function PaymentSuccessContent() {
               <Button
                 onClick={handleGoToOrder}
                 size="lg"
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 shadow-lg"
+                className="flex-1 bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 shadow-lg"
               >
                 {orderId ? 'Посмотреть заказ' : 'Мои заказы'}
                 <ArrowRight className="ml-2 w-5 h-5" />
@@ -265,7 +265,7 @@ function PaymentSuccessContent() {
 export default function PaymentSuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-green-50 via-emerald-50 to-teal-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-slate-600 dark:text-slate-400">Загрузка...</p>

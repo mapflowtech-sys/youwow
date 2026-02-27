@@ -57,7 +57,7 @@ export const SONG_PRICE = 390;
 
 Найдите блок "Price Display" (строка ~90):
 ```tsx
-<div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 mb-6 text-center">
+<div className="bg-linear-to-r from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-6 mb-6 text-center">
   <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
     Стоимость песни
   </div>

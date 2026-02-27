@@ -224,7 +224,7 @@ function AudioPlayerCard({
 
   return (
     <motion.div variants={cardVariants}>
-      <div className="group bg-white rounded-2xl border border-border/60 shadow-sm hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-1 transition-all duration-300">
+      <div className="group bg-white rounded-2xl border border-border/60 shadow-xs hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-1 transition-all duration-300">
         <div className="p-5">
           <div
             className={`relative overflow-hidden rounded-xl ${accentColor} aspect-square flex items-center justify-center cursor-pointer`}
@@ -692,7 +692,7 @@ export default function SongPage() {
                 <motion.div
                   key={item.step}
                   variants={cardVariants}
-                  className={`bg-white rounded-2xl p-8 border border-border/60 shadow-sm hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-1 transition-all duration-300 ${
+                  className={`bg-white rounded-2xl p-8 border border-border/60 shadow-xs hover:shadow-lg hover:shadow-primary/8 hover:-translate-y-1 transition-all duration-300 ${
                     index === 2
                       ? "sm:col-span-2 sm:max-w-md sm:mx-auto lg:col-span-1 lg:max-w-none"
                       : ""
@@ -832,7 +832,7 @@ export default function SongPage() {
                 <motion.div
                   key={index}
                   variants={cardVariants}
-                  className="relative bg-white rounded-2xl border border-border/60 shadow-sm p-7 flex flex-col h-full hover:shadow-md transition-all duration-300"
+                  className="relative bg-white rounded-2xl border border-border/60 shadow-xs p-7 flex flex-col h-full hover:shadow-md transition-all duration-300"
                 >
                   {/* Decorative quote */}
                   <span
@@ -854,7 +854,7 @@ export default function SongPage() {
                     </div>
                   </div>
 
-                  <p className="text-muted-foreground leading-relaxed flex-grow">
+                  <p className="text-muted-foreground leading-relaxed grow">
                     &laquo;{review.text}&raquo;
                   </p>
                 </motion.div>
@@ -1105,7 +1105,7 @@ export default function SongPage() {
                                     />
                                     <FormLabel
                                       htmlFor={style.value}
-                                      className="flex flex-col items-start rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/[0.02] peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer transition-all duration-200"
+                                      className="flex flex-col items-start rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer transition-all duration-200"
                                     >
                                       <span className="font-semibold text-foreground">
                                         {style.label}
@@ -1213,7 +1213,7 @@ export default function SongPage() {
                                     />
                                     <FormLabel
                                       htmlFor={voice.value}
-                                      className="flex items-center justify-center rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/[0.02] peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer font-semibold transition-all duration-200"
+                                      className="flex items-center justify-center rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/2 peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer font-semibold transition-all duration-200"
                                     >
                                       {voice.label}
                                     </FormLabel>
@@ -1483,7 +1483,7 @@ export default function SongPage() {
                   <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-foreground list-none select-none [&::-webkit-details-marker]:hidden">
                     <span className="pr-6">{faq.question}</span>
                     <ChevronDown
-                      className="w-5 h-5 text-muted-foreground transition-transform duration-300 group-open:rotate-180 flex-shrink-0"
+                      className="w-5 h-5 text-muted-foreground transition-transform duration-300 group-open:rotate-180 shrink-0"
                       aria-hidden="true"
                     />
                   </summary>
@@ -1505,7 +1505,7 @@ export default function SongPage() {
           GUARANTEE
       ════════════════════════════════════════════════════════════════════ */}
       <AnimatedSection>
-        <section className="py-16 bg-primary/[0.03]">
+        <section className="py-16 bg-primary/3">
           <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8 text-center">
             <ShieldCheck
               className="w-12 h-12 text-primary mx-auto mb-5"

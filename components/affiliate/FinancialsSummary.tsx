@@ -18,7 +18,7 @@ export default function FinancialsSummary({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.4 }}
-      className="bg-gradient-to-br from-purple-500/20 to-pink-600/20 backdrop-blur-sm rounded-xl border border-purple-400/30 overflow-hidden"
+      className="bg-linear-to-br from-purple-500/20 to-pink-600/20 backdrop-blur-xs rounded-xl border border-purple-400/30 overflow-hidden"
     >
       {/* Header */}
       <div className="px-6 py-4 border-b border-white/10">

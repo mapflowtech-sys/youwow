@@ -96,11 +96,11 @@ export default function SantaPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-50 via-white to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-linear-to-b from-red-50 via-white to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Development Alert */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border-b border-amber-200 dark:border-amber-800">
+      <div className="bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/20 dark:to-orange-950/20 border-b border-amber-200 dark:border-amber-800">
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-6">
-          <Alert className="border-amber-300 dark:border-amber-700 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm shadow-lg">
+          <Alert className="border-amber-300 dark:border-amber-700 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xs shadow-lg">
             <Info className="h-5 w-5 text-amber-600 dark:text-amber-400" />
             <AlertTitle className="text-lg font-semibold text-amber-900 dark:text-amber-100">
               ⚙️ Сервис в разработке
@@ -124,7 +124,7 @@ export default function SantaPage() {
             <Badge className="mb-6 text-base px-4 py-2">
               🎅 Новогодний хит 2025
             </Badge>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-red-600 via-green-600 to-red-600 bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-linear-to-r from-red-600 via-green-600 to-red-600 bg-clip-text text-transparent animate-shimmer bg-size-[200%_auto]">
               Видео от Деда Мороза
               <br />с именем получателя
             </h1>
@@ -135,7 +135,7 @@ export default function SantaPage() {
 
             <Button
               size="lg"
-              className="text-lg px-8 py-6 bg-gradient-to-r from-red-500 to-green-600 hover:from-red-600 hover:to-green-700 text-white"
+              className="text-lg px-8 py-6 bg-linear-to-r from-red-500 to-green-600 hover:from-red-600 hover:to-green-700 text-white"
               onClick={() => {
                 document
                   .getElementById("order-form")
@@ -198,8 +198,8 @@ export default function SantaPage() {
                 transition={{ delay: index * 0.2 }}
                 className="relative"
               >
-                <div className="bg-gradient-to-br from-red-50 to-green-50 dark:from-slate-700 dark:to-slate-600 rounded-2xl p-8 h-full border-2 border-transparent hover:border-primary transition-all">
-                  <div className="bg-gradient-to-r from-red-500 to-green-600 w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">
+                <div className="bg-linear-to-br from-red-50 to-green-50 dark:from-slate-700 dark:to-slate-600 rounded-2xl p-8 h-full border-2 border-transparent hover:border-primary transition-all">
+                  <div className="bg-linear-to-r from-red-500 to-green-600 w-12 h-12 rounded-full flex items-center justify-center mb-6 text-white font-bold text-xl">
                     {item.step}
                   </div>
                   <div className="w-full h-32 bg-slate-200 dark:bg-slate-500 rounded-lg mb-6 flex items-center justify-center">
@@ -255,7 +255,7 @@ export default function SantaPage() {
                 transition={{ delay: index * 0.1 }}
                 className="group cursor-pointer"
               >
-                <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-red-100 to-green-100 dark:from-slate-700 dark:to-slate-600 aspect-video flex items-center justify-center">
+                <div className="relative overflow-hidden rounded-xl bg-linear-to-br from-red-100 to-green-100 dark:from-slate-700 dark:to-slate-600 aspect-video flex items-center justify-center">
                   <Play className="h-16 w-16 text-white drop-shadow-lg group-hover:scale-110 transition-transform" />
                   <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                 </div>
@@ -626,7 +626,7 @@ export default function SantaPage() {
                     <Button
                       type="submit"
                       size="lg"
-                      className="w-full text-lg bg-gradient-to-r from-red-500 to-green-600 hover:from-red-600 hover:to-green-700"
+                      className="w-full text-lg bg-linear-to-r from-red-500 to-green-600 hover:from-red-600 hover:to-green-700"
                     >
                       Оставить заявку на поздравление
                       <ArrowRight className="ml-2 h-5 w-5" />

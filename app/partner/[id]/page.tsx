@@ -71,7 +71,7 @@ export default function PartnerDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center">
         <div className="text-center">
           <ProgressSpinner style={{ width: '64px', height: '64px' }} strokeWidth="4" />
           <p className="text-white/60 mt-4">Загрузка статистики...</p>
@@ -82,7 +82,7 @@ export default function PartnerDashboardPage() {
 
   if (error || !stats) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -102,7 +102,7 @@ export default function PartnerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800">
+    <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
       <Toast ref={toast} />
 
       {/* Header */}
@@ -152,7 +152,7 @@ export default function PartnerDashboardPage() {
               label="Копировать"
               icon="pi pi-copy"
               onClick={copyAffiliateLink}
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
           <p className="text-white/40 text-sm mt-4">
@@ -219,7 +219,7 @@ export default function PartnerDashboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 p-6 text-center"
+          className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 p-6 text-center"
         >
           <p className="text-white/60 text-sm">
             По вопросам выплат и сотрудничества обращайтесь:{' '}

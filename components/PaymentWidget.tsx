@@ -211,11 +211,11 @@ export default function PaymentWidget({
       {/* Trust Indicators */}
       <div className="flex flex-col gap-2 mb-6">
         <div className="flex items-center gap-3 text-sm">
-          <Shield className="text-green-600 flex-shrink-0" size={18} />
+          <Shield className="text-green-600 shrink-0" size={18} />
           <span className="text-muted-foreground">Безопасная оплата</span>
         </div>
         <div className="flex items-center gap-3 text-sm">
-          <CheckCircle2 className="text-green-600 flex-shrink-0" size={18} />
+          <CheckCircle2 className="text-green-600 shrink-0" size={18} />
           <span className="text-muted-foreground">Гарантия возврата средств</span>
         </div>
       </div>

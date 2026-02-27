@@ -67,14 +67,14 @@ export default function Home() {
       />
       <main>
       {/* HERO SECTION */}
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
+      <section className="min-h-screen flex items-center justify-center bg-linear-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="text-center max-w-4xl"
         >
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer px-2">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-space bg-linear-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent mb-6 animate-shimmer px-2">
             Персональные подарки с эмоцией
           </h1>
 
@@ -90,13 +90,13 @@ export default function Home() {
             <Button
               onClick={scrollToServices}
               size="lg"
-              className="relative overflow-hidden bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all backdrop-blur-sm"
+              className="relative overflow-hidden bg-primary hover:bg-primary/90 text-white text-lg px-10 py-7 shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 transition-all backdrop-blur-xs"
             >
               <span className="relative z-10 flex items-center">
                 Создать подарок
                 <ChevronDown className="ml-2 w-5 h-5" />
               </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
             </Button>
           </motion.div>
         </motion.div>
@@ -132,7 +132,7 @@ export default function Home() {
                     Твой персональный хит
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent className="grow">
                   <p className="text-muted-foreground">
                     Песня про твоего друга. Слова и музыка в любом стиле
                   </p>
@@ -172,7 +172,7 @@ export default function Home() {
                     Видео от Деда Мороза
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent className="grow">
                   <p className="text-muted-foreground">
                     Дед Мороз лично поздравит ребёнка или взрослого. Сервис запустится совсем скоро. Пока доступно оформление предзаказа.
                   </p>
@@ -229,7 +229,7 @@ export default function Home() {
                     transition={{ duration: 2, repeat: Infinity }}
                     className="w-2 h-2 rounded-full bg-primary"
                   ></motion.div>
-                  <div className="w-8 h-0.5 bg-gradient-to-r from-primary to-accent-pink"></div>
+                  <div className="w-8 h-0.5 bg-linear-to-r from-primary to-accent-pink"></div>
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.5 }}
@@ -267,7 +267,7 @@ export default function Home() {
                     transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
                     className="w-2 h-2 rounded-full bg-accent-pink"
                   ></motion.div>
-                  <div className="w-8 h-0.5 bg-gradient-to-r from-accent-pink to-accent-gold"></div>
+                  <div className="w-8 h-0.5 bg-linear-to-r from-accent-pink to-accent-gold"></div>
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}
                     transition={{ duration: 2, repeat: Infinity, delay: 0.8 }}

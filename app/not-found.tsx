@@ -8,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
+    <main className="min-h-screen flex items-center justify-center bg-linear-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background px-4 py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ export default function NotFound() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="mb-8"
         >
-          <h1 className="text-8xl sm:text-9xl font-bold font-space bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent animate-shimmer bg-[length:200%_auto]">
+          <h1 className="text-8xl sm:text-9xl font-bold font-space bg-linear-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent animate-shimmer bg-size-[200%_auto]">
             404
           </h1>
         </motion.div>

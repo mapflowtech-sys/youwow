@@ -66,7 +66,7 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs"
       onClick={onClose}
     >
       <motion.div
@@ -154,11 +154,11 @@ export default function PaymentModal({ onPaymentInitiated, onClose, formData }: 
         {/* Trust Indicators */}
         <div className="bg-muted/50 rounded-xl p-4 mb-6 space-y-3">
           <div className="flex items-center gap-3 text-sm">
-            <Shield className="text-green-600 flex-shrink-0" size={18} />
+            <Shield className="text-green-600 shrink-0" size={18} />
             <span className="text-muted-foreground">Безопасная оплата</span>
           </div>
           <div className="flex items-center gap-3 text-sm">
-            <CheckCircle className="text-green-600 flex-shrink-0" size={18} />
+            <CheckCircle className="text-green-600 shrink-0" size={18} />
             <span className="text-muted-foreground">Гарантия возврата средств</span>
           </div>
         </div>

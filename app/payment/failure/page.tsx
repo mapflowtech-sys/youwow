@@ -32,7 +32,7 @@ function PaymentFailureContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-amber-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -69,7 +69,7 @@ function PaymentFailureContent() {
                 />
 
                 {/* Main icon */}
-                <div className="relative w-24 h-24 bg-gradient-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-xl">
+                <div className="relative w-24 h-24 bg-linear-to-br from-red-500 to-orange-600 rounded-full flex items-center justify-center shadow-xl">
                   <XCircle className="w-16 h-16 text-white" />
                 </div>
 
@@ -115,7 +115,7 @@ function PaymentFailureContent() {
               transition={{ delay: 0.4, duration: 0.6 }}
               className="text-center mb-8"
             >
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
+              <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-linear-to-r from-red-600 via-orange-600 to-amber-600 bg-clip-text text-transparent">
                 Оплата не прошла
               </h1>
               <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300">
@@ -175,7 +175,7 @@ function PaymentFailureContent() {
               </div>
 
               {/* What to Do */}
-              <div className="bg-gradient-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
+              <div className="bg-linear-to-r from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 rounded-2xl p-6 border border-blue-200 dark:border-blue-800">
                 <h3 className="font-semibold text-lg mb-3 text-slate-900 dark:text-white">
                   Что делать?
                 </h3>
@@ -211,7 +211,7 @@ function PaymentFailureContent() {
               <Button
                 onClick={handleTryAgain}
                 size="lg"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 shadow-lg"
+                className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-lg py-6 shadow-lg"
               >
                 <RefreshCw className="mr-2 w-5 h-5" />
                 Попробовать снова
@@ -282,7 +282,7 @@ function PaymentFailureContent() {
 export default function PaymentFailurePage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-amber-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-linear-to-br from-red-50 via-orange-50 to-amber-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
           <p className="text-slate-600 dark:text-slate-400">Загрузка...</p>

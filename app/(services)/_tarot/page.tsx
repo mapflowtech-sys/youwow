@@ -131,7 +131,7 @@ export default function TarotPage() {
   return (
     <div className="min-h-screen">
       {/* HERO SECTION */}
-      <section className="relative bg-gradient-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background py-16 px-4">
+      <section className="relative bg-linear-to-b from-violet-50 via-background to-background dark:from-slate-900 dark:via-background dark:to-background py-16 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -142,7 +142,7 @@ export default function TarotPage() {
               🔥 Вирусный тренд 2025
             </Badge>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-linear-to-r from-primary via-accent-pink to-accent-gold bg-clip-text text-transparent">
               Твоя карта Таро 2026<br />с твоим лицом
             </h1>
 
@@ -190,7 +190,7 @@ export default function TarotPage() {
                 transition={{ duration: 0.6, delay: 0.1 }}
               >
                 <Card className="h-full text-center p-6">
-                  <div className="w-full aspect-video bg-gradient-to-br from-primary/10 to-accent-pink/10 rounded-lg mb-4 flex items-center justify-center">
+                  <div className="w-full aspect-video bg-linear-to-br from-primary/10 to-accent-pink/10 rounded-lg mb-4 flex items-center justify-center">
                     <Sparkles className="w-16 h-16 text-primary" />
                     <p className="text-sm text-muted-foreground mt-2">Фото появится здесь</p>
                   </div>
@@ -212,7 +212,7 @@ export default function TarotPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
                 <Card className="h-full text-center p-6">
-                  <div className="w-full aspect-video bg-gradient-to-br from-accent-pink/10 to-accent-gold/10 rounded-lg mb-4 flex items-center justify-center">
+                  <div className="w-full aspect-video bg-linear-to-br from-accent-pink/10 to-accent-gold/10 rounded-lg mb-4 flex items-center justify-center">
                     <Sparkles className="w-16 h-16 text-accent-pink" />
                     <p className="text-sm text-muted-foreground mt-2">Процесс создания</p>
                   </div>
@@ -234,7 +234,7 @@ export default function TarotPage() {
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
                 <Card className="h-full text-center p-6">
-                  <div className="w-full aspect-video bg-gradient-to-br from-accent-gold/10 to-primary/10 rounded-lg mb-4 flex items-center justify-center">
+                  <div className="w-full aspect-video bg-linear-to-br from-accent-gold/10 to-primary/10 rounded-lg mb-4 flex items-center justify-center">
                     <Sparkles className="w-16 h-16 text-accent-gold" />
                     <p className="text-sm text-muted-foreground mt-2">Готовый результат</p>
                   </div>
@@ -277,9 +277,9 @@ export default function TarotPage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   whileHover={{ scale: 1.05 }}
-                  className="relative aspect-[2/3] rounded-lg overflow-hidden shadow-lg cursor-pointer group"
+                  className="relative aspect-2/3 rounded-lg overflow-hidden shadow-lg cursor-pointer group"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent-pink/20 to-accent-gold/20 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-linear-to-br from-primary/20 via-accent-pink/20 to-accent-gold/20 flex items-center justify-center">
                     <div className="text-center">
                       <Sparkles className="w-12 h-12 text-white mb-2 mx-auto" />
                       <p className="text-white text-sm font-medium">Пример {i}</p>

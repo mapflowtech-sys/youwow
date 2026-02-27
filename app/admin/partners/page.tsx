@@ -61,14 +61,14 @@ export default function AdminPartnersPage() {
   // Если не авторизован - показываем модальное окно
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800">
+      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
         <AuthModal onSuccess={handleAuthSuccess} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-pink-800">
+    <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
       {/* Header */}
       <header className="bg-black/20 backdrop-blur-md border-b border-white/10">
         <div className="container mx-auto px-4 py-4">

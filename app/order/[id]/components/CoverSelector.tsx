@@ -187,7 +187,7 @@ export default function CoverSelector({ orderId, onVideoGenerated }: CoverSelect
           onClick={() => setActiveTab('preset')}
           className={`flex-1 py-2 px-4 rounded-md transition-all ${
             activeTab === 'preset'
-              ? 'bg-white dark:bg-slate-700 shadow-sm font-semibold'
+              ? 'bg-white dark:bg-slate-700 shadow-xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
         >
@@ -198,7 +198,7 @@ export default function CoverSelector({ orderId, onVideoGenerated }: CoverSelect
           onClick={() => setActiveTab('custom')}
           className={`flex-1 py-2 px-4 rounded-md transition-all ${
             activeTab === 'custom'
-              ? 'bg-white dark:bg-slate-700 shadow-sm font-semibold'
+              ? 'bg-white dark:bg-slate-700 shadow-xs font-semibold'
               : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
           }`}
         >
@@ -336,7 +336,7 @@ export default function CoverSelector({ orderId, onVideoGenerated }: CoverSelect
           </div>
           <div className="h-2 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+              className="h-full bg-linear-to-r from-purple-500 to-pink-500"
               initial={{ width: 0 }}
               animate={{ width: `${generationProgress}%` }}
               transition={{ duration: 0.5 }}
@@ -371,7 +371,7 @@ export default function CoverSelector({ orderId, onVideoGenerated }: CoverSelect
           <Button
             onClick={handleDownloadVideo}
             size="lg"
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
           >
             <Video className="mr-2 h-5 w-5" />
             Скачать видео (MP4)
@@ -389,7 +389,7 @@ export default function CoverSelector({ orderId, onVideoGenerated }: CoverSelect
             (activeTab === 'custom' && !customImage)
           }
           size="lg"
-          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+          className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
         >
           {isGenerating ? (
             <>

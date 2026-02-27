@@ -25,7 +25,7 @@ export default function KPICard({ label, value, subtitle, icon, color, delay = 0
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       className={`
-        bg-gradient-to-br ${colorClasses[color]}
+        bg-linear-to-br ${colorClasses[color]}
         backdrop-blur-md rounded-xl border p-6
         hover:scale-105 transition-transform duration-300
       `}
