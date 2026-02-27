@@ -6,9 +6,6 @@ import { Footer } from "@/components/shared/footer";
 import { Toaster } from "@/components/ui/toaster";
 import YandexMetrika from "@/components/YandexMetrika";
 import "./globals.css";
-import "primereact/resources/themes/lara-light-pink/theme.css";
-import "primereact/resources/primereact.min.css";
-import "primeicons/primeicons.css";
 
 const onest = Onest({
   subsets: ["latin", "cyrillic"],

@@ -26,16 +26,8 @@ export async function POST(request: NextRequest) {
 
     const finalPrice = isBypassRequest ? 0 : (testPrice || SONG_PRICE);
 
-    if (testPrice) {
-      console.log(`[Payment] Using test price: ${testPrice}₽ (from YOOKASSA_MIN_TEST_PRICE=${process.env.YOOKASSA_MIN_TEST_PRICE} копеек)`);
-    }
-
     // Получаем партнёрские данные из cookie (если есть)
     const partnerData = await getPartnerCookie();
-
-    if (partnerData) {
-      console.log('[Payment] Partner cookie found:', partnerData.partnerId);
-    }
 
     // Create order in database
     const order = await createOrder({
@@ -79,14 +71,6 @@ export async function POST(request: NextRequest) {
       useWidget: useWidget ?? false, // Use widget mode if requested
     });
 
-    console.log('[Payment] Payment created:', {
-      guid: payment.guid,
-      paymentId: payment.paymentId,
-      url: payment.paymentUrl,
-      token: payment.confirmationToken ? '***' : undefined,
-      useWidget: useWidget ?? false,
-    });
-
     // Update order with payment info
     const { updateOrderStatus } = await import('@/lib/db-helpers');
     await updateOrderStatus(order.id, 'pending', {
@@ -111,10 +95,7 @@ export async function POST(request: NextRequest) {
     console.error('[Payment] Error details:', { message: errorMessage, stack: errorStack });
 
     return NextResponse.json(
-      {
-        error: 'Failed to create payment',
-        details: errorMessage
-      },
+      { error: 'Failed to create payment' },
       { status: 500 }
     );
   }

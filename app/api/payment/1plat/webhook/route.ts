@@ -3,8 +3,6 @@ import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('[1plat Webhook] Received payment notification');
-
     // 1. Получаем данные из JSON body
     const body = await request.json();
 
@@ -21,15 +19,6 @@ export async function POST(request: NextRequest) {
       amount_to_shop,
       expired: _expired, // eslint-disable-line @typescript-eslint/no-unused-vars
     } = body;
-
-    console.log('[1plat Webhook] Payment data:', {
-      payment_id,
-      guid,
-      merchant_id,
-      status,
-      amount,
-      amount_to_shop
-    });
 
     // 2. Получаем секреты из переменных окружения
     const expectedShopId = process.env.ONEPLAT_SHOP_ID;
@@ -65,15 +54,6 @@ export async function POST(request: NextRequest) {
       .update(`${merchant_id}${amount}${expectedShopId}${shopSecret}`)
       .digest('hex');
 
-    console.log('[1plat Webhook] Signature check:', {
-      received_signature: signature,
-      calculated_signature: calculatedSignature,
-      signature_match: signature === calculatedSignature,
-      received_signature_v2: signature_v2,
-      calculated_signature_v2: calculatedSignatureV2,
-      signature_v2_match: signature_v2 === calculatedSignatureV2
-    });
-
     // Проверяем хотя бы одну подпись
     const isSignatureValid = signature === calculatedSignature || signature_v2 === calculatedSignatureV2;
 
@@ -84,11 +64,7 @@ export async function POST(request: NextRequest) {
 
     // 5. ВСЁ ПРОВЕРЕНО! Обрабатываем платёж
 
-    console.log('[1plat Webhook] ✅ Payment verified successfully');
-    console.log('[1plat Webhook] Payment ID:', payment_id);
-    console.log('[1plat Webhook] GUID:', guid);
-    console.log('[1plat Webhook] Status:', status);
-    console.log('[1plat Webhook] Amount to shop:', amount_to_shop);
+    console.log(`[1plat Webhook] Payment verified: payment_id=${payment_id}, status=${status}, amount=${amount_to_shop}`);
 
     // Статусы 1plat:
     // -2 - нет подходящих реквизитов
@@ -115,23 +91,16 @@ export async function POST(request: NextRequest) {
         return new NextResponse('Order not found', { status: 404 });
       }
 
-      console.log('[1plat Webhook] Found order:', order.id);
-
       if (order.status === 'paid' || order.status === 'processing' || order.status === 'completed') {
-        console.log('[1plat Webhook] Order already processed, skipping');
         return new NextResponse('OK', { status: 200 });
       }
 
       // Update order to paid status
       await updateOrderStatus(order.id, 'paid');
-
-      console.log('[1plat Webhook] Order marked as paid:', order.id);
+      console.log(`[1plat Webhook] Order ${order.id} marked as paid, triggering generation`);
 
       // Запускаем генерацию песни
-      // Используем абсолютный URL для webhook callback
       const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-
-      console.log('[1plat Webhook] Triggering song generation for order:', order.id);
 
       // Запускаем генерацию асинхронно
       fetch(`${baseUrl}/api/song/process`, {

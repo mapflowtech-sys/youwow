@@ -4,6 +4,7 @@ import { generateSunoMusic } from '@/lib/genapi/suno-generation';
 import { getOrderById, updateOrderStatus } from '@/lib/db-helpers';
 import { sendSongReadyEmail } from '@/lib/email';
 import { trackConversion } from '@/lib/affiliate/tracking';
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit';
 
 export const maxDuration = 300; // 5 минут для полной генерации
 
@@ -13,6 +14,22 @@ interface ProcessRequest {
 
 export async function POST(request: NextRequest) {
   try {
+    // Rate limit: 10 запросов в минуту с одного IP
+    // Основная защита — проверка статуса заказа ниже
+    const ip = getClientIp(request);
+    const rateCheck = checkRateLimit(ip, {
+      key: 'song-process',
+      limit: 10,
+      windowSec: 60,
+    });
+
+    if (!rateCheck.success) {
+      return NextResponse.json(
+        { error: 'Слишком много запросов. Попробуйте позже.' },
+        { status: 429 }
+      );
+    }
+
     const { orderId }: ProcessRequest = await request.json();
 
     if (!orderId) {
@@ -72,8 +89,6 @@ export async function POST(request: NextRequest) {
 // Фоновая обработка генерации
 async function processSongGeneration(orderId: string, formData: SongFormData) {
   try {
-    console.log(`[${orderId}] Начало генерации`);
-
     // Получаем заказ для доступа к customer_email
     const order = await getOrderById(orderId);
 
@@ -81,9 +96,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     // (не меняем здесь, чтобы не было race condition)
 
     // Шаг 1: Генерация текста песни через ChatGPT
-    console.log(`[${orderId}] Генерация текста...`);
     const songText = await generateSongText(formData);
-    console.log(`[${orderId}] Текст сгенерирован, длина: ${songText.length} символов`);
 
     // Сохраняем промежуточный результат
     await updateOrderStatus(orderId, 'processing', {
@@ -94,9 +107,7 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     });
 
     // Шаг 2: Генерация музыки через Suno
-    console.log(`[${orderId}] Генерация музыки в Suno...`);
     const sunoResult = await generateSunoMusic(songText, formData);
-    console.log(`[${orderId}] Музыка сгенерирована:`, sunoResult);
 
     // Извлекаем URL аудио из результата Suno
     let audioUrl: string | null = null;
@@ -125,7 +136,6 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
     }
 
     // Обновляем заказ со статусом "completed"
-    console.log(`[${orderId}] Обновляем статус на completed с audioUrl:`, audioUrl);
     await updateOrderStatus(orderId, 'completed', {
       result_url: audioUrl,
       result_metadata: {
@@ -135,28 +145,22 @@ async function processSongGeneration(orderId: string, formData: SongFormData) {
       },
     });
 
-    console.log(`[${orderId}] ✅ Генерация завершена успешно! URL сохранён:`, audioUrl);
+    console.log(`[${orderId}] Generation completed successfully`);
 
     // Трекинг партнёрской конверсии (если есть партнёр)
     await trackConversion(orderId, 'song', order.amount || 590);
-    console.log(`[${orderId}] Партнёрская конверсия обработана`);
 
     // Отправляем email с готовой песней
     if (order.customer_email) {
-      console.log(`[${orderId}] Отправка email на ${order.customer_email}...`);
       const emailResult = await sendSongReadyEmail({
         to: order.customer_email,
         orderId: orderId,
         audioUrl: audioUrl,
       });
 
-      if (emailResult.success) {
-        console.log(`[${orderId}] ✅ Email успешно отправлен!`);
-      } else {
-        console.error(`[${orderId}] ❌ Ошибка отправки email:`, emailResult.error);
+      if (!emailResult.success) {
+        console.error(`[${orderId}] Failed to send email:`, emailResult.error);
       }
-    } else {
-      console.warn(`[${orderId}] Email не указан, пропускаем отправку`);
     }
 
   } catch (error) {

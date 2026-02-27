@@ -1,4 +1,7 @@
 import type { Metadata } from 'next';
+import 'primereact/resources/themes/lara-light-pink/theme.css';
+import 'primereact/resources/primereact.min.css';
+import 'primeicons/primeicons.css';
 
 export const metadata: Metadata = {
   title: 'Партнёрский кабинет',

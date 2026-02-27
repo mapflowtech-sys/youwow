@@ -9,19 +9,13 @@ const supabase = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('[YooKassa Webhook] Received webhook');
-
     const body = await req.json();
-    console.log('[YooKassa Webhook] Body:', JSON.stringify(body, null, 2));
 
     const provider = new YooKassaProvider();
     const webhookData = await provider.verifyWebhook(body);
 
-    console.log('[YooKassa Webhook] Verified data:', webhookData);
-
     // Only process successful payments
     if (webhookData.status !== 1) {
-      console.log('[YooKassa Webhook] Payment not successful, status:', webhookData.status);
       return NextResponse.json({ received: true });
     }
 
@@ -39,7 +33,6 @@ export async function POST(req: NextRequest) {
 
     // Check if already paid
     if (order.status === 'paid') {
-      console.log('[YooKassa Webhook] Order already paid:', webhookData.orderId);
       return NextResponse.json({ received: true });
     }
 
@@ -58,12 +51,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
     }
 
-    console.log('[YooKassa Webhook] Order updated successfully:', webhookData.orderId);
+    console.log(`[YooKassa Webhook] Order ${webhookData.orderId} marked as paid`);
 
     // Trigger song processing
     try {
       const processUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/song/process`;
-      console.log('[YooKassa Webhook] Triggering song processing:', processUrl);
 
       const processResponse = await fetch(processUrl, {
         method: 'POST',
@@ -78,8 +70,6 @@ export async function POST(req: NextRequest) {
       if (!processResponse.ok) {
         const errorText = await processResponse.text();
         console.error('[YooKassa Webhook] Failed to trigger processing:', errorText);
-      } else {
-        console.log('[YooKassa Webhook] Song processing triggered successfully');
       }
     } catch (processError) {
       console.error('[YooKassa Webhook] Error triggering processing:', processError);
