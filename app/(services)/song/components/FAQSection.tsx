@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDown } from "lucide-react";
-import { AnimatedSection, SectionBar } from "./AnimationWrappers";
+import { ChevronDown, HelpCircle } from "lucide-react";
+import { AnimatedSection, SectionBadge } from "./AnimationWrappers";
 
 export const faqItems = [
   {
@@ -44,11 +44,15 @@ export const faqItems = [
 export default function FAQSection() {
   return (
     <AnimatedSection>
-      <section className="py-20 bg-secondary/50">
+      <section className="py-20 md:py-24 bg-secondary/50">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8">
+          {/* ── Header ── */}
           <div className="text-center mb-12">
-            <SectionBar />
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-foreground">
+            <SectionBadge>
+              <HelpCircle className="w-4 h-4" aria-hidden="true" />
+              FAQ
+            </SectionBadge>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
               Частые вопросы
             </h2>
             <p className="text-lg text-muted-foreground">
@@ -56,14 +60,20 @@ export default function FAQSection() {
             </p>
           </div>
 
+          {/* ── Accordion ── */}
           <div className="space-y-3">
             {faqItems.map((faq, index) => (
               <details
                 key={index}
-                className="group bg-white rounded-xl border border-border/60 overflow-hidden hover:border-primary/30 transition-colors duration-200"
+                className="group bg-white rounded-2xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-sm transition-all duration-200"
               >
-                <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-foreground list-none select-none [&::-webkit-details-marker]:hidden">
-                  <span className="pr-6">{faq.question}</span>
+                <summary className="flex items-center justify-between cursor-pointer p-5 md:p-6 font-semibold text-foreground list-none select-none [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-center gap-3 pr-6">
+                    <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/[0.07] flex items-center justify-center text-xs font-bold text-primary/70">
+                      {index + 1}
+                    </span>
+                    <span>{faq.question}</span>
+                  </span>
                   <ChevronDown
                     className="w-5 h-5 text-muted-foreground transition-transform duration-300 group-open:rotate-180 shrink-0"
                     aria-hidden="true"
@@ -71,7 +81,7 @@ export default function FAQSection() {
                 </summary>
                 <div className="faq-answer">
                   <div>
-                    <div className="px-5 pb-5 text-muted-foreground leading-relaxed">
+                    <div className="px-5 pb-5 md:px-6 md:pb-6 pl-[4.25rem] text-muted-foreground leading-relaxed">
                       {faq.answer}
                     </div>
                   </div>

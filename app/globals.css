@@ -194,13 +194,117 @@ details .faq-answer > div {
   animation: pulse-ring 1.5s ease-out infinite;
 }
 
+/* ── Hero floating music notes ── */
+@keyframes float-note {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0.12;
+  }
+  50% {
+    transform: translateY(-24px) rotate(8deg);
+    opacity: 0.22;
+  }
+}
+.animate-float-note {
+  animation: float-note 6s ease-in-out infinite;
+}
+
+/* ── Waveform bars ── */
+@keyframes wave-bar {
+  0%, 100% { transform: scaleY(0.25); }
+  50% { transform: scaleY(1); }
+}
+.waveform-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+.waveform-bars .bar {
+  flex: 1;
+  border-radius: 999px;
+  transform-origin: bottom;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.waveform-bars.playing .bar {
+  animation: wave-bar 0.8s ease-in-out infinite;
+}
+
+/* ── CTA glow pulse ── */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px hsl(var(--primary) / 0.25),
+                0 0 0 0 hsl(var(--primary) / 0);
+  }
+  50% {
+    box-shadow: 0 8px 35px hsl(var(--primary) / 0.4),
+                0 0 0 6px hsl(var(--primary) / 0.06);
+  }
+}
+.animate-glow-pulse {
+  animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+/* ── Stats counter slide-in ── */
+@keyframes stat-in {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Gradient text ── */
+.text-gradient-primary {
+  background: linear-gradient(135deg, hsl(var(--primary)), hsl(350 80% 55%), hsl(30 85% 58%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Sticky mobile CTA ── */
+.sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  backdrop-filter: blur(12px);
+}
+.sticky-cta.visible {
+  transform: translateY(0);
+}
+
+/* ── Timeline connector ── */
+.timeline-connector {
+  position: relative;
+}
+.timeline-connector::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -2rem;
+  width: 2rem;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(var(--primary) / 0.3), hsl(var(--primary) / 0.1));
+}
+@media (max-width: 1023px) {
+  .timeline-connector::after {
+    display: none;
+  }
+}
+
 /* Reduced motion: disable all custom animations */
 @media (prefers-reduced-motion: reduce) {
   .animate-shimmer,
-  .animate-pulse-ring {
+  .animate-pulse-ring,
+  .animate-float-note,
+  .animate-glow-pulse,
+  .waveform-bars.playing .bar {
     animation: none;
   }
   details .faq-answer {
+    transition: none;
+  }
+  .sticky-cta {
     transition: none;
   }
 }

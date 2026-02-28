@@ -1,18 +1,47 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { MessageCircle, CheckCircle2 } from "lucide-react";
 import {
   AnimatedSection,
   StaggeredGrid,
-  SectionBar,
+  SectionBadge,
   Stars,
+  CountUp,
   cardVariants,
 } from "./AnimationWrappers";
+
+const reviews = [
+  {
+    name: "Мария",
+    occasion: "День рождения",
+    occasionColor: "bg-rose-50 text-rose-600",
+    date: "Февраль 2026",
+    text: "Заказала песню для мамы на юбилей. Когда она услышала, просто расплакалась от счастья. Там были все наши семейные истории. Спасибо за такой подарок!",
+    avatarGradient: "from-rose-400 to-pink-500",
+  },
+  {
+    name: "Алексей",
+    occasion: "Для друга",
+    occasionColor: "bg-violet-50 text-violet-600",
+    date: "Январь 2026",
+    text: "Сделал песню-прожарку для друга на день рождения. Вся компания смеялась до слёз! Качество трека как у настоящих исполнителей. Однозначно буду заказывать ещё!",
+    avatarGradient: "from-violet-400 to-purple-500",
+  },
+  {
+    name: "Екатерина",
+    occasion: "Годовщина",
+    occasionColor: "bg-amber-50 text-amber-600",
+    date: "Декабрь 2025",
+    text: "Подарила мужу романтичную песню на годовщину. Он был в полном шоке! Говорит, это лучший подарок за всю нашу жизнь. Песня получилась очень трогательная и личная.",
+    avatarGradient: "from-amber-400 to-orange-500",
+  },
+];
 
 export default function ReviewsSection() {
   return (
     <AnimatedSection>
-      <section className="py-20 bg-secondary/50">
+      <section className="py-20 md:py-24 bg-secondary/50">
         {/* Schema.org Reviews */}
         <script
           type="application/ld+json"
@@ -26,96 +55,91 @@ export default function ReviewsSection() {
                 ratingValue: "4.9",
                 reviewCount: "344",
               },
-              review: [
-                {
-                  "@type": "Review",
-                  author: { "@type": "Person", name: "Мария" },
-                  reviewRating: {
-                    "@type": "Rating",
-                    ratingValue: "5",
-                  },
-                  reviewBody:
-                    "Заказала песню для мамы на юбилей. Когда она услышала, просто расплакалась от счастья. Там были все наши семейные истории, которые я указала в форме. Спасибо вам огромное за такой подарок!",
+              review: reviews.map((r) => ({
+                "@type": "Review",
+                author: { "@type": "Person", name: r.name },
+                reviewRating: {
+                  "@type": "Rating",
+                  ratingValue: "5",
                 },
-                {
-                  "@type": "Review",
-                  author: { "@type": "Person", name: "Алексей" },
-                  reviewRating: {
-                    "@type": "Rating",
-                    ratingValue: "5",
-                  },
-                  reviewBody:
-                    "Сделал песню-прожарку для друга на день рождения. Вся компания смеялась до слёз! Качество трека как у настоящих исполнителей, даже не верится что это AI. Однозначно буду заказывать ещё!",
-                },
-                {
-                  "@type": "Review",
-                  author: { "@type": "Person", name: "Екатерина" },
-                  reviewRating: {
-                    "@type": "Rating",
-                    ratingValue: "5",
-                  },
-                  reviewBody:
-                    "Подарила мужу романтичную песню на годовщину. Он был в полном шоке! Говорит, это лучший подарок за всю нашу жизнь. И правда, песня получилась очень трогательная и личная.",
-                },
-              ],
+                reviewBody: r.text,
+              })),
             }),
           }}
         />
 
         <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <SectionBar />
-            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4 text-foreground">
+          {/* ── Header ── */}
+          <div className="text-center mb-14">
+            <SectionBadge>
+              <MessageCircle className="w-4 h-4" aria-hidden="true" />
+              Отзывы клиентов
+            </SectionBadge>
+            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
               Что говорят наши клиенты
             </h2>
             <p className="text-lg text-muted-foreground">
-              Более 5&nbsp;000 песен создано
+              Более{" "}
+              <strong className="text-foreground">
+                <CountUp target={5000} suffix="+" />
+              </strong>{" "}
+              песен уже подарено
             </p>
           </div>
 
+          {/* ── Reviews grid ── */}
           <StaggeredGrid className="grid md:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              {
-                name: "Мария",
-                text: "Заказала песню для мамы на юбилей. Когда она услышала, просто расплакалась от счастья. Там были все наши семейные истории. Спасибо за такой подарок!",
-              },
-              {
-                name: "Алексей",
-                text: "Сделал песню-прожарку для друга на день рождения. Вся компания смеялась до слёз! Качество трека как у настоящих исполнителей. Однозначно буду заказывать ещё!",
-              },
-              {
-                name: "Екатерина",
-                text: "Подарила мужу романтичную песню на годовщину. Он был в полном шоке! Говорит, это лучший подарок за всю нашу жизнь. Песня получилась очень трогательная и личная.",
-              },
-            ].map((review, index) => (
+            {reviews.map((review, index) => (
               <motion.div
                 key={index}
                 variants={cardVariants}
-                className="relative bg-white rounded-2xl border border-border/60 shadow-xs p-7 flex flex-col h-full hover:shadow-md transition-all duration-300"
+                className="relative bg-white rounded-2xl border border-border/50 shadow-sm p-7 flex flex-col h-full hover:shadow-xl hover:shadow-primary/[0.06] hover:-translate-y-1 transition-all duration-300"
               >
                 {/* Decorative quote */}
                 <span
-                  className="absolute top-4 right-5 text-5xl leading-none font-serif text-primary/8 select-none pointer-events-none"
+                  className="absolute top-4 right-5 text-6xl leading-none font-serif text-primary/[0.06] select-none pointer-events-none"
                   aria-hidden="true"
                 >
                   &ldquo;
                 </span>
 
+                {/* ── Header: avatar + name + stars ── */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm">
+                  <div
+                    className={`w-11 h-11 rounded-full bg-gradient-to-br ${review.avatarGradient} text-white flex items-center justify-center font-bold text-sm shadow-sm`}
+                  >
                     {review.name[0]}
                   </div>
-                  <div>
-                    <span className="font-semibold text-foreground block">
-                      {review.name}
-                    </span>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold text-foreground">
+                        {review.name}
+                      </span>
+                      <CheckCircle2
+                        className="w-3.5 h-3.5 text-emerald-500"
+                        aria-label="Проверенный покупатель"
+                      />
+                    </div>
                     <Stars />
                   </div>
                 </div>
 
+                {/* ── Occasion tag ── */}
+                <span
+                  className={`inline-flex self-start text-xs font-medium px-2.5 py-1 rounded-full mb-4 ${review.occasionColor}`}
+                >
+                  {review.occasion}
+                </span>
+
+                {/* ── Review text ── */}
                 <p className="text-muted-foreground leading-relaxed grow">
                   &laquo;{review.text}&raquo;
                 </p>
+
+                {/* ── Date ── */}
+                <span className="text-xs text-muted-foreground/60 mt-4 block">
+                  {review.date}
+                </span>
               </motion.div>
             ))}
           </StaggeredGrid>
