@@ -14,7 +14,7 @@ import AffiliateChart from '@/components/affiliate/AffiliateChart';
 import KPICard from '@/components/affiliate/KPICard';
 import { adminFetch } from '../lib/admin-fetch';
 import type { Partner } from '@/types/affiliate';
-import type { PartnerStats as StatsType, PartnerConversion, PartnerStatus } from '@/types/affiliate';
+import type { PartnerStats as StatsType, PartnerConversion, PartnerPayout, PartnerStatus } from '@/types/affiliate';
 
 interface PartnerStatsProps {
   partnerId: string;
@@ -24,6 +24,7 @@ interface PartnerStatsProps {
 export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStatsProps) {
   const [stats, setStats] = useState<StatsType | null>(null);
   const [conversions, setConversions] = useState<PartnerConversion[]>([]);
+  const [payouts, setPayouts] = useState<PartnerPayout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isPayoutModalOpen, setIsPayoutModalOpen] = useState(false);
@@ -77,17 +78,32 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
     }
   }, [partnerId]);
 
+  const loadPayouts = useCallback(async () => {
+    try {
+      const response = await adminFetch(`/api/admin/partners/${partnerId}/payout?limit=20`);
+      const data = await response.json();
+
+      if (data.success) {
+        setPayouts(data.payouts || []);
+      }
+    } catch (err) {
+      console.error('Error loading payouts:', err);
+    }
+  }, [partnerId]);
+
   useEffect(() => {
     loadPartner();
     loadStats();
     loadConversions();
-  }, [partnerId, loadPartner, loadStats, loadConversions]);
+    loadPayouts();
+  }, [partnerId, loadPartner, loadStats, loadConversions, loadPayouts]);
 
   // Обработчик успешной выплаты
   const handlePayoutSuccess = () => {
     setIsPayoutModalOpen(false);
     loadStats();
     loadConversions();
+    loadPayouts();
   };
 
   // Обработчик успешного редактирования
@@ -424,6 +440,91 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
                 <code className="text-xs text-muted-foreground">
                   {row.order_id.substring(0, 8)}...
                 </code>
+              )}
+            />
+          </DataTable>
+        )}
+      </div>
+
+      {/* Payouts History */}
+      <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
+        <h3 className="text-foreground font-semibold mb-4">
+          История выплат ({payouts.length})
+        </h3>
+
+        {payouts.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">Выплат ещё не было</p>
+            <p className="text-muted-foreground/60 text-sm mt-1">
+              Нажмите «Отметить выплату» чтобы записать первую выплату
+            </p>
+          </div>
+        ) : (
+          <DataTable
+            value={payouts}
+            className="p-datatable-sm"
+            paginator={payouts.length > 5}
+            rows={5}
+            emptyMessage="Выплат нет"
+          >
+            <Column
+              field="paid_at"
+              header="Дата"
+              body={(row) => new Date(row.paid_at).toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+              })}
+              style={{ width: '170px' }}
+            />
+            <Column
+              field="amount"
+              header="Сумма"
+              body={(row) => (
+                <span className="font-bold text-primary">
+                  {Number(row.amount).toFixed(0)}₽
+                </span>
+              )}
+              style={{ width: '100px' }}
+            />
+            <Column
+              header="Период"
+              body={(row) => {
+                const s = new Date(row.period_start).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short' });
+                const e = new Date(row.period_end).toLocaleDateString('ru-RU', { day: '2-digit', month: 'short', year: 'numeric' });
+                return <span className="text-sm text-muted-foreground">{s} — {e}</span>;
+              }}
+              style={{ width: '180px' }}
+            />
+            <Column
+              field="conversions_count"
+              header="Конверсий"
+              body={(row) => row.conversions_count}
+              style={{ width: '100px' }}
+            />
+            <Column
+              field="payment_method"
+              header="Метод"
+              body={(row) => row.payment_method ? (
+                <span className="px-2 py-1 bg-secondary rounded text-xs">
+                  {row.payment_method}
+                </span>
+              ) : (
+                <span className="text-muted-foreground/40 text-xs">—</span>
+              )}
+              style={{ width: '100px' }}
+            />
+            <Column
+              field="notes"
+              header="Заметки"
+              body={(row) => row.notes ? (
+                <span className="text-sm text-muted-foreground truncate block max-w-[200px]" title={row.notes}>
+                  {row.notes}
+                </span>
+              ) : (
+                <span className="text-muted-foreground/40 text-xs">—</span>
               )}
             />
           </DataTable>

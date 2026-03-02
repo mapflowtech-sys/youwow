@@ -9,8 +9,9 @@ import { Toast } from 'primereact/toast';
 import KPICard from '@/components/affiliate/KPICard';
 import ConversionsTable from '@/components/affiliate/ConversionsTable';
 import FinancialsSummary from '@/components/affiliate/FinancialsSummary';
+import PayoutsHistory from '@/components/affiliate/PayoutsHistory';
 import AffiliateChart from '@/components/affiliate/AffiliateChart';
-import type { PartnerStats, PartnerConversion } from '@/types/affiliate';
+import type { PartnerStats, PartnerConversion, PartnerPayout } from '@/types/affiliate';
 
 export default function PartnerDashboardPage() {
   const params = useParams();
@@ -19,6 +20,7 @@ export default function PartnerDashboardPage() {
 
   const [stats, setStats] = useState<PartnerStats | null>(null);
   const [conversions, setConversions] = useState<PartnerConversion[]>([]);
+  const [payouts, setPayouts] = useState<PartnerPayout[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,6 +46,14 @@ export default function PartnerDashboardPage() {
 
       if (conversionsData.success) {
         setConversions(conversionsData.conversions);
+      }
+
+      // Загружаем выплаты
+      const payoutsResponse = await fetch(`/api/partners/${partnerId}/payouts`);
+      const payoutsData = await payoutsResponse.json();
+
+      if (payoutsData.success) {
+        setPayouts(payoutsData.payouts);
       }
     } catch (err) {
       console.error('Error loading partner data:', err);
@@ -204,13 +214,14 @@ export default function PartnerDashboardPage() {
             <ConversionsTable conversions={conversions} />
           </div>
 
-          {/* Financials Summary - Takes 1 column */}
-          <div className="lg:col-span-1">
+          {/* Financials + Payouts - Takes 1 column */}
+          <div className="lg:col-span-1 space-y-6">
             <FinancialsSummary
               totalEarned={stats.totalEarned}
               totalPaidOut={stats.totalPaidOut}
               pendingPayout={stats.pendingPayout}
             />
+            <PayoutsHistory payouts={payouts} />
           </div>
         </div>
 
