@@ -161,7 +161,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
 
   if (isLoading) {
     return (
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12 flex items-center justify-center">
+      <div className="bg-card rounded-2xl border border-border/50 p-12 flex items-center justify-center shadow-sm">
         <ProgressSpinner style={{ width: '48px', height: '48px' }} strokeWidth="4" />
       </div>
     );
@@ -169,8 +169,8 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
 
   if (error || !stats) {
     return (
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12 text-center">
-        <p className="text-red-400 text-lg">{error || 'Партнёр не найден'}</p>
+      <div className="bg-card rounded-2xl border border-border/50 p-12 text-center shadow-sm">
+        <p className="text-destructive text-lg">{error || 'Партнёр не найден'}</p>
       </div>
     );
   }
@@ -179,11 +179,11 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
   const getStatusBadge = () => {
     switch (stats?.status) {
       case 'active':
-        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-green-500/20 text-green-300">Активен</span>;
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary">Активен</span>;
       case 'inactive':
-        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-yellow-500/20 text-yellow-300">Неактивен</span>;
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gold/10 text-gold">Неактивен</span>;
       case 'archived':
-        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-gray-500/20 text-gray-300">В архиве</span>;
+        return <span className="px-3 py-1.5 rounded-full text-sm font-medium bg-secondary text-muted-foreground">В архиве</span>;
       default:
         return null;
     }
@@ -198,13 +198,13 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
         className="space-y-6"
       >
         {/* Header */}
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+        <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
           <div className="flex items-start justify-between flex-wrap gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-white mb-1">
+              <h2 className="text-2xl font-bold text-foreground mb-1">
                 {stats.partnerName}
               </h2>
-              <p className="text-white/60 text-sm">ID: {stats.partnerId}</p>
+              <p className="text-muted-foreground text-sm">ID: {stats.partnerId}</p>
             </div>
 
             <div className="flex items-center gap-2 flex-wrap">
@@ -243,17 +243,17 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
           </div>
 
         {/* Affiliate Link */}
-        <div className="mt-4 p-3 bg-black/20 rounded-lg border border-white/10">
-          <p className="text-white/60 text-xs mb-1">Партнёрская ссылка:</p>
+        <div className="mt-4 p-3 bg-secondary/50 rounded-lg border border-border/50">
+          <p className="text-muted-foreground text-xs mb-1">Партнёрская ссылка:</p>
           <div className="flex items-center gap-2">
-            <code className="text-white text-sm flex-1 truncate">
+            <code className="text-foreground text-sm flex-1 truncate">
               https://youwow.ru/song?partner={stats.partnerId}
             </code>
             <button
               onClick={() => {
                 navigator.clipboard.writeText(`https://youwow.ru/song?partner=${stats.partnerId}`);
               }}
-              className="text-white/60 hover:text-white transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <i className="pi pi-copy" />
             </button>
@@ -295,9 +295,9 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
       <AffiliateChart partnerId={partnerId} />
 
       {/* Settings Card */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
+      <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Настройки</h3>
+          <h3 className="text-foreground font-semibold">Настройки</h3>
           <div className="flex gap-2">
             <Button
               label="Редактировать"
@@ -319,36 +319,36 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
         </div>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-white/60 text-sm">Комиссия за продажу</span>
-            <span className="text-white font-medium">{stats.commissionRate}₽</span>
+            <span className="text-muted-foreground text-sm">Комиссия за продажу</span>
+            <span className="text-foreground font-medium">{stats.commissionRate}₽</span>
           </div>
           {partnerData?.website && (
             <div className="flex items-center justify-between">
-              <span className="text-white/60 text-sm">Сайт</span>
-              <a href={partnerData.website} target="_blank" rel="noopener noreferrer" className="text-purple-400 hover:text-purple-300 text-sm">
+              <span className="text-muted-foreground text-sm">Сайт</span>
+              <a href={partnerData.website} target="_blank" rel="noopener noreferrer" className="text-plum hover:underline text-sm">
                 {partnerData.website}
               </a>
             </div>
           )}
           {partnerData?.payment_info && (
             <div className="flex items-center justify-between">
-              <span className="text-white/60 text-sm">Реквизиты</span>
-              <span className="text-white text-sm">{partnerData.payment_info}</span>
+              <span className="text-muted-foreground text-sm">Реквизиты</span>
+              <span className="text-foreground text-sm">{partnerData.payment_info}</span>
             </div>
           )}
         </div>
       </div>
 
       {/* Conversions Table */}
-      <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6">
-        <h3 className="text-white font-semibold mb-4">
+      <div className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm">
+        <h3 className="text-foreground font-semibold mb-4">
           Последние конверсии ({conversions.length})
         </h3>
 
         {conversions.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-white/40">Конверсий пока нет</p>
-            <p className="text-white/30 text-sm mt-1">
+            <p className="text-muted-foreground">Конверсий пока нет</p>
+            <p className="text-muted-foreground/60 text-sm mt-1">
               Как только кто-то купит по партнёрской ссылке, конверсия появится здесь
             </p>
           </div>
@@ -376,7 +376,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
               field="service_type"
               header="Сервис"
               body={(row) => (
-                <span className="px-2 py-1 bg-white/10 rounded text-xs">
+                <span className="px-2 py-1 bg-secondary rounded text-xs">
                   {row.service_type === 'song' ? 'Песня' : row.service_type}
                 </span>
               )}
@@ -392,7 +392,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
               field="commission"
               header="Комиссия"
               body={(row) => (
-                <span className="font-medium text-green-400">
+                <span className="font-medium text-primary">
                   {row.commission}₽
                 </span>
               )}
@@ -407,8 +407,8 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
                     px-2 py-1 rounded-full text-xs font-medium
                     ${
                       row.is_paid_out
-                        ? 'bg-green-500/20 text-green-300'
-                        : 'bg-yellow-500/20 text-yellow-300'
+                        ? 'bg-primary/10 text-primary'
+                        : 'bg-gold/10 text-gold'
                     }
                   `}
                 >
@@ -421,7 +421,7 @@ export default function PartnerStats({ partnerId, onPartnerUpdate }: PartnerStat
               field="order_id"
               header="ID заказа"
               body={(row) => (
-                <code className="text-xs text-white/60">
+                <code className="text-xs text-muted-foreground">
                   {row.order_id.substring(0, 8)}...
                 </code>
               )}

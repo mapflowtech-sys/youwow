@@ -13,11 +13,11 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 p-12 text-center"
+        className="bg-card rounded-2xl border border-border/50 p-12 text-center shadow-sm"
       >
-        <i className="pi pi-shopping-cart text-white/20 text-6xl mb-4" />
-        <p className="text-white/60 text-lg mb-2">Конверсий пока нет</p>
-        <p className="text-white/40 text-sm">
+        <i className="pi pi-shopping-cart text-border text-6xl mb-4" />
+        <p className="text-foreground text-lg mb-2">Конверсий пока нет</p>
+        <p className="text-muted-foreground text-sm">
           Как только кто-то купит по вашей партнёрской ссылке, конверсия появится здесь
         </p>
       </motion.div>
@@ -25,10 +25,10 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
   }
 
   return (
-    <div className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 overflow-hidden">
+    <div className="bg-card rounded-2xl border border-border/50 overflow-hidden shadow-sm">
       {/* Header */}
-      <div className="px-6 py-4 border-b border-white/10">
-        <h3 className="text-white font-semibold text-lg">
+      <div className="px-6 py-4 border-b border-border/50">
+        <h3 className="text-foreground font-semibold text-lg">
           Последние конверсии ({conversions.length})
         </h3>
       </div>
@@ -36,35 +36,35 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
       {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full">
-          <thead className="bg-white/5">
+          <thead className="bg-secondary/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Дата
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Сервис
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Сумма
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Комиссия
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-white/60 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                 Статус
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-white/10">
+          <tbody className="divide-y divide-border/50">
             {conversions.map((conversion, index) => (
               <motion.tr
                 key={conversion.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="hover:bg-white/5 transition-colors"
+                className="hover:bg-secondary/30 transition-colors"
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                   {new Date(conversion.converted_at).toLocaleString('ru-RU', {
                     day: '2-digit',
                     month: '2-digit',
@@ -74,14 +74,14 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
                   })}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-3 py-1 bg-white/10 rounded-full text-xs text-white/80">
+                  <span className="px-3 py-1 bg-secondary rounded-full text-xs text-foreground">
                     {conversion.service_type === 'song' ? 'Песня' : conversion.service_type}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                   {conversion.amount}₽
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-green-400">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">
                   +{conversion.commission}₽
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
@@ -90,8 +90,8 @@ export default function ConversionsTable({ conversions }: ConversionsTableProps)
                       px-3 py-1 rounded-full text-xs font-medium
                       ${
                         conversion.is_paid_out
-                          ? 'bg-green-500/20 text-green-300'
-                          : 'bg-yellow-500/20 text-yellow-300'
+                          ? 'bg-primary/10 text-primary'
+                          : 'bg-gold/10 text-gold'
                       }
                     `}
                   >

@@ -18,7 +18,7 @@ export default async function OrderPage({
   }
 
   return (
-    <div className="min-h-screen px-4 py-12">
+    <div className="min-h-screen bg-background px-4 py-12">
       <div className="max-w-2xl mx-auto">
         <OrderStatusDisplay order={order} />
       </div>

@@ -71,10 +71,10 @@ export default function PartnerDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <ProgressSpinner style={{ width: '64px', height: '64px' }} strokeWidth="4" />
-          <p className="text-white/60 mt-4">Загрузка статистики...</p>
+          <p className="text-muted-foreground mt-4">Загрузка статистики...</p>
         </div>
       </div>
     );
@@ -82,15 +82,15 @@ export default function PartnerDashboardPage() {
 
   if (error || !stats) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12 text-center max-w-md"
+          className="bg-card rounded-2xl border border-border/50 p-12 text-center max-w-md shadow-sm"
         >
-          <i className="pi pi-exclamation-triangle text-red-400 text-6xl mb-4" />
-          <h1 className="text-2xl font-bold text-white mb-2">Партнёр не найден</h1>
-          <p className="text-white/60 mb-6">{error || 'Проверьте правильность ссылки'}</p>
+          <i className="pi pi-exclamation-triangle text-primary text-6xl mb-4" />
+          <h1 className="font-display text-2xl font-bold text-plum mb-2">Партнёр не найден</h1>
+          <p className="text-muted-foreground mb-6">{error || 'Проверьте правильность ссылки'}</p>
           <Button
             label="Вернуться на главную"
             icon="pi pi-home"
@@ -102,17 +102,17 @@ export default function PartnerDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
+    <div className="min-h-screen bg-background">
       <Toast ref={toast} />
 
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-md border-b border-white/10">
+      <header className="bg-surface-dark border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-white">YouWow</h1>
-              <span className="text-white/60">|</span>
-              <span className="text-white/80">{stats.partnerName}</span>
+              <h1 className="font-display text-2xl font-bold text-white/90">YouWow</h1>
+              <span className="text-white/30">|</span>
+              <span className="text-white/60">{stats.partnerName}</span>
             </div>
 
             <div className="flex items-center gap-2">
@@ -121,8 +121,8 @@ export default function PartnerDashboardPage() {
                   px-3 py-1.5 rounded-full text-sm font-medium
                   ${
                     stats.isActive
-                      ? 'bg-green-500/20 text-green-300'
-                      : 'bg-red-500/20 text-red-300'
+                      ? 'bg-primary/20 text-primary-light'
+                      : 'bg-destructive/20 text-destructive'
                   }
                 `}
               >
@@ -139,12 +139,12 @@ export default function PartnerDashboardPage() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-6"
+          className="bg-card rounded-2xl border border-border/50 p-6 shadow-sm"
         >
           <div className="flex items-start justify-between gap-4 flex-wrap">
             <div className="flex-1 min-w-0">
-              <h2 className="text-white/60 text-sm mb-2">Ваша партнёрская ссылка:</h2>
-              <code className="text-white text-lg font-mono break-all">
+              <h2 className="text-muted-foreground text-sm mb-2">Ваша партнёрская ссылка:</h2>
+              <code className="text-foreground text-lg font-mono break-all">
                 https://youwow.ru/song?partner={partnerId}
               </code>
             </div>
@@ -155,7 +155,7 @@ export default function PartnerDashboardPage() {
               className="shrink-0"
             />
           </div>
-          <p className="text-white/40 text-sm mt-4">
+          <p className="text-muted-foreground/60 text-sm mt-4">
             Делитесь этой ссылкой для получения комиссии {stats.commissionRate}₽ за каждую продажу
           </p>
         </motion.div>
@@ -219,15 +219,15 @@ export default function PartnerDashboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-white/5 backdrop-blur-xs rounded-xl border border-white/10 p-6 text-center"
+          className="bg-secondary/50 rounded-xl border border-border/50 p-6 text-center"
         >
-          <p className="text-white/60 text-sm">
+          <p className="text-muted-foreground text-sm">
             По вопросам выплат и сотрудничества обращайтесь:{' '}
             <a
               href="https://t.me/youwow_support"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-purple-300 hover:text-purple-200 transition-colors underline"
+              className="text-plum font-semibold hover:underline transition-colors"
             >
               @youwow_support
             </a>

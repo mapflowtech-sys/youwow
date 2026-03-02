@@ -63,7 +63,7 @@ supabase/                # Миграции БД
 - **Формы:** react-hook-form + zod для валидации
 - **Анимации:** framer-motion (scroll-reveal, staggered cards, hover)
 - **Тема:** Только light mode (next-themes с `defaultTheme="light"`)
-- **Middleware:** Трекинг партнёрских utm-меток (файл deprecated в Next 16, нужна миграция на proxy)
+- **Proxy:** `proxy.ts` в корне — перехват партнёрских ссылок (`?partner=xxx`), установка cookie, трекинг кликов
 
 ## Важно помнить
 - `_tarot` — отключённый сервис, игнорируется в ESLint и tsconfig
@@ -71,7 +71,7 @@ supabase/                # Миграции БД
 - YooKassa widget грузится динамически через `<script>`
 - PrimeReact используется только в admin/partners (тема: lara-light-pink)
 - Все Schema.org JSON-LD встроены в song/page.tsx
-- Партнёрская система реализована на ~70%, есть план в docs/archive
+- Партнёрская система: proxy → cookie → заказ → конверсия → выплаты. Деплой-гайд: `docs/affiliate-deployment-guide.md`
 
 ## Текущий статус
 Проект в активной разработке. Основной функционал работает. Фокус — улучшение UX, SEO, и расширение сервисов.

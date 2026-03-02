@@ -49,13 +49,13 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 shadow-2xl">
+        <div className="bg-card rounded-2xl border border-border/50 p-8 shadow-sm">
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+            <h1 className="font-display text-3xl font-bold text-plum mb-2">
               YouWow
             </h1>
-            <p className="text-white/60">
+            <p className="text-muted-foreground">
               Админ-панель партнёрской системы
             </p>
           </div>
@@ -63,7 +63,7 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="password" className="block text-white/80 mb-2 text-sm font-medium">
+              <label htmlFor="password" className="block text-foreground mb-2 text-sm font-medium">
                 Пароль
               </label>
               <InputText
@@ -72,14 +72,14 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Введите пароль администратора"
-                className="w-full bg-white/10 border-white/20 text-white placeholder:text-white/40"
+                className="w-full"
                 autoFocus
               />
               {error && (
                 <motion.p
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-red-400 text-sm mt-2"
+                  className="text-destructive text-sm mt-2"
                 >
                   {error}
                 </motion.p>
@@ -97,7 +97,7 @@ export default function AuthModal({ onSuccess }: AuthModalProps) {
 
           {/* Footer */}
           <div className="mt-6 text-center">
-            <p className="text-white/40 text-xs">
+            <p className="text-muted-foreground/60 text-xs">
               Только для администраторов YouWow
             </p>
           </div>

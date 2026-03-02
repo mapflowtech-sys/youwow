@@ -49,10 +49,10 @@ export default function PartnersList({
   // Получить цвет статуса
   const getStatusColor = (status: PartnerStatus) => {
     switch (status) {
-      case 'active': return 'bg-green-400';
-      case 'inactive': return 'bg-yellow-400';
-      case 'archived': return 'bg-gray-400';
-      default: return 'bg-gray-400';
+      case 'active': return 'bg-primary';
+      case 'inactive': return 'bg-gold';
+      case 'archived': return 'bg-muted-foreground';
+      default: return 'bg-muted-foreground';
     }
   };
 
@@ -60,9 +60,9 @@ export default function PartnersList({
   const getStatusBadge = (status: PartnerStatus) => {
     switch (status) {
       case 'inactive':
-        return <span className="text-xs bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full">Неактивен</span>;
+        return <span className="text-xs bg-gold/10 text-gold px-2 py-0.5 rounded-full">Неактивен</span>;
       case 'archived':
-        return <span className="text-xs bg-gray-500/20 text-gray-300 px-2 py-0.5 rounded-full">Архив</span>;
+        return <span className="text-xs bg-secondary text-muted-foreground px-2 py-0.5 rounded-full">Архив</span>;
       default:
         return null;
     }
@@ -79,20 +79,20 @@ export default function PartnersList({
         w-full text-left p-3 rounded-xl transition-all
         ${
           selectedPartnerId === partner.id
-            ? 'bg-white/20 border border-white/30'
-            : 'bg-white/5 border border-white/10 hover:bg-white/10'
+            ? 'bg-primary/10 border border-primary/20'
+            : 'bg-card border border-border/50 hover:bg-secondary/50'
         }
       `}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-white font-medium text-sm truncate">
+            <h3 className="text-foreground font-medium text-sm truncate">
               {partner.name}
             </h3>
             {getStatusBadge(partner.status || 'active')}
           </div>
-          <p className="text-white/50 text-xs mt-0.5 truncate">
+          <p className="text-muted-foreground/60 text-xs mt-0.5 truncate">
             {partner.id}
           </p>
         </div>
@@ -107,17 +107,17 @@ export default function PartnersList({
       </div>
 
       {/* Комиссия */}
-      <div className="mt-2 text-xs text-white/40">
+      <div className="mt-2 text-xs text-muted-foreground">
         Комиссия: {partner.commission_rate}₽
       </div>
     </motion.button>
   );
 
   return (
-    <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden flex flex-col h-full">
+    <div className="bg-card rounded-2xl border border-border/50 overflow-hidden flex flex-col h-full shadow-sm">
       {/* Header */}
-      <div className="p-4 border-b border-white/10">
-        <h2 className="text-white font-semibold mb-3">Партнёры</h2>
+      <div className="p-4 border-b border-border/50">
+        <h2 className="text-foreground font-semibold mb-3">Партнёры</h2>
 
         {/* Фильтр */}
         <Dropdown
@@ -148,10 +148,10 @@ export default function PartnersList({
           </div>
         ) : activePartners.length === 0 && !showArchived ? (
           <div className="p-6 text-center">
-            <p className="text-white/40 text-sm">
+            <p className="text-muted-foreground text-sm">
               Партнёры не найдены
             </p>
-            <p className="text-white/30 text-xs mt-1">
+            <p className="text-muted-foreground/60 text-xs mt-1">
               Создайте первого партнёра
             </p>
           </div>
@@ -168,18 +168,18 @@ export default function PartnersList({
 
             {/* Архив */}
             {archivedPartners.length > 0 && (
-              <div className="border-t border-white/10 mt-2">
+              <div className="border-t border-border/50 mt-2">
                 <button
                   onClick={() => setShowArchived(!showArchived)}
-                  className="w-full p-3 hover:bg-white/5 transition-colors flex items-center justify-between group"
+                  className="w-full p-3 hover:bg-secondary/50 transition-colors flex items-center justify-between group"
                 >
                   <div className="flex items-center gap-2">
-                    <i className="pi pi-inbox text-white/60 text-sm" />
-                    <span className="text-white/60 text-sm font-medium">
+                    <i className="pi pi-inbox text-muted-foreground text-sm" />
+                    <span className="text-muted-foreground text-sm font-medium">
                       Архив ({archivedPartners.length})
                     </span>
                   </div>
-                  <i className={`pi ${showArchived ? 'pi-chevron-up' : 'pi-chevron-down'} text-white/40 text-xs`} />
+                  <i className={`pi ${showArchived ? 'pi-chevron-up' : 'pi-chevron-down'} text-muted-foreground/60 text-xs`} />
                 </button>
 
                 <AnimatePresence>
@@ -190,7 +190,7 @@ export default function PartnersList({
                       exit={{ height: 0, opacity: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="p-2 space-y-1 bg-black/10">
+                      <div className="p-2 space-y-1 bg-secondary/30">
                         {archivedPartners.map(renderPartner)}
                       </div>
                     </motion.div>
@@ -204,8 +204,8 @@ export default function PartnersList({
 
       {/* Footer */}
       {(activePartners.length > 0 || archivedPartners.length > 0) && (
-        <div className="p-3 border-t border-white/10 bg-white/5">
-          <p className="text-white/40 text-xs text-center">
+        <div className="p-3 border-t border-border/50 bg-secondary/30">
+          <p className="text-muted-foreground/60 text-xs text-center">
             {statusFilter === 'all'
               ? `Всего: ${activePartners.length} | Архив: ${archivedPartners.length}`
               : `Показано: ${activePartners.length}`

@@ -13,10 +13,17 @@ interface KPICardProps {
 
 export default function KPICard({ label, value, subtitle, icon, color, delay = 0 }: KPICardProps) {
   const colorClasses = {
-    blue: 'from-blue-500/20 to-blue-600/20 border-blue-400/30',
-    green: 'from-green-500/20 to-green-600/20 border-green-400/30',
-    purple: 'from-purple-500/20 to-purple-600/20 border-purple-400/30',
-    pink: 'from-pink-500/20 to-pink-600/20 border-pink-400/30',
+    blue: 'border-primary/20 bg-primary/5',
+    green: 'border-gold/20 bg-gold/5',
+    purple: 'border-plum/20 bg-plum/5',
+    pink: 'border-primary/20 bg-primary/5',
+  };
+
+  const iconColors = {
+    blue: 'text-primary/50',
+    green: 'text-gold/50',
+    purple: 'text-plum/50',
+    pink: 'text-primary/50',
   };
 
   return (
@@ -25,17 +32,17 @@ export default function KPICard({ label, value, subtitle, icon, color, delay = 0
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       className={`
-        bg-linear-to-br ${colorClasses[color]}
-        backdrop-blur-md rounded-xl border p-6
-        hover:scale-105 transition-transform duration-300
+        ${colorClasses[color]}
+        rounded-2xl border p-6
+        hover:scale-[1.02] transition-transform duration-300
       `}
     >
       <div className="flex items-start justify-between mb-3">
-        <span className="text-white/70 text-sm font-medium">{label}</span>
-        <i className={`pi ${icon} text-white/50 text-xl`} />
+        <span className="text-muted-foreground text-sm font-medium">{label}</span>
+        <i className={`pi ${icon} ${iconColors[color]} text-xl`} />
       </div>
-      <div className="text-3xl font-bold text-white mb-1">{value}</div>
-      {subtitle && <div className="text-xs text-white/60">{subtitle}</div>}
+      <div className="text-3xl font-bold text-foreground mb-1">{value}</div>
+      {subtitle && <div className="text-xs text-muted-foreground">{subtitle}</div>}
     </motion.div>
   );
 }

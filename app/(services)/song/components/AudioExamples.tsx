@@ -7,12 +7,12 @@ import { Button } from "@/components/ui/button";
 import {
   AnimatedSection,
   StaggeredGrid,
-  SectionBar,
   WaveformBars,
+  SectionBadge,
   cardVariants,
 } from "./AnimationWrappers";
 
-// ─── Audio Data ──────────────────────────────────────────────────────────────
+// ─── Audio Data ─────────────────────────────────────────────────────────────
 
 const examples = [
   {
@@ -20,36 +20,36 @@ const examples = [
     subtitle: "Для того, кто всегда рядом",
     audioSrc: "/examples/pop-friend.mp3",
     genre: "Поп",
-    gradientFrom: "from-rose-400",
-    gradientTo: "to-pink-500",
-    bgAccent: "bg-gradient-to-br from-rose-400/90 to-pink-500/90",
+    accentColor: "#E8567F",
+    accentBg: "bg-primary/10",
+    accentText: "text-primary",
   },
   {
     title: "Песня для коллеги",
     subtitle: "Для человека из твоей команды",
     audioSrc: "/examples/rap-colleague.mp3",
     genre: "Рэп",
-    gradientFrom: "from-violet-400",
-    gradientTo: "to-purple-500",
-    bgAccent: "bg-gradient-to-br from-violet-400/90 to-purple-500/90",
+    accentColor: "#7C3AED",
+    accentBg: "bg-violet-500/10",
+    accentText: "text-violet-500",
   },
   {
     title: "Песня для мамы",
     subtitle: "Для самого родного человека",
     audioSrc: "/examples/chanson-mom.mp3",
     genre: "Шансон",
-    gradientFrom: "from-amber-400",
-    gradientTo: "to-orange-500",
-    bgAccent: "bg-gradient-to-br from-amber-400/90 to-orange-500/90",
+    accentColor: "#C9956B",
+    accentBg: "bg-gold/10",
+    accentText: "text-gold",
   },
   {
     title: "Песня для брата",
     subtitle: "Для самого близкого человека",
     audioSrc: "/examples/rock-brother.mp3",
     genre: "Рок",
-    gradientFrom: "from-sky-400",
-    gradientTo: "to-blue-500",
-    bgAccent: "bg-gradient-to-br from-sky-400/90 to-blue-500/90",
+    accentColor: "#5B2C6F",
+    accentBg: "bg-plum/10",
+    accentText: "text-plum",
   },
 ];
 
@@ -60,14 +60,18 @@ function AudioPlayerCard({
   subtitle,
   audioSrc,
   genre,
-  bgAccent,
+  accentColor,
+  accentBg,
+  accentText,
   onPlay,
 }: {
   title: string;
   subtitle: string;
   audioSrc: string;
   genre: string;
-  bgAccent: string;
+  accentColor: string;
+  accentBg: string;
+  accentText: string;
   onPlay: (audio: HTMLAudioElement) => void;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -124,11 +128,18 @@ function AudioPlayerCard({
   };
 
   return (
-    <motion.div variants={cardVariants}>
-      <div className="group bg-white rounded-2xl border border-border/50 shadow-sm hover:shadow-xl hover:shadow-primary/[0.06] hover:-translate-y-1.5 transition-all duration-300">
-        {/* ── Waveform area ── */}
+    <motion.div variants={cardVariants} className="min-w-[280px] sm:min-w-0">
+      <div className="card-tilt bg-surface-dark rounded-2xl overflow-hidden">
+        {/* Accent color line at top */}
         <div
-          className={`relative overflow-hidden rounded-t-2xl ${bgAccent} aspect-[4/3] flex items-center justify-center cursor-pointer`}
+          className="h-1"
+          style={{ background: accentColor }}
+          aria-hidden="true"
+        />
+
+        {/* Waveform area — dark */}
+        <div
+          className="relative aspect-[4/3] flex items-center justify-center cursor-pointer bg-surface-dark-card"
           onClick={togglePlay}
           role="button"
           tabIndex={0}
@@ -137,51 +148,66 @@ function AudioPlayerCard({
             isPlaying ? `Остановить ${title}` : `Воспроизвести ${title}`
           }
         >
-          {/* Waveform visualization */}
-          <div className="absolute inset-0 flex items-end px-4 pb-12 pt-4">
-            <WaveformBars isPlaying={isPlaying} barCount={28} className="h-full" />
+          {/* Waveform */}
+          <div className="absolute inset-0 flex items-end px-4 pb-14 pt-4">
+            <WaveformBars
+              isPlaying={isPlaying}
+              barCount={24}
+              className="h-full"
+            />
           </div>
 
-          {/* Play/Pause button */}
+          {/* Play/Pause button with vinyl spin */}
           <button
-            className={`relative z-10 w-16 h-16 rounded-full bg-white/95 flex items-center justify-center shadow-xl hover:bg-white hover:scale-110 transition-all duration-200 ${
+            className={`relative z-10 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition-all duration-200 ${
               isPlaying ? "animate-pulse-ring" : ""
             }`}
             aria-hidden="true"
             tabIndex={-1}
           >
-            {isPlaying ? (
-              <Pause className="h-6 w-6 text-foreground" />
-            ) : (
-              <Play className="h-6 w-6 text-foreground ml-0.5" />
-            )}
+            <div className={isPlaying ? "animate-vinyl-spin" : ""}>
+              {isPlaying ? (
+                <Pause className="h-6 w-6 text-white" />
+              ) : (
+                <Play className="h-6 w-6 text-white ml-0.5" />
+              )}
+            </div>
           </button>
 
           {/* Genre badge */}
-          <span className="absolute top-3 left-3 text-xs font-semibold bg-white/25 backdrop-blur-sm text-white px-3 py-1 rounded-full">
+          <span
+            className="absolute top-3 left-3 text-xs font-semibold bg-white/10 backdrop-blur-sm text-white/80 px-3 py-1 rounded-full"
+          >
             {genre}
           </span>
 
           {/* Duration */}
           {duration && (
-            <span className="absolute top-3 right-3 text-xs font-medium text-white/80">
+            <span className="absolute top-3 right-3 text-xs font-medium text-white/50">
               {duration}
             </span>
           )}
 
           {/* Progress bar */}
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/10">
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/5">
             <div
-              className="h-full bg-white/80 transition-[width] duration-200"
-              style={{ width: `${progress}%` }}
+              className="h-full transition-[width] duration-200"
+              style={{ width: `${progress}%`, background: accentColor }}
             />
           </div>
         </div>
 
-        {/* ── Info ── */}
+        {/* Info */}
         <div className="p-5">
-          <h4 className="font-semibold text-foreground text-base">{title}</h4>
-          <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>
+          <div className="flex items-center gap-2 mb-1">
+            <span
+              className={`text-xs font-medium px-2 py-0.5 rounded-full ${accentBg} ${accentText}`}
+            >
+              {genre}
+            </span>
+          </div>
+          <h4 className="font-semibold text-white text-base mt-2">{title}</h4>
+          <p className="text-sm text-white/50 mt-0.5">{subtitle}</p>
         </div>
 
         <audio
@@ -195,7 +221,7 @@ function AudioPlayerCard({
   );
 }
 
-// ─── Examples Section ────────────────────────────────────────────────────────
+// ─── Examples Section ───────────────────────────────────────────────────────
 
 export default function ExamplesGrid() {
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -209,21 +235,35 @@ export default function ExamplesGrid() {
 
   return (
     <>
-      <StaggeredGrid className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
+      {/* Desktop: grid | Mobile: horizontal scroll */}
+      <StaggeredGrid className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
         {examples.map((example, index) => (
           <AudioPlayerCard
             key={index}
-            title={example.title}
-            subtitle={example.subtitle}
-            audioSrc={example.audioSrc}
-            genre={example.genre}
-            bgAccent={example.bgAccent}
+            {...example}
             onPlay={handlePlay}
           />
         ))}
       </StaggeredGrid>
 
-      {/* ── Secondary CTA ── */}
+      {/* Mobile: horizontal carousel */}
+      <div className="sm:hidden">
+        <div className="flex gap-4 overflow-x-auto scroll-snap-x pb-4 -mx-4 px-4">
+          {examples.map((example, index) => (
+            <div key={index} className="scroll-snap-item flex-shrink-0 w-[80vw]">
+              <AudioPlayerCard
+                {...example}
+                onPlay={handlePlay}
+              />
+            </div>
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground text-center mt-2">
+          Свайпните для просмотра
+        </p>
+      </div>
+
+      {/* Secondary CTA */}
       <AnimatedSection delay={0.3}>
         <div className="text-center mt-12">
           <motion.div
@@ -234,7 +274,7 @@ export default function ExamplesGrid() {
             <Button
               variant="outline"
               size="lg"
-              className="text-base px-8 py-5 rounded-xl border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50 transition-all duration-300 cursor-pointer"
+              className="text-base px-8 py-5 rounded-xl border-plum/20 text-plum hover:bg-plum/5 hover:border-plum/30 transition-all duration-300 cursor-pointer"
               onClick={() =>
                 document
                   .getElementById("order-form")

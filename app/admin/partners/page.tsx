@@ -66,24 +66,24 @@ export default function AdminPartnersPage() {
   // Если не авторизован - показываем модальное окно
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
+      <div className="min-h-screen bg-background">
         <AuthModal onSuccess={handleAuthSuccess} />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-purple-900 via-purple-800 to-pink-800">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-black/20 backdrop-blur-md border-b border-white/10">
+      <header className="bg-surface-dark border-b border-white/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="font-display text-2xl font-bold text-white/90">
                 YouWow
               </h1>
-              <span className="text-white/60">|</span>
-              <span className="text-white/80">Админ-панель партнёров</span>
+              <span className="text-white/30">|</span>
+              <span className="text-white/60">Админ-панель партнёров</span>
             </div>
 
             <button
@@ -91,7 +91,7 @@ export default function AdminPartnersPage() {
                 sessionStorage.removeItem('admin_token');
                 setIsAuthenticated(false);
               }}
-              className="px-4 py-2 text-sm text-white/60 hover:text-white transition-colors"
+              className="px-4 py-2 text-sm text-white/40 hover:text-white/80 transition-colors"
             >
               Выйти
             </button>
@@ -124,9 +124,9 @@ export default function AdminPartnersPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-12 text-center"
+                className="bg-card rounded-2xl border border-border/50 p-12 text-center shadow-sm"
               >
-                <p className="text-white/60 text-lg">
+                <p className="text-muted-foreground text-lg">
                   Выберите партнёра из списка или создайте нового
                 </p>
               </motion.div>

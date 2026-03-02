@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, Music2, Sparkles } from "lucide-react";
+import { ArrowRight, Music2 } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,33 +28,33 @@ import PaymentWidget from "@/components/PaymentWidget";
 import { AnimatedSection } from "./AnimationWrappers";
 import { SongFormData } from "../lib/schema";
 
-// ─── Genre Cards Data ────────────────────────────────────────────────────────
+// ─── Genre Data — colored dots instead of emoji ─────────────────────────────
 
 const genres = [
-  { value: "pop", label: "Поп", emoji: "🎤", color: "hover:border-rose-300 peer-data-[state=checked]:border-rose-400 peer-data-[state=checked]:bg-rose-50/50 [&:has([data-state=checked])]:border-rose-400 [&:has([data-state=checked])]:bg-rose-50/50" },
-  { value: "rock", label: "Рок", emoji: "🎸", color: "hover:border-orange-300 peer-data-[state=checked]:border-orange-400 peer-data-[state=checked]:bg-orange-50/50 [&:has([data-state=checked])]:border-orange-400 [&:has([data-state=checked])]:bg-orange-50/50" },
-  { value: "rap", label: "Рэп", emoji: "🎙️", color: "hover:border-violet-300 peer-data-[state=checked]:border-violet-400 peer-data-[state=checked]:bg-violet-50/50 [&:has([data-state=checked])]:border-violet-400 [&:has([data-state=checked])]:bg-violet-50/50" },
-  { value: "chanson", label: "Шансон", emoji: "🎻", color: "hover:border-amber-300 peer-data-[state=checked]:border-amber-400 peer-data-[state=checked]:bg-amber-50/50 [&:has([data-state=checked])]:border-amber-400 [&:has([data-state=checked])]:bg-amber-50/50" },
-  { value: "jazz", label: "Джаз", emoji: "🎷", color: "hover:border-sky-300 peer-data-[state=checked]:border-sky-400 peer-data-[state=checked]:bg-sky-50/50 [&:has([data-state=checked])]:border-sky-400 [&:has([data-state=checked])]:bg-sky-50/50" },
-  { value: "edm", label: "Электро", emoji: "⚡", color: "hover:border-indigo-300 peer-data-[state=checked]:border-indigo-400 peer-data-[state=checked]:bg-indigo-50/50 [&:has([data-state=checked])]:border-indigo-400 [&:has([data-state=checked])]:bg-indigo-50/50" },
-  { value: "acoustic", label: "Акустика", emoji: "🎼", color: "hover:border-emerald-300 peer-data-[state=checked]:border-emerald-400 peer-data-[state=checked]:bg-emerald-50/50 [&:has([data-state=checked])]:border-emerald-400 [&:has([data-state=checked])]:bg-emerald-50/50" },
-  { value: "blues", label: "Блюз", emoji: "🎹", color: "hover:border-blue-300 peer-data-[state=checked]:border-blue-400 peer-data-[state=checked]:bg-blue-50/50 [&:has([data-state=checked])]:border-blue-400 [&:has([data-state=checked])]:bg-blue-50/50" },
-  { value: "country", label: "Кантри", emoji: "🤠", color: "hover:border-yellow-300 peer-data-[state=checked]:border-yellow-400 peer-data-[state=checked]:bg-yellow-50/50 [&:has([data-state=checked])]:border-yellow-400 [&:has([data-state=checked])]:bg-yellow-50/50" },
-  { value: "new-year-pop", label: "Новогодний", emoji: "🎄", color: "hover:border-red-300 peer-data-[state=checked]:border-red-400 peer-data-[state=checked]:bg-red-50/50 [&:has([data-state=checked])]:border-red-400 [&:has([data-state=checked])]:bg-red-50/50" },
+  { value: "Классический поп", label: "Поп", dot: "bg-rose-400" },
+  { value: "Рок", label: "Рок", dot: "bg-orange-400" },
+  { value: "Рэп", label: "Рэп", dot: "bg-violet-500" },
+  { value: "Шансон", label: "Шансон", dot: "bg-amber-500" },
+  { value: "Джаз", label: "Джаз", dot: "bg-sky-400" },
+  { value: "Электро", label: "Электро", dot: "bg-indigo-400" },
+  { value: "Акустика", label: "Акустика", dot: "bg-emerald-400" },
+  { value: "Блюз", label: "Блюз", dot: "bg-blue-400" },
+  { value: "Кантри", label: "Кантри", dot: "bg-yellow-500" },
+  { value: "Фанк", label: "Фанк", dot: "bg-fuchsia-400" },
 ];
 
 const textStyles = [
-  { value: "humor", label: "Весёлая", desc: "Юмор и шутки", emoji: "😄" },
-  { value: "lyric", label: "Душевная", desc: "Тёплые эмоции", emoji: "💛" },
-  { value: "roast", label: "Прожарка", desc: "Дружеский троллинг", emoji: "🔥" },
-  { value: "romantic", label: "Романтичная", desc: "Про любовь", emoji: "💕" },
-  { value: "bold", label: "Энергичная", desc: "Дерзкая и мощная", emoji: "💪" },
-  { value: "motivating", label: "Мотивирующая", desc: "Вдохновляющая", emoji: "🚀" },
-  { value: "nostalgic", label: "Ностальгическая", desc: "О прошлом", emoji: "📷" },
-  { value: "custom", label: "Свой вариант", desc: "Укажите свой стиль", emoji: "✏️" },
+  { value: "humor", label: "Весёлая", desc: "Юмор и шутки" },
+  { value: "lyric", label: "Душевная", desc: "Тёплые эмоции" },
+  { value: "roast", label: "Прожарка", desc: "Дружеский троллинг" },
+  { value: "romantic", label: "Романтичная", desc: "Про любовь" },
+  { value: "bold", label: "Энергичная", desc: "Дерзкая и мощная" },
+  { value: "motivating", label: "Мотивирующая", desc: "Вдохновляющая" },
+  { value: "nostalgic", label: "Ностальгическая", desc: "О прошлом" },
+  { value: "custom", label: "Свой вариант", desc: "Укажите свой стиль" },
 ];
 
-// ─── OrderFormSection ────────────────────────────────────────────────────────
+// ─── OrderFormSection ───────────────────────────────────────────────────────
 
 interface OrderFormSectionProps {
   form: UseFormReturn<SongFormData>;
@@ -88,22 +88,12 @@ export default function OrderFormSection({
         aria-labelledby="form-heading"
       >
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8">
-          <div className="relative bg-white rounded-3xl shadow-xl shadow-black/[0.04] p-8 md:p-12 border border-border/40">
-            {/* ── Floating price badge ── */}
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-10">
-              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-primary to-rose-400 text-white rounded-full px-5 py-2.5 shadow-lg shadow-primary/25">
-                <Sparkles className="w-4 h-4" aria-hidden="true" />
-                <span className="text-sm font-semibold">
-                  Специальная цена — 590&nbsp;&#8381;
-                </span>
-              </div>
-            </div>
-
-            {/* ── Header + Pricing ── */}
-            <div className="text-center mb-10 pt-4">
+          <div className="relative bg-card rounded-3xl shadow-xl shadow-plum/[0.04] p-8 md:p-12 border border-border/40">
+            {/* Header + Pricing — elegant, no floating badge */}
+            <div className="text-center mb-10">
               <h2
                 id="form-heading"
-                className="font-display text-3xl md:text-4xl font-bold mb-6 text-foreground"
+                className="font-display text-4xl md:text-5xl font-bold mb-6 text-plum"
               >
                 Создайте свою песню
               </h2>
@@ -113,11 +103,11 @@ export default function OrderFormSection({
                   <span className="text-lg text-muted-foreground line-through">
                     1&nbsp;190&nbsp;&#8381;
                   </span>
-                  <span className="text-xs font-bold bg-primary/10 text-primary px-3 py-1 rounded-full uppercase tracking-wide">
+                  <span className="text-xs font-bold bg-plum/8 text-plum px-3 py-1 rounded-full uppercase tracking-wide">
                     &minus;50%
                   </span>
                 </div>
-                <span className="text-5xl md:text-6xl font-bold text-foreground">
+                <span className="font-display text-5xl md:text-6xl font-bold text-foreground">
                   590&nbsp;&#8381;
                 </span>
               </div>
@@ -136,12 +126,12 @@ export default function OrderFormSection({
                   e.stopPropagation();
                 }}
               >
-                {/* ════════════════════════════════════════════
+                {/* ═══════════════════════════════════════
                     SECTION 1: О ком песня
-                ════════════════════════════════════════════ */}
+                ═══════════════════════════════════════ */}
                 <div className="space-y-6">
                   <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                    <div className="w-6 h-6 rounded-full bg-plum/10 flex items-center justify-center text-xs font-bold text-plum">
                       1
                     </div>
                     Расскажите о человеке
@@ -158,7 +148,7 @@ export default function OrderFormSection({
                           <Textarea
                             rows={3}
                             placeholder="Мой друг Алексей, 30 лет, работает программистом..."
-                            className="resize-none rounded-xl"
+                            className="resize-none rounded-xl input-warm-focus"
                             {...field}
                           />
                         </FormControl>
@@ -181,7 +171,7 @@ export default function OrderFormSection({
                           <Textarea
                             rows={5}
                             placeholder="Любит футбол и пиво, всегда опаздывает, но душа компании. Недавно женился. Обожает мемы про котов..."
-                            className="resize-none rounded-xl"
+                            className="resize-none rounded-xl input-warm-focus"
                             {...field}
                           />
                         </FormControl>
@@ -207,12 +197,12 @@ export default function OrderFormSection({
                           <Textarea
                             rows={2}
                             placeholder='Например: "лучший друг", "помнишь как мы..."'
-                            className="resize-none rounded-xl"
+                            className="resize-none rounded-xl input-warm-focus"
                             {...field}
                           />
                         </FormControl>
                         <FormDescription className="text-xs">
-                          Можно оставить пустым — мы сами подберём лучшие слова
+                          Можно оставить пустым, мы сами подберём лучшие слова
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -263,7 +253,7 @@ export default function OrderFormSection({
                           <FormControl>
                             <Input
                               placeholder="Например: Выпускной, юбилей компании..."
-                              className="rounded-xl"
+                              className="rounded-xl input-warm-focus"
                               {...field}
                             />
                           </FormControl>
@@ -274,18 +264,18 @@ export default function OrderFormSection({
                   )}
                 </div>
 
-                {/* ════════════════════════════════════════════
+                {/* ═══════════════════════════════════════
                     SECTION 2: Стиль и жанр
-                ════════════════════════════════════════════ */}
+                ═══════════════════════════════════════ */}
                 <div className="space-y-6 pt-2">
                   <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                    <div className="w-6 h-6 rounded-full bg-plum/10 flex items-center justify-center text-xs font-bold text-plum">
                       2
                     </div>
                     Выберите стиль
                   </div>
 
-                  {/* Text style */}
+                  {/* Text style — no emoji */}
                   <FormField
                     control={form.control}
                     name="textStyle"
@@ -299,9 +289,9 @@ export default function OrderFormSection({
                             className="grid grid-cols-2 md:grid-cols-4 gap-3"
                           >
                             {textStyles.map((style) => (
-                              <FormItem key={style.value}>
+                              <FormItem key={style.value} className="h-auto">
                                 <FormControl>
-                                  <div>
+                                  <div className="h-full">
                                     <RadioGroupItem
                                       value={style.value}
                                       id={`style-${style.value}`}
@@ -309,11 +299,8 @@ export default function OrderFormSection({
                                     />
                                     <FormLabel
                                       htmlFor={`style-${style.value}`}
-                                      className="flex flex-col items-center rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/[0.02] peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer transition-all duration-200 text-center"
+                                      className="flex flex-col items-center justify-center rounded-xl border-2 border-border/60 bg-card p-4 h-full hover:border-plum/30 hover:bg-plum/[0.02] peer-data-[state=checked]:border-plum peer-data-[state=checked]:bg-plum/5 [&:has([data-state=checked])]:border-plum [&:has([data-state=checked])]:bg-plum/5 cursor-pointer transition-all duration-200 text-center"
                                     >
-                                      <span className="text-xl mb-1" aria-hidden="true">
-                                        {style.emoji}
-                                      </span>
                                       <span className="font-semibold text-foreground text-sm">
                                         {style.label}
                                       </span>
@@ -343,7 +330,7 @@ export default function OrderFormSection({
                           <FormControl>
                             <Input
                               placeholder="Например: Эпическая и героическая, Задумчивая..."
-                              className="rounded-xl"
+                              className="rounded-xl input-warm-focus"
                               {...field}
                             />
                           </FormControl>
@@ -356,7 +343,7 @@ export default function OrderFormSection({
                     />
                   )}
 
-                  {/* Genre — visual cards */}
+                  {/* Genre — colored dot cards */}
                   <FormField
                     control={form.control}
                     name="genre"
@@ -380,11 +367,12 @@ export default function OrderFormSection({
                                     />
                                     <FormLabel
                                       htmlFor={`genre-${genre.value}`}
-                                      className={`flex flex-col items-center justify-center rounded-xl border-2 border-border/60 bg-white p-3 cursor-pointer transition-all duration-200 ${genre.color}`}
+                                      className="flex items-center gap-2.5 rounded-xl border-2 border-border/60 bg-card p-3 cursor-pointer transition-all duration-200 hover:border-plum/30 peer-data-[state=checked]:border-plum peer-data-[state=checked]:bg-plum/5 [&:has([data-state=checked])]:border-plum [&:has([data-state=checked])]:bg-plum/5"
                                     >
-                                      <span className="text-2xl mb-1" aria-hidden="true">
-                                        {genre.emoji}
-                                      </span>
+                                      <span
+                                        className={`w-3 h-3 rounded-full ${genre.dot} flex-shrink-0`}
+                                        aria-hidden="true"
+                                      />
                                       <span className="font-semibold text-foreground text-sm">
                                         {genre.label}
                                       </span>
@@ -400,7 +388,7 @@ export default function OrderFormSection({
                     )}
                   />
 
-                  {/* Voice */}
+                  {/* Voice — clean, no emoji */}
                   <FormField
                     control={form.control}
                     name="voice"
@@ -414,8 +402,8 @@ export default function OrderFormSection({
                             className="grid grid-cols-2 gap-3"
                           >
                             {[
-                              { value: "male", label: "Мужской", emoji: "👨‍🎤" },
-                              { value: "female", label: "Женский", emoji: "👩‍🎤" },
+                              { value: "male", label: "Мужской" },
+                              { value: "female", label: "Женский" },
                             ].map((voice) => (
                               <FormItem key={voice.value}>
                                 <FormControl>
@@ -427,11 +415,8 @@ export default function OrderFormSection({
                                     />
                                     <FormLabel
                                       htmlFor={`voice-${voice.value}`}
-                                      className="flex items-center justify-center gap-2 rounded-xl border-2 border-border/60 bg-white p-4 hover:border-primary/40 hover:bg-primary/[0.02] peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5 [&:has([data-state=checked])]:border-primary [&:has([data-state=checked])]:bg-primary/5 cursor-pointer font-semibold transition-all duration-200"
+                                      className="flex items-center justify-center gap-2 rounded-xl border-2 border-border/60 bg-card p-4 hover:border-plum/30 hover:bg-plum/[0.02] peer-data-[state=checked]:border-plum peer-data-[state=checked]:bg-plum/5 [&:has([data-state=checked])]:border-plum [&:has([data-state=checked])]:bg-plum/5 cursor-pointer font-semibold transition-all duration-200"
                                     >
-                                      <span className="text-xl" aria-hidden="true">
-                                        {voice.emoji}
-                                      </span>
                                       {voice.label}
                                     </FormLabel>
                                   </div>
@@ -446,12 +431,12 @@ export default function OrderFormSection({
                   />
                 </div>
 
-                {/* ════════════════════════════════════════════
+                {/* ═══════════════════════════════════════
                     SECTION 3: Контакты и оплата
-                ════════════════════════════════════════════ */}
+                ═══════════════════════════════════════ */}
                 <div className="space-y-6 pt-2">
                   <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+                    <div className="w-6 h-6 rounded-full bg-plum/10 flex items-center justify-center text-xs font-bold text-plum">
                       3
                     </div>
                     Оплата и получение
@@ -471,7 +456,7 @@ export default function OrderFormSection({
                             autoComplete="email"
                             placeholder="example@mail.ru"
                             spellCheck={false}
-                            className="rounded-xl"
+                            className="rounded-xl input-warm-focus"
                             {...field}
                           />
                         </FormControl>
@@ -529,7 +514,7 @@ export default function OrderFormSection({
                         <Button
                           type="button"
                           size="lg"
-                          className="w-full text-lg py-7 bg-gradient-to-r from-primary to-rose-400 hover:from-primary-dark hover:to-primary text-white rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
+                          className="w-full text-lg py-7 bg-primary hover:bg-primary-dark text-white rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 cursor-pointer"
                           onClick={onSubmitClick}
                           disabled={isSubmitting}
                           aria-label="Отправить заказ на создание персональной песни"

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Star } from "lucide-react";
 
 // ─── Animation Helpers ──────────────────────────────────────────────────────
@@ -68,16 +68,6 @@ export function StaggeredGrid({
   );
 }
 
-// ─── Section Accent Bar (decorative) ────────────────────────────────────────
-
-export function SectionBar() {
-  return (
-    <div className="flex justify-center mb-6">
-      <div className="w-10 h-1 rounded-full bg-primary/60" />
-    </div>
-  );
-}
-
 // ─── Star Rating ────────────────────────────────────────────────────────────
 
 export function Stars({ count = 5 }: { count?: number }) {
@@ -86,7 +76,7 @@ export function Stars({ count = 5 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <Star
           key={i}
-          className="w-4 h-4 fill-amber-400 text-amber-400"
+          className="w-4 h-4 fill-gold text-gold"
           aria-hidden="true"
         />
       ))}
@@ -94,7 +84,7 @@ export function Stars({ count = 5 }: { count?: number }) {
   );
 }
 
-// ─── NEW: Animated Counter ──────────────────────────────────────────────────
+// ─── Animated Counter ───────────────────────────────────────────────────────
 
 export function CountUp({
   target,
@@ -141,29 +131,7 @@ export function CountUp({
   );
 }
 
-// ─── NEW: Floating Decorative Element ───────────────────────────────────────
-
-export function FloatingNote({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  return (
-    <div
-      className={`absolute pointer-events-none select-none text-3xl md:text-4xl animate-float-note ${className}`}
-      style={{ animationDelay: `${delay}s` }}
-      aria-hidden="true"
-    >
-      {children}
-    </div>
-  );
-}
-
-// ─── NEW: Waveform Visualization ────────────────────────────────────────────
+// ─── Waveform Visualization ─────────────────────────────────────────────────
 
 // Pre-computed deterministic bar heights (avoids hydration mismatch from Math.sin)
 const WAVEFORM_HEIGHTS = [15, 30, 22, 38, 18, 42, 25, 35, 20, 45, 28, 32, 17, 40, 23, 37, 19, 43, 26, 34, 21, 44, 29, 31, 16, 41, 24, 36, 18, 39, 27, 33];
@@ -195,20 +163,105 @@ export function WaveformBars({
   );
 }
 
-// ─── NEW: Section Badge ─────────────────────────────────────────────────────
+// ─── Section Badge (pill label) ─────────────────────────────────────────────
 
 export function SectionBadge({
   children,
   className = "",
+  variant = "light",
 }: {
   children: React.ReactNode;
   className?: string;
+  variant?: "light" | "dark";
 }) {
+  const variantClasses =
+    variant === "dark"
+      ? "text-white/40"
+      : "text-muted-foreground/70";
+
   return (
     <div
-      className={`inline-flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-4 py-1.5 mb-6 text-sm font-medium text-primary ${className}`}
+      className={`inline-flex items-center gap-2 mb-5 text-xs font-semibold uppercase tracking-widest ${variantClasses} ${className}`}
     >
       {children}
     </div>
+  );
+}
+
+// ─── Parallax Section ───────────────────────────────────────────────────────
+
+export function ParallaxBg({
+  children,
+  speed = 0.3,
+  className = "",
+}: {
+  children: React.ReactNode;
+  speed?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const y = useTransform(scrollYProgress, [0, 1], [`${speed * -60}px`, `${speed * 60}px`]);
+
+  return (
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+      <motion.div style={{ y }} className="absolute inset-0">
+        {children}
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Scroll Progress Bar ────────────────────────────────────────────────────
+
+export function ScrollProgressBar() {
+  const { scrollYProgress } = useScroll();
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  return (
+    <motion.div
+      className="scroll-progress"
+      style={{ scaleX }}
+      aria-hidden="true"
+    />
+  );
+}
+
+// ─── Text Clip Reveal (word-by-word) ────────────────────────────────────────
+
+export function TextReveal({
+  text,
+  className = "",
+  delay = 0,
+}: {
+  text: string;
+  className?: string;
+  delay?: number;
+}) {
+  const words = text.split(" ");
+
+  return (
+    <span className={className}>
+      {words.map((word, i) => (
+        <span key={i} className="inline-block overflow-hidden">
+          <motion.span
+            className="inline-block"
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: delay + i * 0.06,
+              ease,
+            }}
+          >
+            {word}
+            {i < words.length - 1 ? "\u00A0" : ""}
+          </motion.span>
+        </span>
+      ))}
+    </span>
   );
 }

@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useEffect } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Music2 } from "lucide-react";
 import { SongFormData as APISongFormData } from "@/lib/genapi/text-generation";
 import { songFormSchema, SongFormData } from "./lib/schema";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,11 @@ import ReviewsSection from "./components/ReviewsSection";
 import OrderFormSection from "./components/OrderFormSection";
 import FAQSection, { faqItems } from "./components/FAQSection";
 import GuaranteeSection from "./components/GuaranteeSection";
-import { AnimatedSection, SectionBar } from "./components/AnimationWrappers";
+import {
+  AnimatedSection,
+  SectionBadge,
+  ScrollProgressBar,
+} from "./components/AnimationWrappers";
 
 // ─── Sticky Mobile CTA ──────────────────────────────────────────────────────
 
@@ -28,13 +32,11 @@ function StickyMobileCTA() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky CTA when form is NOT visible
         setVisible(!entry.isIntersecting);
       },
       { threshold: 0.1 }
     );
 
-    // Start observing after a short delay to prevent flash on load
     const timer = setTimeout(() => {
       observer.observe(orderForm);
     }, 1000);
@@ -47,13 +49,13 @@ function StickyMobileCTA() {
 
   return (
     <div
-      className={`sticky-cta md:hidden bg-white/95 border-t border-border/50 px-4 py-3 ${
+      className={`sticky-cta md:hidden bg-card/95 border-t border-border/50 px-4 py-3 ${
         visible ? "visible" : ""
       }`}
     >
       <Button
         size="lg"
-        className="w-full py-5 bg-gradient-to-r from-primary to-rose-400 text-white rounded-xl shadow-lg shadow-primary/20 text-base cursor-pointer"
+        className="w-full py-5 bg-primary hover:bg-primary-dark text-white rounded-xl shadow-lg shadow-primary/20 text-base cursor-pointer"
         onClick={() =>
           document
             .getElementById("order-form")
@@ -164,27 +166,32 @@ export default function SongPage() {
     form.handleSubmit(onSubmit)();
   };
 
-  // Schema.org FAQ items for structured data
   const schemaFaqItems = faqItems.map((item) => ({
     question: item.question,
     answer: item.answer,
   }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background noise-overlay">
       <SongSchemaMarkup faqItems={schemaFaqItems} />
 
-      {/* 1. Hero — gradient, social proof, CTA, stats bar */}
+      {/* Scroll progress bar */}
+      <ScrollProgressBar />
+
+      {/* 1. Hero — asymmetric layout, serif heading, SVG decoration */}
       <HeroSection />
 
-      {/* 2. Audio Examples — moved UP for immediate proof */}
+      {/* 2. Audio Examples — dark cards, 3D tilt, mobile carousel */}
       <AnimatedSection>
-        <section className="py-20 md:py-24">
+        <section className="pt-10 pb-20 md:pt-14 md:pb-24 wave-divider wave-divider-dark">
           <div className="mx-auto max-w-7xl px-4 md:px-6 lg:px-8">
             <div className="text-center mb-14">
-              <SectionBar />
-              <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
-                Послушайте — и вы всё поймёте
+              <SectionBadge>
+                <Music2 className="w-4 h-4" aria-hidden="true" />
+                Примеры работ
+              </SectionBadge>
+              <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-plum">
+                Послушайте, и вы всё поймёте
               </h2>
               <p className="text-lg text-muted-foreground mb-2">
                 Реальные песни, созданные для реальных людей
@@ -199,13 +206,13 @@ export default function SongPage() {
         </section>
       </AnimatedSection>
 
-      {/* 3. How It Works — timeline + large numbers */}
+      {/* 3. How It Works — vertical timeline */}
       <HowItWorksSection />
 
-      {/* 4. Reviews — with occasion tags */}
+      {/* 4. Reviews — dark section, glassmorphism */}
       <ReviewsSection />
 
-      {/* 5. Order Form — visual cards, progress sections */}
+      {/* 5. Order Form — clean, no emoji */}
       <OrderFormSection
         form={form}
         step={step}
@@ -219,7 +226,7 @@ export default function SongPage() {
         onPaymentError={() => {}}
       />
 
-      {/* 6. FAQ */}
+      {/* 6. FAQ — dark section */}
       <FAQSection />
 
       {/* 7. Guarantee + SEO */}

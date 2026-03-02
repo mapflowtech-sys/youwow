@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Shield, CheckCircle2, Music } from "lucide-react";
+import { Shield, CheckCircle2, Music, CreditCard } from "lucide-react";
 import type { YooKassaWidget, YooKassaWidgetConfig } from "@/types/yookassa-widget";
 
 interface PaymentWidgetProps {
@@ -152,38 +152,38 @@ export default function PaymentWidget({
       {/* Progress Steps */}
       <div className="mb-8">
         <div className="flex items-center justify-center gap-4 mb-6">
-          {/* Step 1: Form - always completed */}
+          {/* Step 1: Form - completed */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-plum text-white flex items-center justify-center">
               <CheckCircle2 className="w-5 h-5" />
             </div>
             <span className="text-sm font-medium text-foreground">Форма</span>
           </div>
 
-          <div className={`h-0.5 w-12 transition-colors duration-500 ${
-            paymentStatus === 'success' ? 'bg-green-500' : 'bg-primary'
+          <div className={`h-px w-12 transition-colors duration-500 ${
+            paymentStatus === 'success' ? 'bg-plum' : 'bg-primary'
           }`} />
 
           {/* Step 2: Payment */}
           <div className="flex items-center gap-2">
             <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold transition-all duration-500 ${
-              paymentStatus === 'success' ? 'bg-green-500' : 'bg-primary'
+              paymentStatus === 'success' ? 'bg-plum' : 'bg-primary'
             }`}>
               {paymentStatus === 'success' ? (
                 <CheckCircle2 className="w-5 h-5" />
               ) : (
-                '2'
+                <CreditCard className="w-4 h-4" />
               )}
             </div>
             <span className={`text-sm font-medium transition-colors duration-500 ${
-              paymentStatus === 'success' ? 'text-green-600' : 'text-primary'
+              paymentStatus === 'success' ? 'text-plum' : 'text-primary'
             }`}>
               Оплата
             </span>
           </div>
 
-          <div className={`h-0.5 w-12 transition-colors duration-500 ${
-            paymentStatus === 'success' ? 'bg-green-500' : 'bg-border'
+          <div className={`h-px w-12 transition-colors duration-500 ${
+            paymentStatus === 'success' ? 'bg-plum' : 'bg-border'
           }`} />
 
           {/* Step 3: Generation */}
@@ -191,7 +191,7 @@ export default function PaymentWidget({
             <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
               paymentStatus === 'success'
                 ? 'bg-primary text-white'
-                : 'bg-muted text-muted-foreground'
+                : 'bg-secondary text-muted-foreground'
             }`}>
               <Music className="w-4 h-4" />
             </div>
@@ -203,7 +203,7 @@ export default function PaymentWidget({
           </div>
         </div>
 
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-foreground mb-2">
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-center text-plum mb-2">
           Оплата заказа #{orderId.slice(0, 8)}
         </h2>
       </div>
@@ -211,11 +211,11 @@ export default function PaymentWidget({
       {/* Trust Indicators */}
       <div className="flex flex-col gap-2 mb-6">
         <div className="flex items-center gap-3 text-sm">
-          <Shield className="text-green-600 shrink-0" size={18} />
+          <Shield className="text-plum shrink-0" size={18} />
           <span className="text-muted-foreground">Безопасная оплата</span>
         </div>
         <div className="flex items-center gap-3 text-sm">
-          <CheckCircle2 className="text-green-600 shrink-0" size={18} />
+          <CheckCircle2 className="text-plum shrink-0" size={18} />
           <span className="text-muted-foreground">Гарантия возврата средств</span>
         </div>
       </div>
@@ -224,7 +224,7 @@ export default function PaymentWidget({
       <div className="relative">
         {/* Loading State */}
         {!isWidgetReady && paymentStatus === 'idle' && (
-          <div className="absolute inset-0 bg-white rounded-2xl border border-border flex items-center justify-center min-h-[500px] z-10">
+          <div className="absolute inset-0 bg-card rounded-2xl border border-border/50 flex items-center justify-center min-h-[500px] z-10">
             <div className="text-center">
               <motion.div
                 animate={{ rotate: 360 }}
@@ -244,11 +244,11 @@ export default function PaymentWidget({
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="absolute inset-0 bg-white rounded-2xl border border-green-500 flex items-center justify-center min-h-[500px] z-20"
+            className="absolute inset-0 bg-card rounded-2xl border border-plum/30 flex items-center justify-center min-h-[500px] z-20"
           >
             <div className="text-center">
-              <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto mb-4" />
-              <h3 className="text-2xl font-bold text-green-600 mb-2">
+              <CheckCircle2 className="w-16 h-16 text-plum mx-auto mb-4" />
+              <h3 className="font-display text-2xl font-bold text-plum mb-2">
                 Оплата прошла успешно!
               </h3>
               <p className="text-muted-foreground">
@@ -262,7 +262,7 @@ export default function PaymentWidget({
         <div
           id="payment-widget-container"
           ref={containerRef}
-          className="w-full min-h-[500px] bg-white rounded-2xl border border-border overflow-hidden"
+          className="w-full min-h-[500px] bg-card rounded-2xl border border-border/50 overflow-hidden"
         />
       </div>
 

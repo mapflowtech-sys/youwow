@@ -7,12 +7,12 @@ export const faqItems = [
   {
     question: "Это реально поют люди или AI?",
     answer:
-      "Честно — это AI-технология, но не та, что звучит роботизированно. Мы используем самые современные модели синтеза голоса, обученные на записях профессиональных вокалистов. Результат: чистый, живой звук. Включите любой пример — сами услышите.",
+      "Честно, это AI-технология, но не та, что звучит роботизированно. Мы используем самые современные модели синтеза голоса, обученные на записях профессиональных вокалистов. Результат: чистый, живой звук. Включите любой пример, сами услышите.",
   },
   {
     question: "Сколько это стоит?",
     answer:
-      "590 рублей — и всё включено. Полноценный трек с вокалом, аранжировкой и текстом, написанным специально под вашу историю. Без скрытых доплат.",
+      "590 рублей, и всё включено. Полноценный трек с вокалом, аранжировкой и текстом, написанным специально под вашу историю. Без скрытых доплат.",
   },
   {
     question: "За сколько будет готова песня?",
@@ -27,12 +27,12 @@ export const faqItems = [
   {
     question: "Что нужно написать для создания песни?",
     answer:
-      "Расскажите о человеке: имя, характер, увлечения, смешные или трогательные моменты из жизни. Чем больше деталей — тем круче получится.",
+      "Расскажите о человеке: имя, характер, увлечения, смешные или трогательные моменты из жизни. Чем больше деталей, тем круче получится.",
   },
   {
     question: "Можно выбрать жанр и голос?",
     answer:
-      "Конечно. Доступны все популярные жанры: поп, рок, рэп, шансон, джаз, электроника, блюз, кантри, акустика. Голос — мужской или женский.",
+      "Конечно. Доступны все популярные жанры: поп, рок, рэп, шансон, джаз, электроника, блюз, кантри, акустика. Голос: мужской или женский.",
   },
   {
     question: "Это точно будет уникально?",
@@ -44,44 +44,44 @@ export const faqItems = [
 export default function FAQSection() {
   return (
     <AnimatedSection>
-      <section className="py-20 md:py-24 bg-secondary/50">
+      <section className="py-20 md:py-24 bg-surface-dark">
         <div className="mx-auto max-w-3xl px-4 md:px-6 lg:px-8">
-          {/* ── Header ── */}
+          {/* Header */}
           <div className="text-center mb-12">
-            <SectionBadge>
+            <SectionBadge variant="dark">
               <HelpCircle className="w-4 h-4" aria-hidden="true" />
               FAQ
             </SectionBadge>
-            <h2 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-white">
               Частые вопросы
             </h2>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-white/50">
               Отвечаем честно на всё, что вас волнует
             </p>
           </div>
 
-          {/* ── Accordion ── */}
+          {/* Accordion */}
           <div className="space-y-3">
             {faqItems.map((faq, index) => (
               <details
                 key={index}
-                className="group bg-white rounded-2xl border border-border/50 overflow-hidden hover:border-primary/20 hover:shadow-sm transition-all duration-200"
+                className="group bg-white/[0.04] rounded-2xl border border-white/[0.06] overflow-hidden hover:border-white/[0.1] hover:bg-white/[0.06] transition-all duration-200"
               >
-                <summary className="flex items-center justify-between cursor-pointer p-5 md:p-6 font-semibold text-foreground list-none select-none [&::-webkit-details-marker]:hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 md:p-6 font-semibold text-white/90 list-none select-none [&::-webkit-details-marker]:hidden">
                   <span className="flex items-center gap-3 pr-6">
-                    <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-primary/[0.07] flex items-center justify-center text-xs font-bold text-primary/70">
+                    <span className="flex-shrink-0 w-7 h-7 rounded-lg bg-white/[0.06] flex items-center justify-center text-xs font-display font-bold text-gold/70">
                       {index + 1}
                     </span>
                     <span>{faq.question}</span>
                   </span>
                   <ChevronDown
-                    className="w-5 h-5 text-muted-foreground transition-transform duration-300 group-open:rotate-180 shrink-0"
+                    className="w-5 h-5 text-white/30 transition-transform duration-300 group-open:rotate-180 shrink-0"
                     aria-hidden="true"
                   />
                 </summary>
                 <div className="faq-answer">
                   <div>
-                    <div className="px-5 pb-5 md:px-6 md:pb-6 pl-[4.25rem] text-muted-foreground leading-relaxed">
+                    <div className="px-5 pb-5 md:px-6 md:pb-6 pl-[4.25rem] text-white/60 leading-relaxed">
                       {faq.answer}
                     </div>
                   </div>

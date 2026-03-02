@@ -14,7 +14,8 @@ import {
   Download,
   Share2,
   Copy,
-  Check
+  Check,
+  CreditCard
 } from 'lucide-react'
 import Link from 'next/link'
 import CoverSelector from './components/CoverSelector'
@@ -29,7 +30,7 @@ const MUSIC_FACTS = [
   "Интересно: В среднем человек тратит 5 лет своей жизни на прослушивание музыки",
   "А вы знали? Музыка может помочь вам восстановить воспоминания даже при потере памяти",
   "Факт: Ваше сердцебиение подстраивается под ритм музыки, которую вы слушаете",
-  "Знаете ли вы? Финская группа провела самый длинный концерт - 1154 часа (48 дней!)",
+  "Знаете ли вы? Финская группа провела самый длинный концерт, 1154 часа (48 дней!)",
   "Интересно: Песни с темпом 120-140 ударов в минуту идеально подходят для тренировок"
 ];
 
@@ -47,17 +48,14 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
 
     setIsDownloading(true)
     try {
-      // Создаём прокси через API route для скачивания
       const response = await fetch(`/api/download?url=${encodeURIComponent(currentOrder.result_url)}`)
 
       if (!response.ok) {
         throw new Error('Download failed')
       }
 
-      // Получаем blob
       const blob = await response.blob()
 
-      // Создаём временную ссылку для скачивания
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = url
@@ -65,12 +63,10 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
       document.body.appendChild(link)
       link.click()
 
-      // Очистка
       document.body.removeChild(link)
       window.URL.revokeObjectURL(url)
     } catch (error) {
       console.error('Download error:', error)
-      // Fallback: открыть в новой вкладке
       window.open(currentOrder.result_url, '_blank')
     } finally {
       setIsDownloading(false)
@@ -86,7 +82,6 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           if (response.ok) {
             const data = await response.json()
             if (data.success && data.order) {
-              // Используем функциональное обновление для избежания зависимости от currentOrder
               setCurrentOrder(prevOrder => ({
                 ...prevOrder,
                 status: data.order.status,
@@ -103,10 +98,8 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
         }
       }
 
-      // Первое обновление сразу
       fetchStatus()
 
-      // Затем каждые 5 секунд
       const interval = setInterval(fetchStatus, 5000)
 
       return () => clearInterval(interval)
@@ -128,40 +121,45 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
     const configs = {
       pending: {
         icon: Clock,
-        iconColor: 'text-yellow-500',
-        bgGradient: 'from-yellow-500/10 to-orange-500/10',
+        iconColor: 'text-gold',
+        headerBg: 'bg-gold/5',
+        accentColor: 'text-gold',
         title: 'Ожидаем оплату',
         description: 'Заказ создан, переходите к оплате',
         showAnimation: false
       },
       paid: {
         icon: CheckCircle2,
-        iconColor: 'text-green-500',
-        bgGradient: 'from-green-500/10 to-emerald-500/10',
+        iconColor: 'text-plum',
+        headerBg: 'bg-plum/5',
+        accentColor: 'text-plum',
         title: 'Оплата получена!',
         description: 'Начинаем создавать вашу песню...',
         showAnimation: true
       },
       processing: {
         icon: Music2,
-        iconColor: 'text-purple-500',
-        bgGradient: 'from-purple-500/10 to-pink-500/10',
+        iconColor: 'text-primary',
+        headerBg: 'bg-primary/5',
+        accentColor: 'text-primary',
         title: 'Создаём вашу песню',
-        description: 'Это займёт 3-5 минут. Можете вернуться позже - мы пришлём результат на email.',
+        description: 'Это займёт 3-5 минут. Можете вернуться позже, мы пришлём результат на email.',
         showAnimation: true
       },
       completed: {
         icon: CheckCircle2,
-        iconColor: 'text-green-500',
-        bgGradient: 'from-green-500/10 to-emerald-500/10',
+        iconColor: 'text-plum',
+        headerBg: 'bg-plum/5',
+        accentColor: 'text-plum',
         title: 'Ваша песня готова!',
         description: 'Слушайте и делитесь с друзьями',
         showAnimation: false
       },
       failed: {
         icon: XCircle,
-        iconColor: 'text-red-500',
-        bgGradient: 'from-red-500/10 to-rose-500/10',
+        iconColor: 'text-destructive',
+        headerBg: 'bg-destructive/5',
+        accentColor: 'text-destructive',
         title: 'Что-то пошло не так',
         description: 'Произошла ошибка при создании',
         showAnimation: false
@@ -209,9 +207,9 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="overflow-hidden">
-        {/* Gradient Header */}
-        <div className={`bg-linear-to-br ${config.bgGradient} p-8`}>
+      <Card className="overflow-hidden border-border/50 shadow-xl shadow-plum/[0.04]">
+        {/* Header */}
+        <div className={`${config.headerBg} p-8`}>
           <div className="text-center">
             {/* Animated Icon */}
             <motion.div
@@ -226,7 +224,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                 ease: "easeInOut"
               }}
             >
-              <div className={`relative ${config.showAnimation ? 'animate-pulse' : ''}`}>
+              <div className="relative">
                 <Icon className={`w-16 h-16 ${config.iconColor}`} />
                 {config.showAnimation && (
                   <motion.div
@@ -247,65 +245,65 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
               </div>
             </motion.div>
 
-            <CardTitle className="text-2xl md:text-3xl mb-2">{config.title}</CardTitle>
-            <CardDescription className="text-base">{config.description}</CardDescription>
+            <CardTitle className="font-display text-2xl md:text-3xl mb-2 text-plum">{config.title}</CardTitle>
+            <CardDescription className="text-base text-muted-foreground">{config.description}</CardDescription>
           </div>
         </div>
 
         <CardContent className="space-y-6 pt-6">
-          {/* Progress Steps - Анимированный как в PaymentWidget */}
+          {/* Progress Steps */}
           <div className="flex items-center justify-center gap-4">
-            {/* Шаг 1: Форма - всегда завершён */}
+            {/* Шаг 1: Форма */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-green-500 text-white flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-plum text-white flex items-center justify-center">
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <span className="text-sm font-medium">Форма</span>
             </div>
 
-            <div className={`h-0.5 w-12 transition-colors duration-500 ${
-              ['paid', 'processing', 'completed'].includes(currentOrder.status) ? 'bg-green-500' : 'bg-primary'
+            <div className={`h-px w-12 transition-colors duration-500 ${
+              ['paid', 'processing', 'completed'].includes(currentOrder.status) ? 'bg-plum' : 'bg-primary'
             }`} />
 
             {/* Шаг 2: Оплата */}
             <div className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full text-white flex items-center justify-center font-bold transition-all duration-500 ${
                 ['processing', 'completed'].includes(currentOrder.status)
-                  ? 'bg-green-500'
+                  ? 'bg-plum'
                   : ['paid'].includes(currentOrder.status)
                   ? 'bg-primary'
-                  : 'bg-slate-300'
+                  : 'bg-secondary text-muted-foreground'
               }`}>
                 {['processing', 'completed'].includes(currentOrder.status) ? (
                   <CheckCircle2 className="w-5 h-5" />
                 ) : (
-                  '2'
+                  <CreditCard className="w-4 h-4" />
                 )}
               </div>
               <span className={`text-sm font-medium transition-colors duration-500 ${
                 ['processing', 'completed'].includes(currentOrder.status)
-                  ? 'text-green-600'
+                  ? 'text-plum'
                   : ['paid'].includes(currentOrder.status)
                   ? 'text-primary'
-                  : 'text-slate-500'
+                  : 'text-muted-foreground'
               }`}>
                 Оплата
               </span>
             </div>
 
-            <div className={`h-0.5 w-12 transition-colors duration-500 ${
-              currentOrder.status === 'completed' ? 'bg-green-500' : ['processing'].includes(currentOrder.status) ? 'bg-purple-500' : 'bg-slate-300'
+            <div className={`h-px w-12 transition-colors duration-500 ${
+              currentOrder.status === 'completed' ? 'bg-plum' : ['processing'].includes(currentOrder.status) ? 'bg-primary' : 'bg-border'
             }`} />
 
-            {/* Шаг 3: Генерация - активный с анимацией */}
+            {/* Шаг 3: Генерация */}
             <div className="flex items-center gap-2">
               <motion.div
                 className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
                   currentOrder.status === 'completed'
-                    ? 'bg-green-500 text-white'
+                    ? 'bg-plum text-white'
                     : currentOrder.status === 'processing'
-                    ? 'bg-purple-500 text-white'
-                    : 'bg-slate-300 text-slate-600'
+                    ? 'bg-primary text-white'
+                    : 'bg-secondary text-muted-foreground'
                 }`}
                 animate={currentOrder.status === 'processing' ? {
                   scale: [1, 1.15, 1],
@@ -325,10 +323,10 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
               </motion.div>
               <span className={`text-sm font-medium transition-colors duration-500 ${
                 currentOrder.status === 'completed'
-                  ? 'text-green-600'
+                  ? 'text-plum'
                   : currentOrder.status === 'processing'
-                  ? 'text-purple-600 font-bold'
-                  : 'text-slate-500'
+                  ? 'text-primary font-bold'
+                  : 'text-muted-foreground'
               }`}>
                 Генерация
               </span>
@@ -336,7 +334,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           </div>
 
           {/* Order Info */}
-          <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-4 space-y-2">
+          <div className="bg-secondary/50 rounded-xl p-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Заказ:</span>
               <span className="font-mono">#{currentOrder.id.slice(0, 8)}</span>
@@ -347,7 +345,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">Сумма:</span>
-              <span className="font-bold">{currentOrder.amount} ₽</span>
+              <span className="font-bold">{currentOrder.amount} &#8381;</span>
             </div>
           </div>
 
@@ -360,10 +358,10 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.5 }}
-                className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6 text-center"
+                className="bg-primary/5 border border-primary/10 rounded-xl p-6 text-center"
               >
-                <Sparkles className="w-8 h-8 text-purple-500 mx-auto mb-3" />
-                <p className="text-sm text-purple-900 dark:text-purple-100">
+                <Sparkles className="w-8 h-8 text-primary mx-auto mb-3" />
+                <p className="text-sm text-foreground">
                   {MUSIC_FACTS[currentFactIndex]}
                 </p>
               </motion.div>
@@ -377,9 +375,9 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-4"
             >
-              {/* Audio Player (if song) */}
+              {/* Audio Player */}
               {currentOrder.service_type === 'song' && (
-                <div className="bg-linear-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
+                <div className="bg-plum/5 rounded-xl p-6">
                   <audio controls className="w-full" src={currentOrder.result_url}>
                     Ваш браузер не поддерживает аудио.
                   </audio>
@@ -388,7 +386,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
 
               {/* Cover Selector for Video Generation */}
               {currentOrder.service_type === 'song' && (
-                <div className="bg-slate-50 dark:bg-slate-900 rounded-xl p-6">
+                <div className="bg-secondary/50 rounded-xl p-6">
                   <CoverSelector orderId={currentOrder.id} />
                 </div>
               )}
@@ -398,7 +396,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
                 onClick={handleDownload}
                 disabled={isDownloading}
                 size="lg"
-                className="w-full bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="w-full bg-primary hover:bg-primary-dark text-white"
               >
                 <Download className="mr-2 h-5 w-5" />
                 {isDownloading ? 'Скачивание...' : 'Скачать песню'}
@@ -407,7 +405,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
               {/* Share Buttons */}
               <div>
                 <div className="flex items-center gap-2 mb-3">
-                  <Share2 className="w-4 h-4 text-slate-600" />
+                  <Share2 className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-semibold">Поделиться:</span>
                 </div>
 
@@ -477,17 +475,17 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
 
           {/* Error Message */}
           {currentOrder.status === 'failed' && (
-            <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl p-4">
-              <p className="text-red-800 dark:text-red-200 font-semibold mb-2">
+            <div className="bg-destructive/5 border border-destructive/10 rounded-xl p-4">
+              <p className="text-foreground font-semibold mb-2">
                 {currentOrder.error_message || 'Произошла неизвестная ошибка'}
               </p>
-              <p className="text-sm text-red-600 dark:text-red-300">
+              <p className="text-sm text-muted-foreground">
                 Напишите нам в Telegram:{" "}
                 <a
                   href="https://t.me/youwow_support"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline font-semibold"
+                  className="text-plum font-semibold link-underline"
                 >
                   @youwow_support
                 </a>
@@ -496,7 +494,7 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
           )}
         </CardContent>
 
-        <CardFooter className="flex flex-col gap-2 bg-slate-50 dark:bg-slate-900">
+        <CardFooter className="flex flex-col gap-2 bg-secondary/30">
           <Button asChild variant="outline" className="w-full">
             <Link href="/song">Создать ещё одну песню</Link>
           </Button>
@@ -508,4 +506,3 @@ export default function OrderStatusDisplayNew({ order }: { order: Order }) {
     </motion.div>
   )
 }
-

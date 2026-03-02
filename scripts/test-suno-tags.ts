@@ -5,7 +5,7 @@
 
 // Копируем словари из suno-generation.ts для тестирования
 const GENRE_TAGS: Record<string, string> = {
-  'Новогодний поп': 'pop, christmas pop, festive melody, bells, warm synths, joyful mood, mid-tempo, magical atmosphere',
+  'Фанк': 'funk, groovy bass, funky guitar, brass section, rhythmic groove, upbeat energy, danceable, retro soul feel',
   'Классический поп': 'pop, melodic pop, radio friendly, clean production, layered vocals, emotional mood, mid-tempo, modern sound',
   'Рок': 'rock, alternative rock, electric guitar, live drums, energetic performance, driving rhythm, high energy, dynamic tempo',
   'Рэп': 'rap, hip hop, rhythmic flow, punchy beat, deep bass, minimal melody, confident delivery, strong groove',
