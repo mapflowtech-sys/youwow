@@ -177,7 +177,7 @@ export default function Home() {
                     </p>
 
                     <div className="flex items-baseline gap-3 mb-6">
-                      <span className="font-display text-3xl font-bold text-plum">от 1 390 ₽</span>
+                      <span className="font-display text-3xl font-bold text-plum">от 1 290 ₽</span>
                     </div>
 
                     <div className="bg-plum text-white text-center py-3 rounded-xl font-semibold group-hover:bg-plum-light transition-colors">
